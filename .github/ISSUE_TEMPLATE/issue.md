@@ -1,5 +1,5 @@
 ---
-name: ''
+name: 'issue'
 about: 추가할 기능에 관한 이슈에 대한 설명을 작성합니다.
 title: ''
 labels: ''
