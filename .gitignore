@@ -1,6 +1,13 @@
-backend/node_modules
-backend/.env
+# OS
+*/.DS_Store
 
-frontend/node_modules
-frontend/.env
-frontend/dist
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+*/.env
+*/node_modules
+*/dist
