@@ -1,10 +1,10 @@
 import { button } from './button.styled';
 
-type signButtonType = {
+type mainButtonType = {
   children: JSX.Element | string;
   type: string;
 };
 
-export const SignButton = ({ children, type }: signButtonType) => {
+export const MainButton = ({ children, type }: mainButtonType) => {
   return <button css={button(type)}>{children}</button>;
 };
