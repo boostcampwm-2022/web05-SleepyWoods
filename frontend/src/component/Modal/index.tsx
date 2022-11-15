@@ -1,7 +1,8 @@
+import { childrenType } from '../../types/types';
 import { container } from './modal.styled';
 
-const Modal = () => {
-  return <section css={container}>modal</section>;
+const Modal = ({ children }: childrenType) => {
+  return <section css={container}>{children}</section>;
 };
 
 export default Modal;
