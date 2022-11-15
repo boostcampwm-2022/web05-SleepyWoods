@@ -56,11 +56,11 @@ export class UserService {
     );
 
     const { id, profile_image, email } = naverProfileApiResponse.data.response;
-    console.log({ id, profile_image, email });
+    console.log();
     return { id, profile_image, email };
   }
 
-  async checkUserExists(social: socialPlatform, id: string) {
+  async findUser(social: socialPlatform, id: string): Promise<User> {
     const findResult = await this.userRepository.findOneBy({ id, social });
     return findResult;
   }

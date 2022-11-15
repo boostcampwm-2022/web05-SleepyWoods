@@ -1,12 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Post,
-  Query,
-  Redirect,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
 
@@ -32,19 +25,23 @@ export class UserController {
   }
 
   @Get('callback/naver')
-  async allback(@Query('code') code: string, @Query('state') state: string) {
+  async naverCallback(
+    @Query('code') code: string,
+    @Query('state') state: string,
+    @Res() res: Response
+  ) {
     const access_token = await this.userService.naverOauth(code, state);
     const naverProfile = await this.userService.naverProfileSearch(
       access_token
     );
-    const userData = await this.userService.checkUserExists(
+    const userData = await this.userService.findUser(
       socialPlatform.NAVER,
       naverProfile.id
     );
     if (userData == null) {
-      return '없어요.'; // 가입으로 보내요
+      return res.redirect('http://localhost:3333/user'); // 가입으로 보내요
     } else {
-      return '있어요.'; // 쿠기 생성해서 메인으로 보내요
+      return res.redirect('http://naver.com'); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
