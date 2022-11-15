@@ -10,12 +10,6 @@ export const global = css`
     font-family: 'NanumSquareRound';
   }
 
-  html,
-  body {
-    max-width: 100%;
-    overflow-x: hidden;
-  }
-
   .srOnly {
     overflow: hidden;
     position: absolute !important;
