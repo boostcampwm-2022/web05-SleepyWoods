@@ -1,5 +1,11 @@
+import Background from '../../component/Background';
+
 const Main = () => {
-  return;
+  return (
+    <Background>
+      <div></div>
+    </Background>
+  );
 };
 
 export default Main;
