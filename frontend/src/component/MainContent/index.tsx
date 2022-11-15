@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MainButton } from '../Button';
-import { buttons, container, logo } from './mainContent.styled';
+import { buttons } from '../Button/button.styled';
+import { container, logo } from './mainContent.styled';
 
 const ClientButton = () => {
   return (
