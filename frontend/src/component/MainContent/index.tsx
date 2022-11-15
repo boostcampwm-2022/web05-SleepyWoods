@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
-import { SignButton } from '../Button';
-import { buttons, container, logo } from './mainContent.styled';
+import { MainButton } from '../Button';
+import { buttons } from '../Button/button.styled';
+import { container, logo } from './mainContent.styled';
 
 const ClientButton = () => {
   return (
     <>
       <Link to={'/map'}>
-        <SignButton type={'light'}>입장하기</SignButton>
+        <MainButton type={'light'}>입장하기</MainButton>
       </Link>
       <Link to={'/'}>
-        <SignButton type={'dark'}>로그아웃</SignButton>
+        <MainButton type={'dark'}>로그아웃</MainButton>
       </Link>
     </>
   );
@@ -18,7 +19,7 @@ const ClientButton = () => {
 const GuestButton = () => {
   return (
     <Link to={'/signin'}>
-      <SignButton type={'light'}>로그인하기</SignButton>
+      <MainButton type={'light'}>로그인하기</MainButton>
     </Link>
   );
 };

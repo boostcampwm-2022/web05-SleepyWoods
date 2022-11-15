@@ -22,9 +22,3 @@ export const logo = css`
   font-weight: 700;
   color: ${theme.white};
 `;
-
-export const buttons = css`
-  display: flex;
-  flex-flow: column nowrap;
-  gap: 16px;
-`;
