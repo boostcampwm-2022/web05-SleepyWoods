@@ -7,7 +7,14 @@ export const global = css`
 
   *,
   body {
+    box-sizing: border-box;
     font-family: 'NanumSquareRound';
+  }
+
+  #root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
   }
 
   .srOnly {
