@@ -7,21 +7,19 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get()
-  test() {
-    const api_url =
+  @Get('login')
+  loginRedirect(@Query('social') social: socialPlatform, @Res() res: Response) {
+    const naverOauthUrl =
       'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=' +
       process.env.NAVER_OAUTH_CLIENT_ID +
       '&redirect_uri=' +
       'http://localhost:3333/user/callback/naver' +
       '&state=' +
       'RANDOM_STATE';
-
-    return (
-      "<a href='" +
-      api_url +
-      "'><img height='50' src='http://static.nid.naver.com/oauth/small_g_in.PNG'/></a>"
-    );
+    switch (social) {
+      case socialPlatform.NAVER:
+        res.redirect(naverOauthUrl);
+    }
   }
 
   @Get('callback/naver')
