@@ -1,10 +1,7 @@
+import { childrenType } from '../../types/types';
 import { header, teamBtn, main, video } from './background.styled';
 
-type backgroundType = {
-  children: JSX.Element;
-};
-
-const Background = ({ children }: backgroundType) => {
+const Background = ({ children }: childrenType) => {
   return (
     <>
       <video css={video} src="src/assets/background.mp4" autoPlay loop muted>
