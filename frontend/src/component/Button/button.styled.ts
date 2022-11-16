@@ -1,5 +1,8 @@
 import { css } from '@emotion/react';
 import theme from '../../theme';
+import { backgroundImage } from '../../styles/mixin.styled';
+import prevArrow from '../../assets/prevArrow.svg';
+import nextArrow from '../../assets/nextArrow.svg';
 
 export const buttons = css`
   display: flex;
@@ -23,7 +26,27 @@ export const signButton = (type: string) => css`
   min-height: 40px;
   background-color: ${type === 'naver' ? '#26C825' : '#FFEB00'};
   color: ${type === 'naver' ? theme.white : theme.black};
+
   border-radius: 10px;
   font-weight: 700;
   text-align: center;
+`;
+
+export const signupButton = () => css`
+  padding: 10px 30px;
+  margin-top: 30px;
+  border-radius: 20px;
+  background-color: ${theme.lightGreen};
+
+  :hover {
+    background-color: ${theme.deepGreen};
+    color: ${theme.white};
+  }
+`;
+
+export const arrowButton = (type: string) => css`
+  min-width: 30px;
+  min-height: 40px;
+
+  ${backgroundImage(type === 'prev' ? prevArrow : nextArrow)}
 `;
