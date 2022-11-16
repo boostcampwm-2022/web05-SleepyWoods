@@ -11,7 +11,7 @@ export const global = css`
     font-family: 'NanumSquareRound';
   }
 
-  #root {
+  body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
