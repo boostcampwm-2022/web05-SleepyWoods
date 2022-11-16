@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import Game from './game';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -6,8 +7,8 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1200,
-    height: 800,
+    width: '100%',
+    height: '100%',
   },
   physics: {
     default: 'arcade',
@@ -17,7 +18,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     },
   },
   autoFocus: true,
-  scene: {},
+  scene: Game,
 };
 
 export default gameConfig;
