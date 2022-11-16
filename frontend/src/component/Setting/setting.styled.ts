@@ -1,8 +1,6 @@
 import { css } from '@emotion/react';
 import theme from '../../theme';
-import { flexCenter, backgroundImage } from '../../styles/mixin.styled';
-import prevArrow from '../../assets/prevArrow.svg';
-import nextArrow from '../../assets/nextArrow.svg';
+import { flexCenter } from '../../styles/mixin.styled';
 import baseCharacter from '../../assets/character/waiting/base_waiting_strip9.png';
 
 export const header = css`
@@ -84,32 +82,6 @@ export const nickname = css`
   border: 1px solid ${theme.gray};
   border-radius: 10px;
   padding: 10px;
-`;
-
-export const signupBtn = css`
-  padding: 10px 30px;
-  margin-top: 30px;
-  border-radius: 20px;
-  background-color: ${theme.lightGreen};
-
-  :hover {
-    background-color: ${theme.deepGreen};
-    color: ${theme.white};
-  }
-`;
-
-export const prevBtn = css`
-  ${backgroundImage(prevArrow)}
-
-  width: 30px;
-  height: 40px;
-`;
-
-export const nextBtn = css`
-  ${backgroundImage(nextArrow)}
-
-  width: 30px;
-  height: 40px;
 `;
 
 export const CarowselContainer = css`

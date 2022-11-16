@@ -4,12 +4,11 @@ import {
   character,
   nicknameContainer,
   nickname,
-  signupBtn,
-  prevBtn,
-  nextBtn,
   CarowselContainer,
   characterWrapper,
 } from './setting.styled';
+import { ArrowButton, SignupButton } from '../Button';
+
 import hair from './hair';
 
 const Carowsel = () => {
@@ -27,11 +26,11 @@ const Carowsel = () => {
 
   return (
     <div css={CarowselContainer}>
-      <button type="button" css={prevBtn} onClick={minusIdx}></button>
+      <ArrowButton type="prev" event={minusIdx} />
       <div css={characterWrapper}>
         <div css={character(hair[hairIdx])}></div>
       </div>
-      <button type="button" css={nextBtn} onClick={plusIdx}></button>
+      <ArrowButton type="next" event={plusIdx} />
     </div>
   );
 };
@@ -46,7 +45,7 @@ const Setting = () => (
         css={nickname}
         placeholder="설정할 닉네임을 입력하세요."
       />
-      <button css={signupBtn}>Signup</button>
+      <SignupButton>Signup</SignupButton>
     </div>
   </>
 );
