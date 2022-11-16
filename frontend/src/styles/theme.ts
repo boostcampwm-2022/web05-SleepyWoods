@@ -1,4 +1,6 @@
-const theme = {
+import { colorType } from './color';
+
+const theme: colorType = {
   green: '#5CBC49',
   lightGreen: '#63CD47',
   deepGreen: '#3E8C43',

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { MouseEventHandler } from 'react';
 import { button, signButton, signupButton, arrowButton } from './button.styled';
 
@@ -23,11 +24,31 @@ export const MainButton = ({ children, type }: mainButtonType) => {
   );
 };
 
-export const SignButton = ({ children, type }: mainButtonType) => {
+// export const SignButton = ({ type }: { type: string }) => {
+//   const handleClickEvent = async () => {
+//     await axios({
+//       method: 'GET',
+//       url: `http://localhost:3333/user/login?social=${type}`,
+//       withCredentials: true,
+//     });
+//   };
+
+//   return (
+//     <button type="button" css={signButton(type)} onClick={handleClickEvent}>
+//       {type}로 로그인하기
+//     </button>
+//   );
+// };
+
+export const SignButton = ({ type }: { type: string }) => {
+  const oauth = `http://localhost:3333/user/login?social=${type}`;
+
   return (
-    <button type="button" css={signButton(type)}>
-      {children}
-    </button>
+    <a href={oauth}>
+      <button type="button" css={signButton(type)}>
+        {type}로 로그인하기
+      </button>
+    </a>
   );
 };
 

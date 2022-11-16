@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import { flexCenter } from '../../styles/mixin.styled';
 import baseCharacter from '../../assets/character/waiting/base_waiting_strip9.png';
 
