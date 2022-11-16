@@ -19,6 +19,16 @@ export class UserService {
     return saveResult;
   }
 
+  async googleOauth(code: string) {
+    const api_url = `https://oauth2.googleapis.com/token?code=${code}&client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}&client_secret=${process.env.GOOGLE_OAUTH_SECRET}&redirect_uri=http://localhost:3333/user/callback/google&grant_type=authorization_code`;
+
+    const googleOauthResponse = await firstValueFrom(
+      this.httpService.post(api_url)
+    );
+    const access_token = googleOauthResponse.data.access_token;
+    return access_token;
+  }
+
   async kakaoOauth(code: string) {
     const api_url = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_REST_API_KEY}&redirect_url=http://localhost:3333/user/callback/kakao&code=${code}`;
 
@@ -55,8 +65,26 @@ export class UserService {
     return access_token;
   }
 
+  async googleProfileSearch(access_token: string) {
+    try {
+      console.log(access_token);
+      const googleProfileApiResponse = await firstValueFrom(
+        this.httpService.get(`https://www.googleapis.com/oauth2/v2/userinfo`, {
+          headers: {
+            Authorization: 'Bearer ' + access_token,
+          },
+        })
+      );
+      const { id, picture } = googleProfileApiResponse.data.id;
+
+      return { id, picture };
+    } catch (e) {
+      console.log(e);
+      return;
+    }
+  }
+
   async kakaoProfileSearch(access_token: string) {
-    console.log(access_token);
     try {
       const kakaoProfileApiResponse = await firstValueFrom(
         this.httpService.get('https://kapi.kakao.com/v2/user/me', {

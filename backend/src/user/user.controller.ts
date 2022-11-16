@@ -18,6 +18,8 @@ export class UserController {
       'RANDOM_STATE';
 
     const kakaoOauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_API_KEY}&redirect_uri=http://localhost:3333/user/callback/kakao&response_type=code`;
+    const googleOauthUrl = `https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.profile&response_type=code&redirect_uri=http://localhost:3333/user/callback/google&client_id=${process.env.GOOGLE_OAUTH_CLIENT_ID}`;
+
     switch (social) {
       case socialPlatform.NAVER:
         res.redirect(naverOauthUrl);
@@ -25,6 +27,26 @@ export class UserController {
       case socialPlatform.KAKAO:
         res.redirect(kakaoOauthUrl);
         break;
+      case socialPlatform.GOOGLE:
+        res.redirect(googleOauthUrl);
+        break;
+    }
+  }
+
+  @Get('callback/google')
+  async googleCallback(@Query('code') code: string, @Res() res: Response) {
+    const access_token = await this.userService.googleOauth(code);
+    const googleProfile = await this.userService.googleProfileSearch(
+      access_token
+    );
+    const userData = await this.userService.findUser(
+      socialPlatform.GOOGLE,
+      googleProfile.id
+    );
+    if (!userData) {
+      return res.redirect('http://localhost:5173/signup'); // 가입으로 보내요
+    } else {
+      return res.redirect('http://localhost:5173'); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
@@ -39,10 +61,10 @@ export class UserController {
       socialPlatform.KAKAO,
       kakaoProfile.id
     );
-    if (userData == null) {
-      return res.redirect('http://localhost:3333/user'); // 가입으로 보내요
+    if (!userData) {
+      return res.redirect('http://localhost:5173/signup'); // 가입으로 보내요
     } else {
-      return res.redirect('http://naver.com'); // 쿠기 생성해서 메인으로 보내요
+      return res.redirect('http://localhost:5173'); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
@@ -60,10 +82,10 @@ export class UserController {
       socialPlatform.NAVER,
       naverProfile.id
     );
-    if (userData == null) {
-      return res.redirect('http://localhost:3333/user'); // 가입으로 보내요
+    if (!userData) {
+      return res.redirect('http://localhost:5173/signup'); // 가입으로 보내요
     } else {
-      return res.redirect('http://naver.com'); // 쿠기 생성해서 메인으로 보내요
+      return res.redirect('http://localhost:5173'); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
