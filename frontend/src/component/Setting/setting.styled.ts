@@ -84,7 +84,7 @@ export const nickname = css`
   padding: 10px;
 `;
 
-export const CarowselContainer = css`
+export const CarouselContainer = css`
   ${flexCenter}
 
   flex-flow: row;

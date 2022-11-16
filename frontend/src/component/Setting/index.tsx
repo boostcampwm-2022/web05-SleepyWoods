@@ -4,16 +4,18 @@ import {
   character,
   nicknameContainer,
   nickname,
-  CarowselContainer,
+  CarouselContainer,
   characterWrapper,
 } from './setting.styled';
 import { ArrowButton, SignupButton } from '../Button';
-
 import hair from './hair';
 
-const Carowsel = () => {
-  const [hairIdx, setHairIdx] = useState(0);
+type CarouselType = {
+  hairIdx: number;
+  setHairIdx: React.Dispatch<React.SetStateAction<number>>;
+};
 
+const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
   const minusIdx = () => {
     if (hairIdx - 1 < 0) setHairIdx(hair.length);
     else setHairIdx(hairIdx - 1);
@@ -25,7 +27,7 @@ const Carowsel = () => {
   };
 
   return (
-    <div css={CarowselContainer}>
+    <div css={CarouselContainer}>
       <ArrowButton type="prev" event={minusIdx} />
       <div css={characterWrapper}>
         <div css={character(hair[hairIdx])}></div>
@@ -35,19 +37,23 @@ const Carowsel = () => {
   );
 };
 
-const Setting = () => (
-  <>
-    <h2 css={header}>Setting</h2>
-    <Carowsel />
-    <div css={nicknameContainer}>
-      <input
-        type="text"
-        css={nickname}
-        placeholder="설정할 닉네임을 입력하세요."
-      />
-      <SignupButton>Signup</SignupButton>
-    </div>
-  </>
-);
+const Setting = () => {
+  const [hairIdx, setHairIdx] = useState(0);
+
+  return (
+    <>
+      <h2 css={header}>Setting</h2>
+      <Carousel hairIdx={hairIdx} setHairIdx={setHairIdx} />
+      <div css={nicknameContainer}>
+        <input
+          type="text"
+          css={nickname}
+          placeholder="설정할 닉네임을 입력하세요."
+        />
+        <SignupButton>Signup</SignupButton>
+      </div>
+    </>
+  );
+};
 
 export default Setting;
