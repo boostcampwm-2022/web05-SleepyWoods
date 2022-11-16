@@ -1,5 +1,5 @@
 export enum socialPlatform {
   NAVER = 'naver',
-  KAKAO = 'kokao',
+  KAKAO = 'kakao',
   GOOGLE = 'google',
 }
