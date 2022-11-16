@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { center } from '../../styles/mixin.styled';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 
 export const container = css`
   ${center}
