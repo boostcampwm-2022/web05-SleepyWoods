@@ -6,3 +6,15 @@ export const center = css`
   left: 50%;
   transform: translate(-50%, -50%);
 `;
+
+export const flexCenter = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const backgroundImage = (url: string) => css`
+  background-image: url(${url});
+  background-position: center;
+  background-repeat: no-repeat;
+`;
