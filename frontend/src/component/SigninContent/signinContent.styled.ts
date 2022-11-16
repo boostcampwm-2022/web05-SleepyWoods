@@ -9,6 +9,8 @@ export const container = css`
   justify-content: center;
   align-items: center;
   gap: 50px;
+
+  width: 100%;
 `;
 
 export const title = css`
@@ -20,13 +22,17 @@ export const content = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 70px;
+  gap: 50px;
+
+  width: 100%;
 `;
 
 export const imgWrapper = css`
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 30%;
+  height: 30%;
+  min-width: 75px;
+  min-height: 150px;
   overflow: hidden;
 
   img {

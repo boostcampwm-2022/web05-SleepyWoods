@@ -11,8 +11,9 @@ const SigninContent = () => {
           <img src="src/assets/preview.gif" />
         </section>
         <section css={buttons}>
-          <SignButton type={'naver'}>Naver로 로그인하기</SignButton>
-          <SignButton type={'kakao'}>kakao로 로그인하기</SignButton>
+          <SignButton type={'naver'} />
+          <SignButton type={'kakao'} />
+          <SignButton type={'google'} />
         </section>
       </div>
     </section>
