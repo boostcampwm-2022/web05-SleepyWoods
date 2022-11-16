@@ -40,6 +40,11 @@ const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
 const Setting = () => {
   const [hairIdx, setHairIdx] = useState(0);
 
+  const signup = () => {
+    console.log('signup');
+    console.log(hairIdx);
+  };
+
   return (
     <>
       <h2 css={header}>Setting</h2>
@@ -50,7 +55,7 @@ const Setting = () => {
           css={nickname}
           placeholder="설정할 닉네임을 입력하세요."
         />
-        <SignupButton>Signup</SignupButton>
+        <SignupButton event={signup}>Signup</SignupButton>
       </div>
     </>
   );
