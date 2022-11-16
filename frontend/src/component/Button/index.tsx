@@ -8,6 +8,7 @@ type mainButtonType = {
 
 type signupButtonType = {
   children: JSX.Element | string;
+  event: MouseEventHandler;
 };
 
 type arrowButtonType = {
@@ -31,9 +32,9 @@ export const SignButton = ({ children, type }: mainButtonType) => {
   );
 };
 
-export const SignupButton = ({ children }: signupButtonType) => {
+export const SignupButton = ({ children, event }: signupButtonType) => {
   return (
-    <button type="button" css={signupButton}>
+    <button type="button" css={signupButton} onClick={event}>
       {children}
     </button>
   );
