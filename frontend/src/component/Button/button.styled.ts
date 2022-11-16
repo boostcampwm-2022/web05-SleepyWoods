@@ -1,13 +1,16 @@
 import { css } from '@emotion/react';
-import theme from '../../theme';
+import theme from '../../styles/theme';
 import { backgroundImage } from '../../styles/mixin.styled';
 import prevArrow from '../../assets/prevArrow.svg';
 import nextArrow from '../../assets/nextArrow.svg';
+import social from '../../styles/social';
 
 export const buttons = css`
   display: flex;
   flex-flow: column nowrap;
   gap: 16px;
+
+  width: 300px;
 `;
 
 export const button = (type: string) => css`
@@ -22,14 +25,17 @@ export const button = (type: string) => css`
 `;
 
 export const signButton = (type: string) => css`
+  width: 90%;
   min-width: 200px;
-  min-height: 40px;
-  background-color: ${type === 'naver' ? '#26C825' : '#FFEB00'};
-  color: ${type === 'naver' ? theme.white : theme.black};
+  height: 40px;
+  background-color: ${social.background[type]};
+  color: ${social.color[type]};
 
   border-radius: 10px;
   font-weight: 700;
   text-align: center;
+
+  box-shadow: 2px 2px 5px 1px rgba(100, 100, 100, 0.3);
 `;
 
 export const signupButton = () => css`
