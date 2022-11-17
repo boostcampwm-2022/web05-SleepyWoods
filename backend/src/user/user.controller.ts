@@ -1,11 +1,15 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { Response } from 'express';
+import { AuthService } from 'src/auth/auth.service';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService
+  ) {}
 
   @Get('login')
   loginRedirect(@Query('social') social: socialPlatform, @Res() res: Response) {
@@ -33,6 +37,12 @@ export class UserController {
       id: userSocialProfile.id,
       social: social,
     });
+    const jwt = await this.authService.jwtTokenGenerator(
+      userData.id,
+      userData.social
+    );
+
+    res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
 
     if (!userData) {
       return res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
@@ -42,13 +52,13 @@ export class UserController {
   }
 
   @Post()
-  signUp(@Query('social') social: string, @Body() signupData: object) {
+  signUp(@Body() signupData: object) {
+    // jwt안에 값 추출로직
     this.userService.createUser({
       id: signupData['id'],
       nickname: signupData['nickname'],
       character_name: signupData['character_name'],
-      email: 'rkd@@',
-      social,
+      social: signupData['social'],
     });
   }
 }
