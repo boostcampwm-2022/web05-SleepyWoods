@@ -64,10 +64,10 @@ export class UserController {
 
     if (!userData) {
       //신규 유저
-      return res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
+      res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
     } else {
       // 기존 유저
-      return res.redirect(process.env.CLIENT_URL); // 쿠기 생성해서 메인으로 보내요
+      res.redirect(process.env.CLIENT_URL); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
@@ -75,8 +75,9 @@ export class UserController {
   @UseGuards(AuthGuard('looseGuard'))
   signUp(
     @Body('signupData', ValidationPipe) signupData: signupDataDto,
-    @Req() req: any
-  ) {
+    @Req() req: any,
+    @Res() res: Response
+  ): void {
     const { id, social }: UserDataDto = req.user;
     // body안에 nickname, characterName FE에 전송 요청
     this.userService.createUser({
@@ -85,5 +86,14 @@ export class UserController {
       nickname: signupData['nickname'],
       characterName: signupData['characterName'],
     });
+    res.redirect(process.env.CLIENT_URL);
+  }
+
+  @Get('/logout')
+  logout(@Res() res: Response): void {
+    res.cookie('accessToken', '', {
+      maxAge: 0,
+    });
+    res.redirect(process.env.CLIENT_URL);
   }
 }
