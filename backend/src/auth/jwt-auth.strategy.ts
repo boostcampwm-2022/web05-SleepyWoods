@@ -47,7 +47,7 @@ export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
   }
 
   // db 참조 하지 않는 guard
-  async validate(): Promise<boolean> {
-    return true;
+  async validate(payload: UserDataDto): Promise<UserDataDto> {
+    return payload;
   }
 }

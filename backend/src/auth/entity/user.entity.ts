@@ -12,10 +12,7 @@ export class User {
   nickname: string;
 
   @Column()
-  character_name: string;
-
-  @Column()
-  email: string;
+  characterName: string;
 
   @Column({
     type: 'enum',

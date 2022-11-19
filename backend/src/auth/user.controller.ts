@@ -5,12 +5,15 @@ import {
   Param,
   Post,
   Query,
+  Req,
   Res,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { signupDataDto, UserDataDto } from './dto/user-data.dto';
 import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
@@ -70,13 +73,17 @@ export class UserController {
 
   @Post()
   @UseGuards(AuthGuard('looseGuard'))
-  signUp(@Body() signupData: object) {
-    // jwt안에 값 추출로직
+  signUp(
+    @Body('signupData', ValidationPipe) signupData: signupDataDto,
+    @Req() req: any
+  ) {
+    const { id, social }: UserDataDto = req.user;
+    // body안에 nickname, characterName FE에 전송 요청
     this.userService.createUser({
-      id: signupData['id'],
+      id,
+      social,
       nickname: signupData['nickname'],
-      character_name: signupData['character_name'],
-      social: signupData['social'],
+      characterName: signupData['characterName'],
     });
   }
 }
