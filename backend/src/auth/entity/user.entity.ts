@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryColumn } from 'typeorm';
-import { socialPlatform } from './user.enum';
+import { socialPlatform } from '../user.enum';
 
 @Entity('user')
 export class User {
