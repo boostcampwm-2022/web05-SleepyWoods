@@ -11,6 +11,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
 
@@ -21,19 +22,11 @@ export class UserController {
     private authService: AuthService
   ) {}
 
-  @Get('test1')
-  @UseGuards(AuthGuard('criticalGuard'))
-  test1() {
-    return 'test1';
-  }
-
-  @Get('test2')
-  @UseGuards(AuthGuard('looseGuard'))
-  test2() {
-    return 'test2';
-  }
   @Get('login')
-  loginRedirect(@Query('social') social: socialPlatform, @Res() res: Response) {
+  loginRedirect(
+    @Query('social', socialPlatformValidationPipe) social: socialPlatform,
+    @Res() res: Response
+  ): void {
     const socialOauthUrl = {
       [socialPlatform.NAVER]: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.NAVER_OAUTH_CLIENT_ID}&redirect_uri=${process.env.SERVER_URL}/user/callback/naver&state=RANDOM_STATE`,
       [socialPlatform.KAKAO]: `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_API_KEY}&redirect_uri=${process.env.SERVER_URL}/user/callback/kakao&response_type=code`,
@@ -47,9 +40,9 @@ export class UserController {
     @Query('code') code: string,
     @Param('social') social: socialPlatform,
     @Res() res: Response
-  ) {
-    const accessToken = await this.userService.socialOauth(social, code);
-    const userSocialProfile = await this.userService.socialProfileSearch(
+  ): Promise<void> {
+    const accessToken = await this.authService.socialOauth(social, code);
+    const userSocialProfile = await this.authService.socialProfileSearch(
       social,
       accessToken
     );
@@ -59,10 +52,10 @@ export class UserController {
       social: social,
     });
 
-    const jwt = await this.authService.jwtTokenGenerator(
-      userSocialProfile.id,
-      social
-    );
+    const jwt = await this.authService.jwtTokenGenerator({
+      id: userSocialProfile.id,
+      social,
+    });
 
     res.cookie('accessToken', jwt.accessToken);
 
@@ -76,6 +69,7 @@ export class UserController {
   }
 
   @Post()
+  @UseGuards(AuthGuard('looseGuard'))
   signUp(@Body() signupData: object) {
     // jwt안에 값 추출로직
     this.userService.createUser({
@@ -86,19 +80,3 @@ export class UserController {
     });
   }
 }
-
-/**
- * 
-accessToken : 1일 짜리 
-  - 모든 중요한 기능 접근할 때 확인,
-    - 만료 : refreshToken 요구 .
-  - header 에 담김
-
-refreshToken : 14일 짜리
-  - 자동 로그인
-  - cookie에 refreshToken 발급 
-  - refresh 토큰 만료 : 소셜 로그인 다시 요구.
-    - accessToken 도 같이 발급
-
-
- */
