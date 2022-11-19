@@ -1,12 +1,14 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Query,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -55,11 +57,15 @@ export class UserController {
       social: social,
     });
 
+    // 탈퇴 감지 로직
+    if (userData.deleted) {
+      throw new UnauthorizedException('여길 어디 다시와.');
+    }
+
     const jwt = await this.authService.jwtTokenGenerator({
       id: userSocialProfile.id,
       social,
     });
-
     res.cookie('accessToken', jwt.accessToken);
 
     if (!userData) {
@@ -94,6 +100,15 @@ export class UserController {
     res.cookie('accessToken', '', {
       maxAge: 0,
     });
+    res.redirect(process.env.CLIENT_URL);
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard('looseGuard'))
+  deleteUser(@Req() req: any, @Res() res: Response) {
+    const { id, social }: UserDataDto = req.user;
+
+    this.userService.deleteUser({ id, social });
     res.redirect(process.env.CLIENT_URL);
   }
 }
