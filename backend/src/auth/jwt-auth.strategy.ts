@@ -1,20 +1,51 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from './entity/user.entity';
+import { UserService } from './user.service';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
+  constructor(private userService: UserService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        request => {
+          return request?.cookies?.accessToken;
+        },
+      ]),
       ignoreExpiration: false,
       secretOrKey: process.env.JWT_SECRET_KEY,
     });
   }
 
+  // db 참조 하는 guard
   async validate(payload: any) {
-    // JWT h,p,v   payload 넣어준 값
-    // passport ERR 예외처리 따로 필요함
-    return { id: payload.id, social: payload.social };
+    const { id, social } = payload;
+    const user: User = await this.userService.findUser({ id, social });
+
+    if (!user) {
+      throw new UnauthorizedException('');
+    }
+    return true;
+  }
+}
+
+@Injectable()
+export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
+  constructor(private userService: UserService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        request => {
+          return request?.cookies?.accessToken;
+        },
+      ]),
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_SECRET_KEY,
+    });
+  }
+
+  // db 참조 하는 guard
+  async validate(payload: any) {
+    return true;
   }
 }

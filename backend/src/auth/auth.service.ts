@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { socialPlatform } from 'src/user/user.enum';
+import { socialPlatform } from './user.enum';
 
 @Injectable()
 export class AuthService {

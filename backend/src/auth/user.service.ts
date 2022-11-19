@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { firstValueFrom } from 'rxjs';
 import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
 import { socialPlatform } from './user.enum';
 
 @Injectable()
@@ -30,8 +30,8 @@ export class UserService {
     const socialOauthResponse = await firstValueFrom(
       this.httpService.post(socialOauthUrl[social])
     );
-    const access_token = socialOauthResponse.data.access_token;
-    return access_token;
+    const accessToken = socialOauthResponse.data.access_token;
+    return accessToken;
   }
 
   async socialProfileSearch(social: socialPlatform, access_token: string) {

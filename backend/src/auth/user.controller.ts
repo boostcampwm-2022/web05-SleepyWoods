@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
 import { socialPlatform } from './user.enum';
@@ -11,6 +21,17 @@ export class UserController {
     private authService: AuthService
   ) {}
 
+  @Get('test1')
+  @UseGuards(AuthGuard('criticalGuard'))
+  test1() {
+    return 'test1';
+  }
+
+  @Get('test2')
+  @UseGuards(AuthGuard('looseGuard'))
+  test2() {
+    return 'test2';
+  }
   @Get('login')
   loginRedirect(@Query('social') social: socialPlatform, @Res() res: Response) {
     const socialOauthUrl = {
@@ -27,26 +48,29 @@ export class UserController {
     @Param('social') social: socialPlatform,
     @Res() res: Response
   ) {
-    const access_token = await this.userService.socialOauth(social, code);
+    const accessToken = await this.userService.socialOauth(social, code);
     const userSocialProfile = await this.userService.socialProfileSearch(
       social,
-      access_token
+      accessToken
     );
 
     const userData = await this.userService.findUser({
       id: userSocialProfile.id,
       social: social,
     });
+
     const jwt = await this.authService.jwtTokenGenerator(
-      userData.id,
-      userData.social
+      userSocialProfile.id,
+      social
     );
 
-    res.setHeader('Authorization', 'Bearer ' + jwt.accessToken);
+    res.cookie('accessToken', jwt.accessToken);
 
     if (!userData) {
+      //신규 유저
       return res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
     } else {
+      // 기존 유저
       return res.redirect(process.env.CLIENT_URL); // 쿠기 생성해서 메인으로 보내요
     }
   }
@@ -62,3 +86,19 @@ export class UserController {
     });
   }
 }
+
+/**
+ * 
+accessToken : 1일 짜리 
+  - 모든 중요한 기능 접근할 때 확인,
+    - 만료 : refreshToken 요구 .
+  - header 에 담김
+
+refreshToken : 14일 짜리
+  - 자동 로그인
+  - cookie에 refreshToken 발급 
+  - refresh 토큰 만료 : 소셜 로그인 다시 요구.
+    - accessToken 도 같이 발급
+
+
+ */
