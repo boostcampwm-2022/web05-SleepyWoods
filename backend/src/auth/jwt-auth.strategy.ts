@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
+import { UserDataDto } from './dto/user-data.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
@@ -19,12 +20,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
   }
 
   // db 참조 하는 guard
-  async validate(payload: any) {
-    const { id, social } = payload;
-    const user: User = await this.userService.findUser({ id, social });
+  async validate(payload: UserDataDto): Promise<boolean> {
+    const user: User = await this.userService.findUser(payload);
 
     if (!user) {
-      throw new UnauthorizedException('');
+      throw new UnauthorizedException(
+        '서버에 해당 유저가 존재하지 않습니다. 가입을 완료해주세요.'
+      );
     }
     return true;
   }
@@ -32,7 +34,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
 
 @Injectable()
 export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
-  constructor(private userService: UserService) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         request => {
@@ -44,8 +46,8 @@ export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
     });
   }
 
-  // db 참조 하는 guard
-  async validate(payload: any) {
-    return true;
+  // db 참조 하지 않는 guard
+  async validate(payload: UserDataDto): Promise<UserDataDto> {
+    return payload;
   }
 }

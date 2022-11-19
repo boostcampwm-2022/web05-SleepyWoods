@@ -1,16 +1,22 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
   Query,
+  Req,
   Res,
+  UnauthorizedException,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
+import { signupDataDto, UserDataDto } from './dto/user-data.dto';
+import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
 
@@ -21,19 +27,11 @@ export class UserController {
     private authService: AuthService
   ) {}
 
-  @Get('test1')
-  @UseGuards(AuthGuard('criticalGuard'))
-  test1() {
-    return 'test1';
-  }
-
-  @Get('test2')
-  @UseGuards(AuthGuard('looseGuard'))
-  test2() {
-    return 'test2';
-  }
   @Get('login')
-  loginRedirect(@Query('social') social: socialPlatform, @Res() res: Response) {
+  loginRedirect(
+    @Query('social', socialPlatformValidationPipe) social: socialPlatform,
+    @Res() res: Response
+  ): void {
     const socialOauthUrl = {
       [socialPlatform.NAVER]: `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.NAVER_OAUTH_CLIENT_ID}&redirect_uri=${process.env.SERVER_URL}/user/callback/naver&state=RANDOM_STATE`,
       [socialPlatform.KAKAO]: `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.KAKAO_REST_API_KEY}&redirect_uri=${process.env.SERVER_URL}/user/callback/kakao&response_type=code`,
@@ -47,9 +45,9 @@ export class UserController {
     @Query('code') code: string,
     @Param('social') social: socialPlatform,
     @Res() res: Response
-  ) {
-    const accessToken = await this.userService.socialOauth(social, code);
-    const userSocialProfile = await this.userService.socialProfileSearch(
+  ): Promise<void> {
+    const accessToken = await this.authService.socialOauth(social, code);
+    const userSocialProfile = await this.authService.socialProfileSearch(
       social,
       accessToken
     );
@@ -59,46 +57,58 @@ export class UserController {
       social: social,
     });
 
-    const jwt = await this.authService.jwtTokenGenerator(
-      userSocialProfile.id,
-      social
-    );
+    // 탈퇴 감지 로직
+    if (userData.deleted) {
+      throw new UnauthorizedException('여길 어디 다시와.');
+    }
 
+    const jwt = await this.authService.jwtTokenGenerator({
+      id: userSocialProfile.id,
+      social,
+    });
     res.cookie('accessToken', jwt.accessToken);
 
     if (!userData) {
       //신규 유저
-      return res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
+      res.redirect(process.env.CLIENT_URL + '/signup'); // 가입으로 보내요
     } else {
       // 기존 유저
-      return res.redirect(process.env.CLIENT_URL); // 쿠기 생성해서 메인으로 보내요
+      res.redirect(process.env.CLIENT_URL); // 쿠기 생성해서 메인으로 보내요
     }
   }
 
   @Post()
-  signUp(@Body() signupData: object) {
-    // jwt안에 값 추출로직
+  @UseGuards(AuthGuard('looseGuard'))
+  signUp(
+    @Body('signupData', ValidationPipe) signupData: signupDataDto,
+    @Req() req: any,
+    @Res() res: Response
+  ): void {
+    const { id, social }: UserDataDto = req.user;
+    // body안에 nickname, characterName FE에 전송 요청
     this.userService.createUser({
-      id: signupData['id'],
+      id,
+      social,
       nickname: signupData['nickname'],
-      character_name: signupData['character_name'],
-      social: signupData['social'],
+      characterName: signupData['characterName'],
     });
+    res.redirect(process.env.CLIENT_URL);
+  }
+
+  @Get('/logout')
+  logout(@Res() res: Response): void {
+    res.cookie('accessToken', '', {
+      maxAge: 0,
+    });
+    res.redirect(process.env.CLIENT_URL);
+  }
+
+  @Delete()
+  @UseGuards(AuthGuard('looseGuard'))
+  deleteUser(@Req() req: any, @Res() res: Response) {
+    const { id, social }: UserDataDto = req.user;
+
+    this.userService.deleteUser({ id, social });
+    res.redirect(process.env.CLIENT_URL);
   }
 }
-
-/**
- * 
-accessToken : 1일 짜리 
-  - 모든 중요한 기능 접근할 때 확인,
-    - 만료 : refreshToken 요구 .
-  - header 에 담김
-
-refreshToken : 14일 짜리
-  - 자동 로그인
-  - cookie에 refreshToken 발급 
-  - refresh 토큰 만료 : 소셜 로그인 다시 요구.
-    - accessToken 도 같이 발급
-
-
- */
