@@ -1,30 +1,12 @@
-const responsiveness = 5;
-const moveObj: { [key: string]: number[] } = {
-  left: [-responsiveness, 0],
-  right: [responsiveness, 0],
-  up: [0, -responsiveness],
-  down: [0, responsiveness],
-};
+import { Player } from './Phaser/Player/player';
 
 export default class Game extends Phaser.Scene {
-  character: Phaser.GameObjects.Sprite | undefined;
-  hair: Phaser.GameObjects.Sprite | undefined;
-  state: string = 'right';
-  direction: string = 'wait';
-  x: number;
-  y: number;
-  temp: string;
+  player?: Phaser.GameObjects.Sprite;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
 
-    this.character;
-    this.hair;
-    this.temp = 'right';
-    this.direction = 'right';
-    this.state = 'wait';
-    this.x = -25;
-    this.y = 400;
+    this.player;
   }
 
   preload() {
@@ -130,71 +112,10 @@ export default class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.character = this.add.sprite(-25, 400, 'character-wait');
-    this.character.setScale(3);
-
-    this.hair = this.add.sprite(-25, 400, 'hair-wait');
-    this.hair.setScale(3);
-
-    this.changeState();
-
-    this.cameras.main.startFollow(this.character, true);
+    this.player = new Player(this, 0, 0);
   }
 
   update() {
-    const cursors = this.input.keyboard.createCursorKeys();
-    const keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-    const prevState = this.state;
-
-    if (cursors.left.isDown) {
-      this.state = 'walk';
-      this.changePosition('left');
-      if (this.direction === 'right') this.changeDirection();
-      this.direction = 'left';
-    } else if (cursors.right.isDown) {
-      this.state = 'walk';
-      this.changePosition('right');
-      if (this.direction === 'left') this.changeDirection();
-      this.direction = 'right';
-    } else if (cursors.up.isDown) {
-      this.state = 'walk';
-      this.changePosition('up');
-    } else if (cursors.down.isDown) {
-      this.state = 'walk';
-      this.changePosition('down');
-    } else this.state = 'wait';
-
-    if (keyR.isDown) {
-      this.changePosition(this.temp);
-      this.state = 'roll';
-    }
-
-    if (prevState !== this.state) this.changeState();
-  }
-
-  changeState() {
-    if (!this.character || !this.hair) return;
-
-    this.character.play(`character-${this.state}`);
-    this.hair.play(`hair-${this.state}`);
-  }
-
-  changeDirection() {
-    if (!this.character || !this.hair) return;
-
-    this.character.toggleFlipX();
-    this.hair.toggleFlipX();
-  }
-
-  changePosition(dir: string) {
-    this.temp = dir;
-    if (!this.character || !this.hair) return;
-
-    const [x, y] = moveObj[dir];
-    this.x += x;
-    this.y += y;
-
-    this.character.setPosition(this.x, this.y);
-    this.hair.setPosition(this.x, this.y);
+    this.player?.update();
   }
 }
