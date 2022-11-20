@@ -11,6 +11,7 @@ export default class Game extends Phaser.Scene {
 
   preload() {
     this.load.image('background', './src/assets/background.png');
+    this.load.audio('christmas', ['./src/assets/audio/christmas.mp3']);
 
     this.load.spritesheet(
       'character-wait',
@@ -51,6 +52,9 @@ export default class Game extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, 'background').setScale(3);
+
+    const music = this.sound.add('christmas');
+    music.play();
 
     this.anims.create({
       key: 'character-wait',
