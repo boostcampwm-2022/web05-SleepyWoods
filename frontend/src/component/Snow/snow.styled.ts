@@ -4,7 +4,7 @@ import theme from '../../styles/theme';
 export const snow = (idx: number) => css`
   position: absolute;
   top: 0;
-  left: ${5 * idx}%;
+  left: ${4 * idx}%;
   width: 7px;
   height: 7px;
 
