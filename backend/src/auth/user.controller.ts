@@ -79,6 +79,12 @@ export class UserController {
     }
   }
 
+  @Get('auth')
+  @UseGuards(AuthGuard('criticalGuard'))
+  authorization() {
+    return 'Verified';
+  }
+
   @Post()
   @UseGuards(AuthGuard('looseGuard'))
   async signUp(
