@@ -29,6 +29,12 @@ export default class Game extends Phaser.Scene {
     );
 
     this.load.atlas(
+      'run',
+      './src/assets/character/run/run.png',
+      './src/assets/character/sprite.json'
+    );
+
+    this.load.atlas(
       'roll',
       './src/assets/character/roll/roll.png',
       './src/assets/character/sprite.json'
@@ -86,11 +92,33 @@ export default class Game extends Phaser.Scene {
     });
 
     this.anims.create({
+      key: 'character-run',
+      frames: this.anims.generateFrameNames('run', {
+        prefix: 'base',
+        start: 1,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'hair-run',
+      frames: this.anims.generateFrameNames('run', {
+        prefix: `${hair}`,
+        start: 1,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
       key: 'character-roll',
       frames: this.anims.generateFrameNames('roll', {
         prefix: 'base',
-        start: 1,
-        end: 9,
+        start: 2,
+        end: 5,
       }),
       frameRate: 15,
       repeat: -1,
@@ -100,8 +128,8 @@ export default class Game extends Phaser.Scene {
       key: 'hair-roll',
       frames: this.anims.generateFrameNames('roll', {
         prefix: `${hair}`,
-        start: 1,
-        end: 9,
+        start: 2,
+        end: 5,
       }),
       frameRate: 15,
       repeat: -1,
