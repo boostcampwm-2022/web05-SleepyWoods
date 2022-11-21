@@ -17,6 +17,10 @@ export const global = css`
     overflow: hidden;
   }
 
+  canvas {
+    margin: 0 !important;
+  }
+
   .srOnly {
     overflow: hidden;
     position: absolute !important;
