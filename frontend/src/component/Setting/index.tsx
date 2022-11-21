@@ -8,7 +8,7 @@ import {
   characterWrapper,
 } from './setting.styled';
 import { ArrowButton, SignupButton } from '../Button';
-import hair from './hair';
+import { hairName } from './hair';
 
 type CarouselType = {
   hairIdx: number;
@@ -16,13 +16,15 @@ type CarouselType = {
 };
 
 const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
+  const hairCnt = Object.keys(hairName).length - 1;
+
   const minusIdx = () => {
-    if (hairIdx - 1 < 0) setHairIdx(hair.length);
+    if (hairIdx - 1 < -1) setHairIdx(hairCnt - 1);
     else setHairIdx(hairIdx - 1);
   };
 
   const plusIdx = () => {
-    if (hairIdx + 1 > hair.length) setHairIdx(0);
+    if (hairIdx + 1 >= hairCnt) setHairIdx(-1);
     else setHairIdx(hairIdx + 1);
   };
 
@@ -30,7 +32,7 @@ const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
     <div css={CarouselContainer}>
       <ArrowButton type="prev" event={minusIdx} />
       <div css={characterWrapper}>
-        <div css={character(hair[hairIdx])}></div>
+        <div css={character(hairName[hairIdx])}></div>
       </div>
       <ArrowButton type="next" event={plusIdx} />
     </div>
@@ -38,7 +40,7 @@ const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
 };
 
 const Setting = () => {
-  const [hairIdx, setHairIdx] = useState(0);
+  const [hairIdx, setHairIdx] = useState(-1);
 
   const signup = () => {
     console.log('signup');

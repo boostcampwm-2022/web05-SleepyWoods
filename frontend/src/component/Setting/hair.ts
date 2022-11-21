@@ -1,17 +1,21 @@
-import bowlhair from '../../assets/character/waiting/bowlhair_waiting_strip9.png';
-import curlyhair from '../../assets/character/waiting/curlyhair_waiting_strip9.png';
-import longhair from '../../assets/character/waiting/longhair_waiting_strip9.png';
-import mophair from '../../assets/character/waiting/mophair_waiting_strip9.png';
-import shorthair from '../../assets/character/waiting/shorthair_waiting_strip9.png';
-import spikeyhair from '../../assets/character/waiting/spikeyhair_waiting_strip9.png';
+const hairName: { [key: string]: string } = {
+  '-1': 'nohair',
+  0: 'longhair',
+  1: 'mophair',
+  2: 'shorthair',
+  3: 'spikeyhair',
+  4: 'bowlhair',
+  5: 'curlyhair',
+};
 
-const hair: string[] = [
-  bowlhair,
-  curlyhair,
-  longhair,
-  mophair,
-  shorthair,
-  spikeyhair,
-];
+const hairPos: { [key: string]: number } = {
+  nohair: 0,
+  longhair: 64,
+  mophair: 128,
+  shorthair: 192,
+  spikeyhair: 256,
+  bowlhair: 320,
+  curlyhair: 384,
+};
 
-export default hair;
+export { hairName, hairPos };
