@@ -46,25 +46,27 @@ export class UserController {
     @Param('social') social: socialPlatform,
     @Res() res: Response
   ): Promise<void> {
+    // 1단계 : 소셜에 유저 정보 받아오기
     const accessToken = await this.authService.socialOauth(social, code);
     const userSocialProfile = await this.authService.socialProfileSearch(
       social,
       accessToken
     );
 
+    // 우리 유저 인지 확인하기
     const userData = await this.userService.findUser({
       id: userSocialProfile.id,
       social: social,
     });
-
     // 탈퇴 감지 로직
-    if (userData.deleted) {
+    if (userData && userData.deleted) {
       throw new UnauthorizedException('여길 어디 다시와.');
     }
 
     const jwt = await this.authService.jwtTokenGenerator({
       id: userSocialProfile.id,
       social,
+      nickname: userData?.nickname,
     });
     res.cookie('accessToken', jwt.accessToken);
 
@@ -79,20 +81,28 @@ export class UserController {
 
   @Post()
   @UseGuards(AuthGuard('looseGuard'))
-  signUp(
+  async signUp(
     @Body('signupData', ValidationPipe) signupData: signupDataDto,
     @Req() req: any,
     @Res() res: Response
-  ): void {
+  ) {
     const { id, social }: UserDataDto = req.user;
     // body안에 nickname, characterName FE에 전송 요청
-    this.userService.createUser({
+    await this.userService.createUser({
       id,
       social,
       nickname: signupData['nickname'],
       characterName: signupData['characterName'],
     });
-    res.redirect(process.env.CLIENT_URL);
+
+    const jwt = await this.authService.jwtTokenGenerator({
+      id,
+      social,
+      nickname: signupData['nickname'],
+    });
+    console.log(jwt.accessToken);
+    res.cookie('accessToken', jwt.accessToken);
+    res.send(200);
   }
 
   @Get('/logout')
@@ -100,15 +110,15 @@ export class UserController {
     res.cookie('accessToken', '', {
       maxAge: 0,
     });
-    res.redirect(process.env.CLIENT_URL);
+    res.send(200);
   }
 
   @Delete()
-  @UseGuards(AuthGuard('looseGuard'))
+  @UseGuards(AuthGuard('criticalGuard'))
   deleteUser(@Req() req: any, @Res() res: Response) {
-    const { id, social }: UserDataDto = req.user;
+    const { id, social, nickname }: UserDataDto = req.user;
 
-    this.userService.deleteUser({ id, social });
-    res.redirect(process.env.CLIENT_URL);
+    this.userService.deleteUser({ id, social, nickname });
+    res.send(200);
   }
 }
