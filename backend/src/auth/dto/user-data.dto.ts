@@ -15,6 +15,9 @@ export class UserDataDto {
   @IsNotEmpty()
   @IsString()
   social: socialPlatform;
+
+  @IsString()
+  nickname: string;
 }
 
 export class UserDataFromSocialDto {
