@@ -37,7 +37,7 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     // motion
     if (keyR.isDown) {
-      this.speed = 2;
+      this.speed = 1.5;
       this.state = 'roll';
     } else {
       this.speed = 1;

@@ -99,8 +99,8 @@ export default class Game extends Phaser.Scene {
     this.anims.create({
       key: 'character-roll',
       frames: this.anims.generateFrameNumbers('character-roll', {
-        start: 0,
-        end: 8,
+        start: 2,
+        end: 5,
       }),
       frameRate: 15,
       repeat: -1,
@@ -109,8 +109,8 @@ export default class Game extends Phaser.Scene {
     this.anims.create({
       key: 'hair-roll',
       frames: this.anims.generateFrameNumbers('hair-roll', {
-        start: 0,
-        end: 8,
+        start: 2,
+        end: 5,
       }),
       frameRate: 15,
       repeat: -1,
