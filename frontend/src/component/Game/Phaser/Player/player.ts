@@ -33,12 +33,19 @@ export class Player extends Phaser.GameObjects.Sprite {
     const keyR = this.scene.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.R
     );
+    const keyShift = this.scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SHIFT
+    );
+
     const prevState = this.state;
 
     // motion
     if (keyR.isDown) {
       this.speed = 1.5;
       this.state = 'roll';
+    } else if (keyShift.isDown) {
+      this.speed = 1.2;
+      this.state = 'run';
     } else {
       this.speed = 1;
       this.state = 'walk';
