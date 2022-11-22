@@ -6,7 +6,9 @@ export const global = css`
   ${emotionReset}
 
   *,
-  body {
+  body,
+  *::after,
+  *::before {
     box-sizing: border-box;
     font-family: 'NanumSquareRound';
   }
