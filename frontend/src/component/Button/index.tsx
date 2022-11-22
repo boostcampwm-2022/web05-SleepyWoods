@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { MouseEventHandler } from 'react';
 import { button, signButton, signupButton, arrowButton } from './button.styled';
 
 type mainButtonType = {
   children: JSX.Element | string;
   type: string;
+  handleClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
 type signupButtonType = {
@@ -17,9 +17,9 @@ type arrowButtonType = {
   event: MouseEventHandler;
 };
 
-export const MainButton = ({ children, type }: mainButtonType) => {
+export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
   return (
-    <button type="button" css={button(type)}>
+    <button type="button" css={button(type)} onClick={handleClick}>
       {children}
     </button>
   );
