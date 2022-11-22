@@ -1,5 +1,11 @@
 import { MouseEventHandler } from 'react';
-import { button, signButton, signupButton, arrowButton } from './button.styled';
+import {
+  button,
+  signButton,
+  signupButton,
+  arrowButton,
+  nickNameChangeButton,
+} from './button.styled';
 
 type mainButtonType = {
   children: JSX.Element | string;
@@ -7,7 +13,7 @@ type mainButtonType = {
   handleClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-type signupButtonType = {
+type MouseHandlerButtonType = {
   children: JSX.Element | string;
   event: MouseEventHandler;
 };
@@ -53,7 +59,7 @@ export const SignButton = ({ type }: { type: string }) => {
   );
 };
 
-export const SignupButton = ({ children, event }: signupButtonType) => {
+export const SignupButton = ({ children, event }: MouseHandlerButtonType) => {
   return (
     <button type="button" css={signupButton} onClick={event}>
       {children}
@@ -64,5 +70,16 @@ export const SignupButton = ({ children, event }: signupButtonType) => {
 export const ArrowButton = ({ type, event }: arrowButtonType) => {
   return (
     <button type="button" css={arrowButton(type)} onClick={event}></button>
+  );
+};
+
+export const NickNameChangeButton = ({
+  children,
+  event,
+}: MouseHandlerButtonType) => {
+  return (
+    <button type="button" css={nickNameChangeButton} onClick={event}>
+      {children}
+    </button>
   );
 };
