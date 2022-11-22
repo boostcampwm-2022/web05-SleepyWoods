@@ -1,6 +1,12 @@
 import { css } from '@emotion/react';
 import theme from '../../../styles/theme';
 
+export const mypageWrapper = css`
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 20px;
+`;
+
 export const header = css`
   font-size: 16px;
   font-weight: 700;
