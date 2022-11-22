@@ -4,7 +4,7 @@ import {
   signButton,
   signupButton,
   arrowButton,
-  nickNameChangeButton,
+  userChangeButton,
 } from './button.styled';
 
 type mainButtonType = {
@@ -73,12 +73,12 @@ export const ArrowButton = ({ type, event }: arrowButtonType) => {
   );
 };
 
-export const NickNameChangeButton = ({
+export const UserChangeButton = ({
   children,
   event,
 }: MouseHandlerButtonType) => {
   return (
-    <button type="button" css={nickNameChangeButton} onClick={event}>
+    <button type="button" css={userChangeButton} onClick={event}>
       {children}
     </button>
   );

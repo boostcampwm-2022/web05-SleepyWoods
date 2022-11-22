@@ -57,11 +57,16 @@ export const arrowButton = (type: string) => css`
   ${backgroundImage(type === 'prev' ? prevArrow : nextArrow)}
 `;
 
-export const nickNameChangeButton = css`
+export const userChangeButton = css`
   ${flexCenter}
 
   width: 100%;
   height: 30px;
   border-radius: 10px;
   background-color: ${theme.lightGreen};
+  font-size: 12px;
+
+  :hover {
+    background-color: ${theme.green};
+  }
 `;

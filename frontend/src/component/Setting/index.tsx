@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { header, nicknameContainer, nickname } from './setting.styled';
 import { SignupButton } from '../Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Carousel } from '../Carousel/Calrousel';
+import { hairName } from '../Carousel/hair';
 
 const Setting = () => {
   const navigate = useNavigate();
   const [hairIdx, setHairIdx] = useState(-1);
+  const [nickName, setNickName] = useState('');
 
   const signup = async () => {
     const data = await axios({
@@ -15,8 +17,8 @@ const Setting = () => {
       url: '/api/user',
       data: {
         signupData: {
-          nickname: 'ktmihsKakao',
-          characterName: 'longhair',
+          nickname,
+          characterName: hairName[hairIdx],
         },
       },
       withCredentials: true,
@@ -33,6 +35,10 @@ const Setting = () => {
     }
   };
 
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNickName(e.target.value);
+  };
+
   return (
     <>
       <h2 css={header}>Setting</h2>
@@ -41,6 +47,8 @@ const Setting = () => {
         <input
           type="text"
           css={nickname}
+          value={nickName}
+          onChange={handleChange}
           placeholder="설정할 닉네임을 입력하세요."
         />
         <SignupButton event={signup}>Signup</SignupButton>
