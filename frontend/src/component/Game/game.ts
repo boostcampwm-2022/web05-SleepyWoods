@@ -39,6 +39,12 @@ export default class Game extends Phaser.Scene {
       './src/assets/character/roll/roll.png',
       './src/assets/character/sprite.json'
     );
+
+    // 이펙트
+    this.load.spritesheet('dust', './src/assets/character/dust.png', {
+      frameWidth: 24,
+      frameHeight: 9,
+    });
   }
 
   create() {
@@ -74,7 +80,7 @@ export default class Game extends Phaser.Scene {
       frames: this.anims.generateFrameNames('walk', {
         prefix: 'base',
         start: 1,
-        end: 9,
+        end: 8,
       }),
       frameRate: 10,
       repeat: -1,
@@ -85,7 +91,7 @@ export default class Game extends Phaser.Scene {
       frames: this.anims.generateFrameNames('walk', {
         prefix: `${hair}`,
         start: 1,
-        end: 9,
+        end: 8,
       }),
       frameRate: 10,
       repeat: -1,
@@ -135,6 +141,15 @@ export default class Game extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: 'dust',
+      frames: this.anims.generateFrameNames('dust', {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
     this.player = new Player(this, 0, 0);
   }
 

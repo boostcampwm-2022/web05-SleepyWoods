@@ -3,6 +3,7 @@ import { changeDirection, changePosition, changeState } from '../../util';
 export class Player extends Phaser.GameObjects.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
   hair: Phaser.GameObjects.Sprite | undefined;
+  dust: Phaser.GameObjects.Sprite | undefined;
   state: string = 'right';
   direction: string = 'wait';
   x: number;
@@ -22,6 +23,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     this.hair = this.scene.add.sprite(this.x, this.y, 'hair-wait');
     this.hair.setScale(3);
+
+    this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
+    this.dust.setScale(3);
 
     changeState(this);
 
