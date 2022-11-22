@@ -9,13 +9,10 @@ const Sidebar = () => {
   };
 
   return (
-    <section css={sidebarWrapper}>
-      <nav css={sidebar(isOpen)}></nav>
-      <button
-        type="button"
-        css={toggleButton(isOpen)}
-        onClick={handleClick}></button>
-    </section>
+    <nav css={sidebarWrapper(isOpen)}>
+      <section css={sidebar}></section>
+      <button type="button" css={toggleButton} onClick={handleClick}></button>
+    </nav>
   );
 };
 
