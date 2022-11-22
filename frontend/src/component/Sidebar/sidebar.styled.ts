@@ -16,7 +16,7 @@ export const sidebarWrapper = (isOpen: boolean) => css`
   transform: translateX(${isOpen ? '0' : '-300'}px);
   transition: all 500ms ease-in-out;
 
-  button::after {
+  & > button::after {
     content: url(${isOpen ? sidebarClose : sidebarOpen});
   }
 
@@ -67,6 +67,7 @@ export const sidebar = css`
   .sidebar-content {
     width: 100%;
     height: 100%;
+    padding: 30px;
   }
 
   .sidebar-setting {

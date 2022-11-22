@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { sidebarWrapper, sidebar, toggleButton } from './sidebar.styled';
+import Mypage from './Mypage';
+
 import mypage from '../../assets/icon/mypageIcon.svg';
 import friendsList from '../../assets/icon/friendsListIcon.svg';
 import chatting from '../../assets/icon/chattingIcon.svg';
@@ -40,7 +42,7 @@ const Sidebar = () => {
         </nav>
 
         <section className="sidebar-content">
-          {/* 이 위치에 component */}
+          <Mypage />
         </section>
 
         <section className="sidebar-setting">

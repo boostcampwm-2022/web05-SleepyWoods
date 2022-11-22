@@ -1,49 +1,12 @@
 import { useState } from 'react';
-import {
-  header,
-  character,
-  nicknameContainer,
-  nickname,
-  CarouselContainer,
-  characterWrapper,
-} from './setting.styled';
-import { ArrowButton, SignupButton } from '../Button';
-import { hairName } from './hair';
+import { header, nicknameContainer, nickname } from './setting.styled';
+import { SignupButton } from '../Button';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-type CarouselType = {
-  hairIdx: number;
-  setHairIdx: React.Dispatch<React.SetStateAction<number>>;
-};
-
-const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
-  const hairCnt = Object.keys(hairName).length - 1;
-
-  const minusIdx = () => {
-    if (hairIdx - 1 < -1) setHairIdx(hairCnt - 1);
-    else setHairIdx(hairIdx - 1);
-  };
-
-  const plusIdx = () => {
-    if (hairIdx + 1 >= hairCnt) setHairIdx(-1);
-    else setHairIdx(hairIdx + 1);
-  };
-
-  return (
-    <div css={CarouselContainer}>
-      <ArrowButton type="prev" event={minusIdx} />
-      <div css={characterWrapper}>
-        <div css={character(hairName[hairIdx])}></div>
-      </div>
-      <ArrowButton type="next" event={plusIdx} />
-    </div>
-  );
-};
+import { Carousel } from '../Carousel/Calrousel';
 
 const Setting = () => {
   const navigate = useNavigate();
-
   const [hairIdx, setHairIdx] = useState(-1);
 
   const signup = async () => {
