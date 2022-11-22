@@ -1,50 +1,73 @@
-import { useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { sidebarWrapper, sidebar, toggleButton } from './sidebar.styled';
 import Mypage from './Mypage';
 
 import mypage from '../../assets/icon/mypageIcon.svg';
-import friendsList from '../../assets/icon/friendsListIcon.svg';
+import friendList from '../../assets/icon/friendsListIcon.svg';
 import chatting from '../../assets/icon/chattingIcon.svg';
 import setting from '../../assets/icon/settingIcon.svg';
 import micOn from '../../assets/icon/mic-on.svg';
 import camOn from '../../assets/icon/cam-on.svg';
 import micOff from '../../assets/icon/mic-off.svg';
 import camOff from '../../assets/icon/cam-off.svg';
+import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+
+type componentType = {
+  [key: string]: EmotionJSX.Element;
+};
+
+const component: componentType = {
+  mypage: <Mypage />,
+  friendList: <div>friends</div>,
+  chatting: <div>chatting</div>,
+  setting: <div>setting</div>,
+};
 
 const Sidebar = () => {
   const [isOpen, setOpen] = useState(true);
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
 
-  // 확장성 고려하여 함수로 분리
-  const handleClick = () => {
-    setOpen(!isOpen);
+  const [currentTab, setCurrentTab] = useState<EmotionJSX.Element>(
+    component.friendList
+  );
+
+  const changeTab = (e: MouseEvent) => {
+    const navList = e.currentTarget.children;
+    const target = e.target as HTMLElement;
+
+    if (target.tagName !== 'IMG') return;
+
+    [...navList].forEach((node: Element) => {
+      const name = node.id;
+      const $img = node.children[0];
+
+      $img === target
+        ? ($img.classList.add('active'), setCurrentTab(component[name]))
+        : $img.classList.remove('active');
+    });
   };
 
   return (
     <aside css={sidebarWrapper(isOpen)}>
       <div css={sidebar}>
         <nav className="sidebar-tab">
-          <ul>
-            <li>
+          <ul onClick={changeTab}>
+            <li id="mypage">
               <img src={mypage} alt="마이페이지"></img>
             </li>
-            <li>
-              <img className="active" src={friendsList} alt="친구목록"></img>
+            <li id="friendList">
+              <img className="active" src={friendList} alt="친구목록"></img>
             </li>
-            <li>
+            <li id="chatting">
               <img src={chatting} alt="채팅"></img>
             </li>
-            <li>
+            <li id="setting">
               <img src={setting} alt="환경 설정"></img>
             </li>
           </ul>
         </nav>
-
-        <section className="sidebar-content">
-          <Mypage />
-        </section>
-
+        <section className="sidebar-content">{currentTab}</section>
         <section className="sidebar-setting">
           <ul>
             <li onClick={() => setMic(!isMicOn)}>
@@ -64,7 +87,10 @@ const Sidebar = () => {
           </ul>
         </section>
       </div>
-      <button type="button" css={toggleButton} onClick={handleClick}></button>
+      <button
+        type="button"
+        css={toggleButton}
+        onClick={() => setOpen(!isOpen)}></button>
     </aside>
   );
 };
