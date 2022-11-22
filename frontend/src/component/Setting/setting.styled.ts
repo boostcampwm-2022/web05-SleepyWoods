@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import theme from '../../styles/theme';
 import { flexCenter } from '../../styles/mixin.styled';
-import baseCharacter from '../../assets/character/waiting/base_waiting_strip9.png';
+import characterAsset from '../../assets/character/waiting/wait.png';
+import { hairPos } from './hair';
 
 export const header = css`
   font-weight: 700;
@@ -16,12 +17,13 @@ export const characterWrapper = css`
   overflow: hidden;
 `;
 
-export const character = (hair: string) => css`
+export const character = (hairName: string) => css`
   position: relative;
   width: 96px;
   height: 64px;
-  background-image: url(${baseCharacter});
+  background-image: url(${characterAsset});
   background-repeat: no-repeat;
+  background-position-y: 0;
   animation: wait 0.6s step-start infinite;
   transform: scale(6);
 
@@ -33,38 +35,39 @@ export const character = (hair: string) => css`
     left: 0;
     width: 96px;
     height: 64px;
-    background-image: url(${hair});
+    background-image: url(${characterAsset});
     background-repeat: no-repeat;
+    background-position-y: -${hairPos[hairName]}px;
     animation: wait 0.6s step-start infinite;
   }
 
   @keyframes wait {
     0% {
-      background-position: 0 0;
+      background-position-x: 0;
     }
     12.5% {
-      background-position: -96px 0;
+      background-position-x: -96px;
     }
     25% {
-      background-position: -192px 0;
+      background-position-x: -192px;
     }
     37.5% {
-      background-position: -288px 0;
+      background-position-x: -288px;
     }
     50% {
-      background-position: -384px 0;
+      background-position-x: -384px;
     }
     62.5% {
-      background-position: -480px 0;
+      background-position-x: -480px;
     }
     75% {
-      background-position: -576px 0;
+      background-position-x: -576px;
     }
     97.5% {
-      background-position: -672px 0;
+      background-position-x: -672px;
     }
     100% {
-      background-position: -768px 0;
+      background-position-x: -768px;
     }
   }
 `;
