@@ -5,7 +5,7 @@ import message from '../../../assets/icon/messageIcon.svg';
 import unfollow from '../../../assets/icon/unfollowIcon.svg';
 
 const FriendItem = (data: friendType) => {
-  const { isOnline, name } = data;
+  const { id, isOnline, name } = data;
 
   const sendChatting = () => {
     alert(`${name}님과 채팅하기`);
@@ -16,7 +16,7 @@ const FriendItem = (data: friendType) => {
   };
 
   return (
-    <Content draggable={true} key={name}>
+    <Content draggable={true} key={id}>
       <section css={friendItemWrapper}>
         <div css={userName(isOnline)}>{name}</div>
         <div>
