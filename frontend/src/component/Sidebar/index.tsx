@@ -20,9 +20,9 @@ const Sidebar = () => {
   };
 
   return (
-    <nav css={sidebarWrapper(isOpen)}>
+    <aside css={sidebarWrapper(isOpen)}>
       <div css={sidebar}>
-        <section className="sidebar-tab">
+        <nav className="sidebar-tab">
           <ul>
             <li>
               <img src={mypage} alt="마이페이지"></img>
@@ -37,7 +37,7 @@ const Sidebar = () => {
               <img src={setting} alt="환경 설정"></img>
             </li>
           </ul>
-        </section>
+        </nav>
 
         <section className="sidebar-content">
           {/* 이 위치에 component */}
@@ -63,7 +63,7 @@ const Sidebar = () => {
         </section>
       </div>
       <button type="button" css={toggleButton} onClick={handleClick}></button>
-    </nav>
+    </aside>
   );
 };
 

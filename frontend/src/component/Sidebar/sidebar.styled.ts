@@ -11,6 +11,8 @@ export const sidebarWrapper = (isOpen: boolean) => css`
   width: 300px;
   height: 100%;
 
+  z-index: 10;
+
   transform: translateX(${isOpen ? '0' : '-300'}px);
   transition: all 500ms ease-in-out;
 
@@ -44,8 +46,6 @@ export const sidebar = css`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-
-  z-index: 10;
 
   .sidebar-tab {
     width: 100%;
