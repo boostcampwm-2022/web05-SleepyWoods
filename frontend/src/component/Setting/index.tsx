@@ -9,6 +9,8 @@ import {
 } from './setting.styled';
 import { ArrowButton, SignupButton } from '../Button';
 import { hairName } from './hair';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 type CarouselType = {
   hairIdx: number;
@@ -40,11 +42,32 @@ const Carousel = ({ hairIdx, setHairIdx }: CarouselType) => {
 };
 
 const Setting = () => {
+  const navigate = useNavigate();
+
   const [hairIdx, setHairIdx] = useState(-1);
 
-  const signup = () => {
-    console.log('signup');
-    console.log(hairIdx);
+  const signup = async () => {
+    const data = await axios({
+      method: 'POST',
+      url: '/api/user',
+      data: {
+        signupData: {
+          nickname: 'ktmihsKakao',
+          characterName: 'longhair',
+        },
+      },
+      withCredentials: true,
+    });
+
+    if (data.status === 200) {
+      navigate('/');
+    } else if (data.status === 400) {
+      console.log('validation error(4~12, 한글 영어 숫자만 가능)');
+    } else if (data.status === 406) {
+      console.log('닉네임 중복!');
+    } else {
+      console.log('모르겠어용');
+    }
   };
 
   return (
