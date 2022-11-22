@@ -6,7 +6,7 @@ import { container, logo } from './mainContent.styled';
 const ClientButton = () => {
   return (
     <>
-      <Link to={'/map'}>
+      <Link to={'/town'}>
         <MainButton type={'light'}>입장하기</MainButton>
       </Link>
       <Link to={'/'}>
