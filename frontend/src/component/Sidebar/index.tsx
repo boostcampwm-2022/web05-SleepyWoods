@@ -3,7 +3,7 @@ import { sidebarWrapper, sidebar, toggleButton } from './sidebar.styled';
 import Mypage from './Mypage';
 
 import mypage from '../../assets/icon/mypageIcon.svg';
-import friendList from '../../assets/icon/friendsListIcon.svg';
+import friends from '../../assets/icon/friendsListIcon.svg';
 import chatting from '../../assets/icon/chattingIcon.svg';
 import setting from '../../assets/icon/settingIcon.svg';
 import micOn from '../../assets/icon/mic-on.svg';
@@ -11,6 +11,7 @@ import camOn from '../../assets/icon/cam-on.svg';
 import micOff from '../../assets/icon/mic-off.svg';
 import camOff from '../../assets/icon/cam-off.svg';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
+import Friends from './Friends';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
@@ -18,7 +19,7 @@ type componentType = {
 
 const component: componentType = {
   mypage: <Mypage />,
-  friendList: <div>friends</div>,
+  friends: <Friends />,
   chatting: <div>chatting</div>,
   setting: <div>setting</div>,
 };
@@ -28,7 +29,7 @@ const Sidebar = () => {
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
 
-  const [currentTab, setCurrentTab] = useState<string>('friendList');
+  const [currentTab, setCurrentTab] = useState<string>('friends');
 
   const changeTab = (e: MouseEvent) => {
     const navList = e.currentTarget.children;
@@ -54,8 +55,8 @@ const Sidebar = () => {
             <li id="mypage">
               <img src={mypage} alt="마이페이지"></img>
             </li>
-            <li id="friendList">
-              <img className="active" src={friendList} alt="친구목록"></img>
+            <li id="friends">
+              <img className="active" src={friends} alt="친구목록"></img>
             </li>
             <li id="chatting">
               <img src={chatting} alt="채팅"></img>
