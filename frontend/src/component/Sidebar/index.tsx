@@ -28,9 +28,7 @@ const Sidebar = () => {
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
 
-  const [currentTab, setCurrentTab] = useState<EmotionJSX.Element>(
-    component.friendList
-  );
+  const [currentTab, setCurrentTab] = useState<string>('friendList');
 
   const changeTab = (e: MouseEvent) => {
     const navList = e.currentTarget.children;
@@ -43,7 +41,7 @@ const Sidebar = () => {
       const $img = node.children[0];
 
       $img === target
-        ? ($img.classList.add('active'), setCurrentTab(component[name]))
+        ? ($img.classList.add('active'), setCurrentTab(name))
         : $img.classList.remove('active');
     });
   };
@@ -67,7 +65,7 @@ const Sidebar = () => {
             </li>
           </ul>
         </nav>
-        <section className="sidebar-content">{currentTab}</section>
+        <section className="sidebar-content">{component[currentTab]}</section>
         <section className="sidebar-setting">
           <ul>
             <li onClick={() => setMic(!isMicOn)}>
