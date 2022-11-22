@@ -3,6 +3,7 @@ import { changeDirection, changePosition, changeState } from '../../util';
 export class Player extends Phaser.GameObjects.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
   hair: Phaser.GameObjects.Sprite | undefined;
+  dust: Phaser.GameObjects.Sprite | undefined;
   state: string = 'right';
   direction: string = 'wait';
   x: number;
@@ -23,6 +24,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.hair = this.scene.add.sprite(this.x, this.y, 'hair-wait');
     this.hair.setScale(3);
 
+    this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
+    this.dust.setScale(3);
+
     changeState(this);
 
     this.scene.cameras.main.startFollow(this.character, true);
@@ -33,12 +37,19 @@ export class Player extends Phaser.GameObjects.Sprite {
     const keyR = this.scene.input.keyboard.addKey(
       Phaser.Input.Keyboard.KeyCodes.R
     );
+    const keyShift = this.scene.input.keyboard.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SHIFT
+    );
+
     const prevState = this.state;
 
     // motion
     if (keyR.isDown) {
       this.speed = 1.5;
       this.state = 'roll';
+    } else if (keyShift.isDown) {
+      this.speed = 1.2;
+      this.state = 'run';
     } else {
       this.speed = 1;
       this.state = 'walk';

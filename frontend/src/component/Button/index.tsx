@@ -1,13 +1,19 @@
-import axios from 'axios';
 import { MouseEventHandler } from 'react';
-import { button, signButton, signupButton, arrowButton } from './button.styled';
+import {
+  button,
+  signButton,
+  signupButton,
+  arrowButton,
+  userChangeButton,
+} from './button.styled';
 
 type mainButtonType = {
   children: JSX.Element | string;
   type: string;
+  handleClick?: MouseEventHandler<HTMLButtonElement>;
 };
 
-type signupButtonType = {
+type MouseHandlerButtonType = {
   children: JSX.Element | string;
   event: MouseEventHandler;
 };
@@ -17,9 +23,9 @@ type arrowButtonType = {
   event: MouseEventHandler;
 };
 
-export const MainButton = ({ children, type }: mainButtonType) => {
+export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
   return (
-    <button type="button" css={button(type)}>
+    <button type="button" css={button(type)} onClick={handleClick}>
       {children}
     </button>
   );
@@ -53,7 +59,7 @@ export const SignButton = ({ type }: { type: string }) => {
   );
 };
 
-export const SignupButton = ({ children, event }: signupButtonType) => {
+export const SignupButton = ({ children, event }: MouseHandlerButtonType) => {
   return (
     <button type="button" css={signupButton} onClick={event}>
       {children}
@@ -64,5 +70,16 @@ export const SignupButton = ({ children, event }: signupButtonType) => {
 export const ArrowButton = ({ type, event }: arrowButtonType) => {
   return (
     <button type="button" css={arrowButton(type)} onClick={event}></button>
+  );
+};
+
+export const UserChangeButton = ({
+  children,
+  event,
+}: MouseHandlerButtonType) => {
+  return (
+    <button type="button" css={userChangeButton} onClick={event}>
+      {children}
+    </button>
   );
 };

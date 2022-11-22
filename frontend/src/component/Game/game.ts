@@ -1,5 +1,7 @@
 import { Player } from './Phaser/Player/player';
 
+const hair = 'bowlhair';
+
 export default class Game extends Phaser.Scene {
   player?: Phaser.GameObjects.Sprite;
 
@@ -13,41 +15,36 @@ export default class Game extends Phaser.Scene {
     this.load.image('background', './src/assets/background.png');
     this.load.audio('christmas', ['./src/assets/audio/christmas.mp3']);
 
-    this.load.spritesheet(
-      'character-wait',
-      './src/assets/character/waiting/base_waiting_strip9.png',
-      { frameWidth: 96, frameHeight: 64 }
+    // 캐릭터 동작
+    this.load.atlas(
+      'wait',
+      './src/assets/character/waiting/wait.png',
+      './src/assets/character/sprite.json'
     );
 
-    this.load.spritesheet(
-      'hair-wait',
-      './src/assets/character/waiting/bowlhair_waiting_strip9.png',
-      { frameWidth: 96, frameHeight: 64 }
+    this.load.atlas(
+      'walk',
+      './src/assets/character/walking/walk.png',
+      './src/assets/character/sprite.json'
     );
 
-    this.load.spritesheet(
-      'character-walk',
-      './src/assets/character/walking/base_walk_strip8.png',
-      { frameWidth: 96, frameHeight: 64 }
+    this.load.atlas(
+      'run',
+      './src/assets/character/run/run.png',
+      './src/assets/character/sprite.json'
     );
 
-    this.load.spritesheet(
-      'hair-walk',
-      './src/assets/character/walking/bowlhair_walk_strip8.png',
-      { frameWidth: 96, frameHeight: 64 }
+    this.load.atlas(
+      'roll',
+      './src/assets/character/roll/roll.png',
+      './src/assets/character/sprite.json'
     );
 
-    this.load.spritesheet(
-      'character-roll',
-      './src/assets/character/roll/base_roll_strip10.png',
-      { frameWidth: 96, frameHeight: 64 }
-    );
-
-    this.load.spritesheet(
-      'hair-roll',
-      './src/assets/character/roll/bowlhair_roll_strip10.png',
-      { frameWidth: 96, frameHeight: 64 }
-    );
+    // 이펙트
+    this.load.spritesheet('dust', './src/assets/character/dust.png', {
+      frameWidth: 24,
+      frameHeight: 9,
+    });
   }
 
   create() {
@@ -58,9 +55,10 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'character-wait',
-      frames: this.anims.generateFrameNumbers('character-wait', {
-        start: 0,
-        end: 8,
+      frames: this.anims.generateFrameNames('wait', {
+        prefix: 'base',
+        start: 1,
+        end: 9,
       }),
       frameRate: 10,
       repeat: -1,
@@ -68,9 +66,10 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'hair-wait',
-      frames: this.anims.generateFrameNumbers('hair-wait', {
-        start: 0,
-        end: 8,
+      frames: this.anims.generateFrameNames('wait', {
+        prefix: `${hair}`,
+        start: 1,
+        end: 9,
       }),
       frameRate: 10,
       repeat: -1,
@@ -78,8 +77,9 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'character-walk',
-      frames: this.anims.generateFrameNumbers('character-walk', {
-        start: 0,
+      frames: this.anims.generateFrameNames('walk', {
+        prefix: 'base',
+        start: 1,
         end: 8,
       }),
       frameRate: 10,
@@ -88,8 +88,31 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'hair-walk',
-      frames: this.anims.generateFrameNumbers('hair-walk', {
-        start: 0,
+      frames: this.anims.generateFrameNames('walk', {
+        prefix: `${hair}`,
+        start: 1,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'character-run',
+      frames: this.anims.generateFrameNames('run', {
+        prefix: 'base',
+        start: 1,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'hair-run',
+      frames: this.anims.generateFrameNames('run', {
+        prefix: `${hair}`,
+        start: 1,
         end: 8,
       }),
       frameRate: 10,
@@ -98,7 +121,8 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'character-roll',
-      frames: this.anims.generateFrameNumbers('character-roll', {
+      frames: this.anims.generateFrameNames('roll', {
+        prefix: 'base',
         start: 2,
         end: 5,
       }),
@@ -108,7 +132,8 @@ export default class Game extends Phaser.Scene {
 
     this.anims.create({
       key: 'hair-roll',
-      frames: this.anims.generateFrameNumbers('hair-roll', {
+      frames: this.anims.generateFrameNames('roll', {
+        prefix: `${hair}`,
         start: 2,
         end: 5,
       }),
@@ -116,6 +141,15 @@ export default class Game extends Phaser.Scene {
       repeat: -1,
     });
 
+    this.anims.create({
+      key: 'dust',
+      frames: this.anims.generateFrameNames('dust', {
+        start: 0,
+        end: 7,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
     this.player = new Player(this, 0, 0);
   }
 
