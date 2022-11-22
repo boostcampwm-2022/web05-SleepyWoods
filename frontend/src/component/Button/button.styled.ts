@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import theme from '../../styles/theme';
-import { backgroundImage } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import prevArrow from '../../assets/prevArrow.svg';
 import nextArrow from '../../assets/nextArrow.svg';
 import social from '../../styles/social';
@@ -55,4 +55,13 @@ export const arrowButton = (type: string) => css`
   min-height: 40px;
 
   ${backgroundImage(type === 'prev' ? prevArrow : nextArrow)}
+`;
+
+export const nickNameChangeButton = css`
+  ${flexCenter}
+
+  width: 100%;
+  height: 30px;
+  border-radius: 10px;
+  background-color: ${theme.lightGreen};
 `;
