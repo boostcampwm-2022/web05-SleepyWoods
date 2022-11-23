@@ -44,11 +44,13 @@ const DeviceSetting = (permission: { permission: boolean }) => {
   return (
     <>
       <h2 className="srOnly">디바이스 세팅</h2>
-      <div css={deviceWrapper} onClick={() => {}}>
-        <Device kind={'스피커'} device={deviceList?.speaker || []} />
-        <Device kind={'마이크'} device={deviceList?.audio || []} />
-        <Device kind={'카메라'} device={deviceList?.video || []} />
-      </div>
+      {deviceList && (
+        <div css={deviceWrapper} onClick={() => {}}>
+          <Device kind={'스피커'} device={deviceList.speaker} />
+          <Device kind={'마이크'} device={deviceList.audio} />
+          <Device kind={'카메라'} device={deviceList.video} />
+        </div>
+      )}
     </>
   );
 };
