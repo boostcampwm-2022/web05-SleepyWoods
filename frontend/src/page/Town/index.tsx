@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Game from '../../component/Game';
 import Sidebar from '../../component/Sidebar';
+import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
 
 const Town = () => {
@@ -22,6 +23,7 @@ const Town = () => {
       <Sidebar permission={permission} />
       <Game />
       <Snow />
+      <SleepyBoard />
     </>
   );
 };
