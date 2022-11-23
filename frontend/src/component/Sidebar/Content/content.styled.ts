@@ -4,5 +4,5 @@ export const container = css`
   width: 100%;
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.7);
-  padding: 20px;
+  padding: 15px;
 `;
