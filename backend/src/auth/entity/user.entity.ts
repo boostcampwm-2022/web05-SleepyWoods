@@ -1,6 +1,7 @@
 import { BoardLike } from 'src/board/entity/board-like.entity';
 import { Board } from 'src/board/entity/board.entity';
-import { Column, Entity, JoinColumn, OneToMany, PrimaryColumn } from 'typeorm';
+import { Following } from 'src/friendship/entity/follwing.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { socialPlatform } from '../user.enum';
 
 @Entity('user')
@@ -39,4 +40,10 @@ export class User {
 
   @OneToMany(() => BoardLike, like => like.board)
   likes: BoardLike[];
+
+  @OneToMany(() => Following, following => following.userId)
+  following: Following[];
+
+  @OneToMany(() => Following, following => following.targetUserId)
+  followedBy: Following[];
 }

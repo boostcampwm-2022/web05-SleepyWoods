@@ -6,6 +6,8 @@ import { User } from './auth/entity/user.entity';
 import { BoardModule } from './board/board.module';
 import { BoardLike } from './board/entity/board-like.entity';
 import { Board } from './board/entity/board.entity';
+import { Following } from './friendship/entity/follwing.entity';
+import { FriendshipModule } from './friendship/friendship.module';
 
 @Module({
   imports: [
@@ -18,12 +20,13 @@ import { Board } from './board/entity/board.entity';
         username: process.env.DB_ID,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [User, Board, BoardLike],
+        entities: [User, Board, BoardLike, Following],
         synchronize: true,
       }),
     }),
     AuthModule,
     BoardModule,
+    FriendshipModule,
   ],
   controllers: [],
   providers: [],

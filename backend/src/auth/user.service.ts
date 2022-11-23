@@ -35,4 +35,15 @@ export class UserService {
       );
     }
   }
+
+  async getUserIdByNickname(nickname: string): Promise<string> {
+    try {
+      const userData = await this.userRepository.findOneBy({ nickname });
+      return userData.id;
+    } catch (e) {
+      throw new NotFoundException(
+        '해당 닉네임을 가진 유저를 찾을 수 없습니다.'
+      );
+    }
+  }
 }
