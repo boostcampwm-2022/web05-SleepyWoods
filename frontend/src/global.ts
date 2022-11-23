@@ -33,6 +33,10 @@ export const global = css`
     margin: -1px;
   }
 
+  .hidden {
+    display: none !important;
+  }
+
   input:focus,
   select:focus,
   option:focus,
