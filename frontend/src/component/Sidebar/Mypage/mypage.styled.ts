@@ -16,7 +16,7 @@ export const header = css`
 export const nickname = css`
   width: 100%;
   min-height: 30px;
-  border: 1px solid ${theme.gray};
+  border: none;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
