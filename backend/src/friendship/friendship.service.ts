@@ -17,7 +17,9 @@ export class FriendshipService {
       const resultList = await this.followingRepository
         .createQueryBuilder('following')
         .innerJoinAndSelect('following.targetUser', 'user')
-        .where('following.userId = :userId', { userId })
+        .where('following.userId = :userId AND user.deleted = false', {
+          userId,
+        })
         .getMany();
 
       const followingList = resultList.map(result => result.targetUser);

@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { listenerCount } from 'process';
-import { Repository, FindOptionsWhere } from 'typeorm';
+import { FriendshipService } from 'src/friendship/friendship.service';
+import { Repository } from 'typeorm';
+import { ArticleDataDto } from './dto/article-data.dto';
 import { BoardLike } from './entity/board-like.entity';
 import { Board } from './entity/board.entity';
 
@@ -10,8 +11,51 @@ export class BoardService {
   constructor(
     @InjectRepository(Board) private boardRepository: Repository<Board>,
     @InjectRepository(BoardLike)
-    private boardLikeRepository: Repository<BoardLike>
+    private readonly boardLikeRepository: Repository<BoardLike>,
+    private readonly friendshipService: FriendshipService
   ) {}
+
+  async getAllBoard(userId: string): Promise<Board[]> {
+    // 팔로잉 리스트
+    // in
+    try {
+      const followingList = await this.friendshipService.getFollowingList(
+        userId
+      );
+      const followingIdList = [userId, ...followingList.map(user => user.id)];
+
+      const articleList = await this.boardRepository
+        .createQueryBuilder('board')
+        .select(['board', 'user.nickname'])
+        .innerJoin('board.user', 'user')
+        .where('board.userId IN (:...list) AND board.deleted = false', {
+          list: followingIdList,
+        })
+        .orderBy('board.created_at', 'DESC') // 최신순 정렬처리
+        .getMany();
+
+      return articleList;
+    } catch (e) {
+      throw new NotFoundException('게시글 불러오기 오류');
+    }
+  }
+
+  async writeBoard(userId: string, articleData: ArticleDataDto) {
+    try {
+      const { content, category } = articleData;
+      const insertResult = await this.boardRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Board)
+        .values({ content, category, userId })
+        .execute();
+
+      return insertResult.identifiers.length ? true : false;
+    } catch (e) {
+      console.log(e);
+      throw new NotFoundException('글 쓰기 실패');
+    }
+  }
 
   async deleteBoard(articleId: number, userId: string): Promise<boolean> {
     try {
@@ -21,6 +65,7 @@ export class BoardService {
         .set({ deleted: true })
         .where('id = :articleId AND userId = :userId', { articleId, userId })
         .execute();
+
       return deleteResult.affected ? true : false;
     } catch (e) {
       throw new NotFoundException('알 수 없는 오류');
