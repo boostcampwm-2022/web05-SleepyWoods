@@ -12,6 +12,7 @@ import micOff from '../../assets/icon/mic-off.svg';
 import camOff from '../../assets/icon/cam-off.svg';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import Friends from './Friends';
+import Chat from './Chat';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
@@ -20,7 +21,7 @@ type componentType = {
 const component: componentType = {
   mypage: <Mypage />,
   friends: <Friends />,
-  chatting: <div>chatting</div>,
+  chatting: <Chat />,
   setting: <div>setting</div>,
 };
 
