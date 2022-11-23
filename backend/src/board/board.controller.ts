@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   UnauthorizedException,
   NotFoundException,
+  Put,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardService } from './board.service';
@@ -45,22 +46,32 @@ export class BoardController {
     }
   }
 
-  @Post('likeToggle/:articleId')
-  async likeToggle(
+  @Put('like/:articleId')
+  async likeArticle(
     @Req() req: any,
     @Param('articleId', ParseIntPipe) articleId: number
   ) {
     const { id } = req.user;
 
+    const isLiked = await this.service.insertlike(articleId, id);
+    if (!isLiked) {
+      throw new NotFoundException('좋아요 실패');
+    } else {
+      return '좋아요 성공';
+    }
+  }
+
+  @Delete('like/:articleId')
+  async unLikeArticle(
+    @Req() req: any,
+    @Param('articleId', ParseIntPipe) articleId: number
+  ) {
+    const { id } = req.user;
     const isDeleted = await this.service.deleteLike(articleId, id);
     if (isDeleted) {
-      return '좋아요 취소 성공';
+      return '좋아요 해제 성공';
     } else {
-      const isLiked = await this.service.insertlike(articleId, id);
-      if (!isLiked) {
-        throw new NotFoundException('좋아요 토글 실패');
-      }
-      return '좋아요 성공';
+      throw new NotFoundException('좋아요 해제 실패');
     }
   }
 }
