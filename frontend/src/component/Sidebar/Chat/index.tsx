@@ -6,7 +6,7 @@ import { chatContainer, chatWrapper } from './chat.styled';
 const Chat = () => {
   return (
     <ul css={chatContainer}>
-      <Content>
+      <Content isexpand={true}>
         <ul css={chatWrapper}>
           {chatData.map((data: any) => (
             <ChatItem key={data.user} data={data} />
