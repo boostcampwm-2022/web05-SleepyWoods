@@ -18,3 +18,9 @@ export const backgroundImage = (url: string) => css`
   background-position: center;
   background-repeat: no-repeat;
 `;
+
+export const ellipsis = css`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;

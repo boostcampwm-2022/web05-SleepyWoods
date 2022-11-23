@@ -40,6 +40,7 @@ export const friendItemWrapper = css`
   justify-content: space-between;
   align-items: center;
   height: 5px;
+  padding: 7px 5px;
 
   div {
     display: flex;

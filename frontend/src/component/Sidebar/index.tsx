@@ -12,20 +12,21 @@ import micOff from '../../assets/icon/mic-off.svg';
 import camOff from '../../assets/icon/cam-off.svg';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import Friends from './Friends';
+import Setting from './Setting';
 import Chat from './Chat';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
 };
 
-const component: componentType = {
-  mypage: <Mypage />,
-  friends: <Friends />,
-  chatting: <Chat />,
-  setting: <div>setting</div>,
-};
+const Sidebar = ({ permission }: { permission: boolean }) => {
+  const component: componentType = {
+    mypage: <Mypage />,
+    friends: <Friends />,
+    chatting: <Chat />,
+    setting: <Setting permission={permission} />,
+  };
 
-const Sidebar = () => {
   const [isOpen, setOpen] = useState(true);
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);

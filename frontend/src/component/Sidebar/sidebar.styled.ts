@@ -72,10 +72,11 @@ export const sidebar = css`
 
   .sidebar-setting {
     height: 35px;
-    margin: 10px;
 
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 20px;
+    padding: 20px 10px;
+    margin: 0 20px 15px;
 
     ul {
       width: 30%;
