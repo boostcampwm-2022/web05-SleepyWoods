@@ -17,6 +17,7 @@ const BackgroundSetting = () => {
 
   return (
     <Content>
+      <h2 className="srOnly">환경 설정</h2>
       <div css={backgroundSettingWrapper}>
         <Toggle
           feature={'배경 음악'}
