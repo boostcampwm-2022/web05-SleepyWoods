@@ -17,6 +17,7 @@ export const backgroundSettingWrapper = css`
   display: flex;
   flex-flow: column nowrap;
   gap: 20px;
+  padding: 5px 0px;
 `;
 
 export const deviceWrapper = css`
