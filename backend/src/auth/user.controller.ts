@@ -15,7 +15,11 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 import { AuthService } from 'src/auth/auth.service';
-import { signupDataDto, UserDataDto } from './dto/user-data.dto';
+import {
+  signupDataDto,
+  UserDataDto,
+  UserIdentifierDto,
+} from './dto/user-data.dto';
 import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
@@ -67,6 +71,7 @@ export class UserController {
       id: userSocialProfile.id,
       social,
       nickname: userData?.nickname,
+      characterName: userData?.characterName,
     });
     res.cookie('accessToken', jwt.accessToken);
 
@@ -81,8 +86,9 @@ export class UserController {
 
   @Get('auth')
   @UseGuards(AuthGuard('criticalGuard'))
-  authorization() {
-    return 'Verified';
+  authorization(@Req() req: any): UserDataDto {
+    const { id, social, nickname, characterName }: UserDataDto = req.user;
+    return { id, social, nickname, characterName };
   }
 
   @Post()
@@ -105,8 +111,9 @@ export class UserController {
       id,
       social,
       nickname: signupData['nickname'],
+      characterName: signupData['characterName'],
     });
-    console.log(jwt.accessToken);
+
     res.cookie('accessToken', jwt.accessToken);
     res.send(200);
   }
@@ -122,9 +129,9 @@ export class UserController {
   @Delete()
   @UseGuards(AuthGuard('criticalGuard'))
   deleteUser(@Req() req: any, @Res() res: Response) {
-    const { id, social, nickname }: UserDataDto = req.user;
+    const { id, social }: UserIdentifierDto = req.user;
 
-    this.userService.deleteUser({ id, social, nickname });
-    res.send(200);
+    this.userService.deleteUser({ id, social });
+    return '캐릭터가 삭제 되었습니다.';
   }
 }
