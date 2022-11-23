@@ -18,6 +18,20 @@ export class UserDataDto {
 
   @IsString()
   nickname: string;
+
+  @IsNotEmpty()
+  @IsString()
+  characterName: string;
+}
+
+export class UserIdentifierDto {
+  @IsNotEmpty()
+  @IsString()
+  id: string;
+
+  @IsNotEmpty()
+  @IsString()
+  social: socialPlatform;
 }
 
 export class UserDataFromSocialDto {

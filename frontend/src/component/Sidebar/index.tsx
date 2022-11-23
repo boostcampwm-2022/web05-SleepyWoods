@@ -13,6 +13,7 @@ import camOff from '../../assets/icon/cam-off.svg';
 import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import Friends from './Friends';
 import Setting from './Setting';
+import Chat from './Chat';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
@@ -22,7 +23,7 @@ const Sidebar = ({ permission }: { permission: boolean }) => {
   const component: componentType = {
     mypage: <Mypage />,
     friends: <Friends />,
-    chatting: <div>chatting</div>,
+    chatting: <Chat />,
     setting: <Setting permission={permission} />,
   };
 

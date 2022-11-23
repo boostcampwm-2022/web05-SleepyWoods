@@ -1,4 +1,4 @@
-import { changeDirection, changePosition, changeState } from '../../util';
+import { sortHeldDirection, changePosition, changeState } from '../../util';
 
 export class Player extends Phaser.GameObjects.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
@@ -9,6 +9,7 @@ export class Player extends Phaser.GameObjects.Sprite {
   x: number;
   y: number;
   speed: number;
+  heldDirection: string[];
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
     super(scene, x, y, 'character');
@@ -17,6 +18,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.x = -25;
     this.y = 400;
     this.speed = 1;
+    this.heldDirection = [];
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3);
@@ -55,18 +57,9 @@ export class Player extends Phaser.GameObjects.Sprite {
       this.state = 'walk';
     }
 
-    // direction
-    if (cursors.left.isDown) {
-      changePosition(this, 'left');
-      if (this.direction === 'right') changeDirection(this);
-    } else if (cursors.right.isDown) {
-      changePosition(this, 'right');
-      if (this.direction === 'left') changeDirection(this);
-    } else if (cursors.up.isDown) {
-      changePosition(this, 'up');
-    } else if (cursors.down.isDown) {
-      changePosition(this, 'down');
-    } else this.state = 'wait';
+    sortHeldDirection(this, cursors);
+    if (this.heldDirection.length) changePosition(this, this.heldDirection);
+    else this.state = 'wait';
 
     if (prevState !== this.state) changeState(this);
   }

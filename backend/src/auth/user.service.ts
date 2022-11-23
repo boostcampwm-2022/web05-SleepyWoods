@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserDataDto } from './dto/user-data.dto';
+import { UserDataDto, UserIdentifierDto } from './dto/user-data.dto';
 import { User } from './entity/user.entity';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>
   ) {}
 
-  async createUser(signupData: any): Promise<void> {
+  async createUser(signupData: UserDataDto): Promise<void> {
     try {
       await this.userRepository.save(signupData);
     } catch (e) {
@@ -22,16 +22,27 @@ export class UserService {
     }
   }
 
-  async findUser(searchOptions: object): Promise<User> {
+  async findUser(searchOptions: UserIdentifierDto): Promise<User> {
     return await this.userRepository.findOneBy(searchOptions);
   }
 
-  async deleteUser(userDataToDelete: UserDataDto) {
+  async deleteUser(userDataToDelete: UserIdentifierDto) {
     try {
       await this.userRepository.update(userDataToDelete, { deleted: true });
     } catch (e) {
       throw new NotFoundException(
         '해당 유저를 찾을 수 없어 삭제할 수 없습니다.'
+      );
+    }
+  }
+
+  async getUserIdByNickname(nickname: string): Promise<string> {
+    try {
+      const userData = await this.userRepository.findOneBy({ nickname });
+      return userData.id;
+    } catch (e) {
+      throw new NotFoundException(
+        '해당 닉네임을 가진 유저를 찾을 수 없습니다.'
       );
     }
   }
