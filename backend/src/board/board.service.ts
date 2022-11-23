@@ -15,11 +15,10 @@ export class BoardService {
 
   async deleteBoard(articleId: number, userId: string): Promise<boolean> {
     try {
-      console.log(articleId, userId);
       const deleteResult = await this.boardRepository
         .createQueryBuilder()
-        .delete()
-        .from(Board)
+        .update()
+        .set({ deleted: true })
         .where('id = :articleId AND userId = :userId', { articleId, userId })
         .execute();
       return deleteResult.affected ? true : false;

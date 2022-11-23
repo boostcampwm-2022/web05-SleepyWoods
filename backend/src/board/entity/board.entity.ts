@@ -37,7 +37,7 @@ export class Board {
   })
   deleted: boolean;
 
-  @ManyToOne(() => User, user => user.boards)
+  @ManyToOne(() => User, user => user.boards, { onDelete: 'CASCADE' })
   user: User;
 
   @OneToMany(() => BoardLike, like => like.board)
