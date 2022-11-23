@@ -57,7 +57,7 @@ export class UserController {
       accessToken
     );
 
-    // 우리 유저 인지 확인하기
+    // 2단계 : 우리 유저 인지 확인하기
     const userData = await this.userService.findUser({
       id: userSocialProfile.id,
       social: social,
@@ -86,9 +86,9 @@ export class UserController {
 
   @Get('auth')
   @UseGuards(AuthGuard('criticalGuard'))
-  authorization(@Req() req: any): UserDataDto {
-    const { id, social, nickname, characterName }: UserDataDto = req.user;
-    return { id, social, nickname, characterName };
+  authorization(@Req() req: any) {
+    const { nickname, characterName }: UserDataDto = req.user;
+    return { nickname, characterName };
   }
 
   @Post()
@@ -115,20 +115,20 @@ export class UserController {
     });
 
     res.cookie('accessToken', jwt.accessToken);
-    res.send(200);
+    res.status(200).send('회원가입 완료!!');
   }
 
   @Get('/logout')
-  logout(@Res() res: Response): void {
+  logout(@Res() res: Response) {
     res.cookie('accessToken', '', {
       maxAge: 0,
     });
-    res.send(200);
+    res.status(200).send('로그아웃 되었습니다.');
   }
 
   @Delete()
   @UseGuards(AuthGuard('criticalGuard'))
-  deleteUser(@Req() req: any, @Res() res: Response) {
+  deleteUser(@Req() req: any) {
     const { id, social }: UserIdentifierDto = req.user;
 
     this.userService.deleteUser({ id, social });

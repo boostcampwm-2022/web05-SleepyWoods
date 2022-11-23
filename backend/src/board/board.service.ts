@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendshipService } from 'src/friendship/friendship.service';
 import { Repository } from 'typeorm';
@@ -73,7 +77,6 @@ export class BoardService {
   }
 
   async deleteLike(articleId: number, userId: string): Promise<boolean> {
-    console.log(articleId, userId);
     try {
       //좋아요 처리
       const deleteResult = await this.boardLikeRepository
@@ -87,7 +90,6 @@ export class BoardService {
         .execute();
       return deleteResult.affected ? true : false;
     } catch (e) {
-      //무슨 상황이 있으려나
       throw new NotFoundException('해당 하는 게시글이 없습니다.');
     }
   }
@@ -103,8 +105,12 @@ export class BoardService {
         .execute();
       return insertResult.identifiers.length ? true : false;
     } catch (e) {
-      //무슨 상황이 있으려나
-      throw new NotFoundException('알 수 없는 오류');
+      console.log(e.code);
+      if (e.code == 23505) {
+        throw new NotAcceptableException('이미 좋아요를 누르셨습니다.');
+      } else {
+        throw new NotFoundException('해당하는 게시글이 없습니다.');
+      }
     }
   }
 }

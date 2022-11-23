@@ -23,7 +23,11 @@ export class UserService {
   }
 
   async findUser(searchOptions: UserIdentifierDto): Promise<User> {
-    return await this.userRepository.findOneBy(searchOptions);
+    try {
+      return await this.userRepository.findOneBy(searchOptions);
+    } catch (e) {
+      throw new NotFoundException('유저를 찾는 데 실패하였습니다.');
+    }
   }
 
   async deleteUser(userDataToDelete: UserIdentifierDto) {

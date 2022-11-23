@@ -12,6 +12,7 @@ import {
   Put,
   Body,
   ValidationPipe,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardService } from './board.service';
@@ -26,7 +27,16 @@ export class BoardController {
   async getAllBoard(@Req() req: any) {
     const userId = req.user.id;
     const articleList = await this.service.getAllBoard(userId);
-    return articleList;
+    return articleList.map(article => {
+      const { id, content, category, created_at } = article;
+      return {
+        id,
+        nickname: article.user.nickname,
+        content,
+        category,
+        created_at,
+      };
+    });
   }
 
   @Post()
@@ -67,7 +77,7 @@ export class BoardController {
 
     const isLiked = await this.service.insertlike(articleId, id);
     if (!isLiked) {
-      throw new NotFoundException('좋아요 실패');
+      throw new NotAcceptableException('이미 좋아요를 누르셨습니다.');
     } else {
       return '좋아요 성공';
     }
@@ -81,9 +91,9 @@ export class BoardController {
     const { id } = req.user;
     const isDeleted = await this.service.deleteLike(articleId, id);
     if (isDeleted) {
-      return '좋아요 해제 성공';
+      return '좋아요 취소 성공';
     } else {
-      throw new NotFoundException('좋아요 해제 실패');
+      throw new NotAcceptableException('이미 처리되었습니다.');
     }
   }
 }
