@@ -12,11 +12,11 @@ export class Player extends Phaser.GameObjects.Sprite {
   heldDirection: string[];
 
   constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, 'character');
+    super(scene, 0, 0, 'character');
     this.direction = 'right';
     this.state = 'wait';
-    this.x = -25;
-    this.y = 400;
+    this.x = x;
+    this.y = y;
     this.speed = 1;
     this.heldDirection = [];
 
