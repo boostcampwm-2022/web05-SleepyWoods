@@ -2,6 +2,7 @@ import { User } from 'src/auth/entity/user.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -17,6 +18,9 @@ export class Board {
   id: number;
 
   @Column()
+  userId: string;
+
+  @Column()
   content: string;
 
   @Column({
@@ -26,7 +30,7 @@ export class Board {
   category: articleCategory;
 
   @Column({
-    type: 'date',
+    type: 'timestamp',
     default: 'NOW()',
   })
   created_at: Date;
@@ -38,6 +42,7 @@ export class Board {
   deleted: boolean;
 
   @ManyToOne(() => User, user => user.boards, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 
   @OneToMany(() => BoardLike, like => like.board)
