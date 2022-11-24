@@ -14,7 +14,7 @@ export const sleepyBoardBtn = css`
   background-position: center;
 `;
 
-export const modal = css`
+export const modal = (animation: string) => css`
   width: 50%;
   height: 60%;
   padding: 20px;
@@ -25,6 +25,26 @@ export const modal = css`
   transform: translate(-50%, -60%);
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.9);
+
+  animation: ${animation} 0.3s ease-in-out;
+
+  @keyframes show {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes close {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 `;
 
 export const header = css`
