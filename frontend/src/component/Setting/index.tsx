@@ -5,12 +5,7 @@ import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Carousel } from '../Carousel/Calrousel';
 import { hairName } from '../Carousel/hair';
-// {
-//   header,
-//   nicknameContainer,
-//   nickname,
-//   errorMessage,
-// }
+
 const Setting = () => {
   const navigate = useNavigate();
   const [hairIdx, setHairIdx] = useState(-1);
