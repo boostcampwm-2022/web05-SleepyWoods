@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react';
-import { header, nicknameContainer, nickname } from './setting.styled';
+import * as style from './setting.styled';
 import { SignupButton } from '../Button';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Carousel } from '../Carousel/Calrousel';
 import { hairName } from '../Carousel/hair';
@@ -10,28 +10,38 @@ const Setting = () => {
   const navigate = useNavigate();
   const [hairIdx, setHairIdx] = useState(-1);
   const [nickName, setNickName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const signup = async () => {
-    const data = await axios({
-      method: 'POST',
-      url: '/api/user',
-      data: {
-        signupData: {
-          nickname,
-          characterName: hairName[hairIdx],
+    try {
+      const { status } = await axios({
+        method: 'POST',
+        url: '/api/user',
+        data: {
+          signupData: {
+            nickname: nickName,
+            characterName: hairName[hairIdx],
+          },
         },
-      },
-      withCredentials: true,
-    });
+        withCredentials: true,
+      });
 
-    if (data.status === 200) {
-      navigate('/');
-    } else if (data.status === 400) {
-      console.log('validation error(4~12, 한글 영어 숫자만 가능)');
-    } else if (data.status === 406) {
-      console.log('닉네임 중복!');
-    } else {
-      console.log('모르겠어용');
+      if (status === 200) navigate('/');
+    } catch (error) {
+      const e = error as AxiosError;
+      if (!e.response) return;
+
+      if (e.response.status === 400) {
+        setErrorMessage(
+          '닉네임은 4 ~ 12글자이어야 하고, 한글, 영어 및 숫자만 가능합니다'
+        );
+      } else if (e.response.status === 401) {
+        setErrorMessage('토큰이 유효하지 않습니다');
+      } else if (e.response.status === 406) {
+        setErrorMessage('중복된 닉네임입니다');
+      } else {
+        setErrorMessage('다시 시도해주세요');
+      }
     }
   };
 
@@ -41,16 +51,17 @@ const Setting = () => {
 
   return (
     <>
-      <h2 css={header}>Setting</h2>
+      <h2 css={style.header}>Setting</h2>
       <Carousel hairIdx={hairIdx} setHairIdx={setHairIdx} />
-      <div css={nicknameContainer}>
+      <div css={style.nicknameContainer}>
         <input
           type="text"
-          css={nickname}
+          css={style.nickname}
           value={nickName}
           onChange={handleChange}
           placeholder="설정할 닉네임을 입력하세요."
         />
+        {errorMessage && <span css={style.errorMessage}>{errorMessage}</span>}
         <SignupButton event={signup}>Signup</SignupButton>
       </div>
     </>

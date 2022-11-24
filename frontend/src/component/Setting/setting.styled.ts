@@ -11,6 +11,7 @@ export const nicknameContainer = css`
   ${flexCenter}
   flex-flow: column;
 
+  position: relative;
   width: 100%;
 `;
 
@@ -20,4 +21,12 @@ export const nickname = css`
   border: 1px solid ${theme.gray};
   border-radius: 10px;
   padding: 10px;
+  margin-bottom: 30px;
+`;
+
+export const errorMessage = css`
+  position: absolute;
+  top: 60px;
+  font-size: 12px;
+  color: ${theme.red};
 `;
