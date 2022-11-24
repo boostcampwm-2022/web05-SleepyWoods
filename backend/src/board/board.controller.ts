@@ -6,30 +6,52 @@ import {
   UseGuards,
   Req,
   Param,
-  PipeTransform,
   ParseIntPipe,
   UnauthorizedException,
   NotFoundException,
   Put,
+  Body,
+  ValidationPipe,
+  NotAcceptableException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardService } from './board.service';
+import { ArticleDataDto } from './dto/article-data.dto';
+import { articleCategoryValidationPipe } from './pipes/category.pipe';
 
 @Controller('board')
 @UseGuards(AuthGuard('criticalGuard'))
 export class BoardController {
   constructor(private readonly service: BoardService) {}
   @Get()
-  getAllBoard() {
-    // [GET] 기록 공유 전체 조회
-    // 자기꺼랑, 팔로잉 리스트의 게시글들 시간순
-    return 'zzzz';
+  async getAllBoard(@Req() req: any) {
+    const userId = req.user.id;
+    const articleList = await this.service.getAllBoard(userId);
+    return articleList.map(article => {
+      const { id, content, category, created_at } = article;
+      return {
+        id,
+        nickname: article.user.nickname,
+        content,
+        category,
+        created_at,
+      };
+    });
   }
 
   @Post()
-  writeBoard(articleData: any) {
-    // data가 오면 그대로 넣어주기. DTO 만들기 추천.
-    // [POST] 기록 공유 작성
+  async writeBoard(
+    @Body('articleData', ValidationPipe, articleCategoryValidationPipe)
+    articleData: ArticleDataDto,
+    @Req() req: any
+  ) {
+    const userId: string = req.user.id;
+    const isComplete = await this.service.writeBoard(userId, articleData);
+    if (!isComplete) {
+      throw new NotFoundException('글 작성 실패');
+    } else {
+      return '글 작성 성공';
+    }
   }
 
   @Delete(':articleId')
@@ -55,7 +77,7 @@ export class BoardController {
 
     const isLiked = await this.service.insertlike(articleId, id);
     if (!isLiked) {
-      throw new NotFoundException('좋아요 실패');
+      throw new NotAcceptableException('이미 좋아요를 누르셨습니다.');
     } else {
       return '좋아요 성공';
     }
@@ -69,9 +91,9 @@ export class BoardController {
     const { id } = req.user;
     const isDeleted = await this.service.deleteLike(articleId, id);
     if (isDeleted) {
-      return '좋아요 해제 성공';
+      return '좋아요 취소 성공';
     } else {
-      throw new NotFoundException('좋아요 해제 실패');
+      throw new NotAcceptableException('이미 처리되었습니다.');
     }
   }
 }

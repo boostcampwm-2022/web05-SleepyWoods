@@ -21,9 +21,12 @@ export class FriendshipController {
 
   @Get()
   async getFollowingList(@Req() req: any) {
-    const { id } = req.user;
-    const followingList = await this.friendshipService.getFollowingList(id);
-    return followingList;
+    const userId = req.user.id;
+    const followingList = await this.friendshipService.getFollowingList(userId);
+    return followingList.map(following => {
+      const { nickname, characterName } = following;
+      return { nickname, characterName };
+    });
   }
 
   // PUT friendship 요청
@@ -32,34 +35,27 @@ export class FriendshipController {
     @Req() req: any,
     @Param('targetNickname') targetNickname: string
   ) {
-    const { id } = req.user;
+    const userId = req.user.id;
     const targetUserId = await this.userService.getUserIdByNickname(
       targetNickname
     );
-    const result = await this.friendshipService.followFriend(id, targetUserId);
+    await this.friendshipService.followFriend(userId, targetUserId);
 
-    return result ? '팔로우 성공' : '팔로우 실패';
-    // 404 -> 없는 놈임
+    return '팔로우 성공';
   }
+
   @Delete('/:targetNickname')
   async unfollowFriend(
     @Req() req: any,
     @Param('targetNickname') targetNickname: string
   ) {
-    const { id } = req.user;
+    const userId = req.user.id;
 
     const targetUserId = await this.userService.getUserIdByNickname(
       targetNickname
     );
-    const result = await this.friendshipService.unfollowFriend(
-      id,
-      targetUserId
-    );
+    await this.friendshipService.unfollowFriend(userId, targetUserId);
 
-    return result ? '팔로우 취소 성공' : '팔로우 목록에 없는 유저';
-    // delete
+    return '팔로우 취소 성공';
   }
 }
-
-// 없는놈 404
-// 잇는놈

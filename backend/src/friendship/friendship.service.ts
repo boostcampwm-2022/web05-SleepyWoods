@@ -17,7 +17,9 @@ export class FriendshipService {
       const resultList = await this.followingRepository
         .createQueryBuilder('following')
         .innerJoinAndSelect('following.targetUser', 'user')
-        .where('following.userId = :userId', { userId })
+        .where('following.userId = :userId AND user.deleted = false', {
+          userId,
+        })
         .getMany();
 
       const followingList = resultList.map(result => result.targetUser);
@@ -26,7 +28,7 @@ export class FriendshipService {
       throw new NotFoundException('팔로잉 목록 조회 오류');
     }
   }
-  async followFriend(userId: string, targetUserId: string) {
+  async followFriend(userId: string, targetUserId: string): Promise<boolean> {
     try {
       //팔로잉 처리 처리
       const insertResult = await this.followingRepository
@@ -42,7 +44,7 @@ export class FriendshipService {
     }
   }
 
-  async unfollowFriend(userId: string, targetUserId: string) {
+  async unfollowFriend(userId: string, targetUserId: string): Promise<true> {
     try {
       const deleteResult = await this.followingRepository
         .createQueryBuilder()
@@ -53,7 +55,8 @@ export class FriendshipService {
           targetUserId,
         })
         .execute();
-      return deleteResult.affected ? true : false;
+      if (deleteResult.affected) return true;
+      else throw new NotFoundException('팔로우 취소 실패');
     } catch (e) {
       throw new NotFoundException('팔로우 취소 실패');
     }
