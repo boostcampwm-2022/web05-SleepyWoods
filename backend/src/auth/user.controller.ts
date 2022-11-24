@@ -20,6 +20,7 @@ import {
   UserDataDto,
   UserIdentifierDto,
 } from './dto/user-data.dto';
+import { characterNameValidationPipe } from './pipes/characterName.pipe';
 import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
@@ -94,7 +95,8 @@ export class UserController {
   @Post()
   @UseGuards(AuthGuard('looseGuard'))
   async signUp(
-    @Body('signupData', ValidationPipe) signupData: signupDataDto,
+    @Body('signupData', ValidationPipe, characterNameValidationPipe)
+    signupData: signupDataDto,
     @Req() req: any,
     @Res() res: Response
   ) {
