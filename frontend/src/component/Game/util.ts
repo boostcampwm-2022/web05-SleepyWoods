@@ -1,12 +1,5 @@
 const responsiveness = 5;
 
-const moveObj: { [key: string]: number[] } = {
-  left: [-responsiveness, 0],
-  right: [responsiveness, 0],
-  up: [0, -responsiveness],
-  down: [0, responsiveness],
-};
-
 export const changeState = (scene: any) => {
   if (!scene.character || !scene.hair) return;
 

@@ -4,7 +4,6 @@ import {
   changeState,
   calcMoveToPos,
 } from '../../util';
-import { OtherPlayer } from './otherPlayer';
 import { Player } from './player';
 
 export class MyPlayer extends Player {
