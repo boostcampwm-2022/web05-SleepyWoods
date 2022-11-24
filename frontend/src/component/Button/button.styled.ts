@@ -40,7 +40,6 @@ export const signButton = (type: string) => css`
 
 export const signupButton = () => css`
   padding: 10px 30px;
-  margin-top: 30px;
   border-radius: 20px;
   background-color: ${theme.lightGreen};
 
