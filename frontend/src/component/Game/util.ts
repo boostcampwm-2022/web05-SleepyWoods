@@ -34,7 +34,7 @@ export const changeDirection = (scene: any, moveX: number) => {
   scene.direction = scene.direction === 'left' ? 'right' : 'left';
 };
 
-export const changePosition = (scene: any, dir: string[]) => {
+export const calcMoveToPos = (scene: any, dir: string[]) => {
   if (!scene.character || !scene.hair) return;
 
   const move = { x: 0, y: 0 };
@@ -46,7 +46,6 @@ export const changePosition = (scene: any, dir: string[]) => {
   if (leftIdx !== rightIdx) {
     move.x = leftIdx < rightIdx ? responsiveness : -responsiveness;
   }
-
   if (upIdx !== downIdx) {
     move.y = upIdx < downIdx ? responsiveness : -responsiveness;
   }
@@ -56,10 +55,16 @@ export const changePosition = (scene: any, dir: string[]) => {
     move.y /= Math.abs(1.3);
   }
 
-  scene.x += move.x * scene.speed;
-  scene.y += move.y * scene.speed;
+  return move;
+};
 
-  changeDirection(scene, move.x);
+export const changePosition = (scene: any, x: number, y: number) => {
+  if (!scene.character || !scene.hair) return;
+
+  scene.x += x * scene.speed;
+  scene.y += y * scene.speed;
+
+  changeDirection(scene, x);
   scene.character.setPosition(scene.x, scene.y);
   scene.hair.setPosition(scene.x, scene.y);
 

@@ -1,4 +1,4 @@
-import { sortHeldDirection, changePosition, changeState } from '../../util';
+import { changeState } from '../../util';
 
 export class Player extends Phaser.GameObjects.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
@@ -30,37 +30,5 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.dust.setScale(3);
 
     changeState(this);
-
-    this.scene.cameras.main.startFollow(this.character, true);
-  }
-
-  update() {
-    const cursors = this.scene.input.keyboard.createCursorKeys();
-    const keyR = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.R
-    );
-    const keyShift = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SHIFT
-    );
-
-    const prevState = this.state;
-
-    // motion
-    if (keyR.isDown) {
-      this.speed = 1.5;
-      this.state = 'roll';
-    } else if (keyShift.isDown) {
-      this.speed = 1.2;
-      this.state = 'run';
-    } else {
-      this.speed = 1;
-      this.state = 'walk';
-    }
-
-    sortHeldDirection(this, cursors);
-    if (this.heldDirection.length) changePosition(this, this.heldDirection);
-    else this.state = 'wait';
-
-    if (prevState !== this.state) changeState(this);
   }
 }

@@ -1,3 +1,4 @@
+import { MyPlayer } from './Phaser/Player/myplayer';
 import { Player } from './Phaser/Player/player';
 
 const hair = 'bowlhair';
@@ -150,7 +151,8 @@ export default class Game extends Phaser.Scene {
       frameRate: 10,
       repeat: -1,
     });
-    this.player = new Player(this, 0, 0);
+
+    this.player = new MyPlayer(this, -25, 400);
   }
 
   update() {
