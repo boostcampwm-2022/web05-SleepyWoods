@@ -1,5 +1,4 @@
-import { MyPlayer } from './Phaser/Player/myplayer';
-import { Player } from './Phaser/Player/player';
+import { MyPlayer } from './Phaser/Player/myPlayer';
 
 const hair = 'bowlhair';
 

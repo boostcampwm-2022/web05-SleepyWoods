@@ -15,7 +15,8 @@ export const friendListWrapper = css`
   display: flex;
   flex-flow: column nowrap;
   gap: 12px;
-  height: 350px;
+  max-height: 300px;
+  height: 35vh;
 
   overflow-y: scroll;
   -ms-overflow-style: none;
