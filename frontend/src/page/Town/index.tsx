@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import Game from '../../component/Game';
+import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
 import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
 
 const Town = () => {
+  const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+  const [isClose, setIsClose] = useState(false);
+
   // 전역으로 관리할 예정 (이후 props drilling 제거)
   const [permission, setPermission] = useState(false);
 
@@ -16,6 +20,12 @@ const Town = () => {
     };
 
     getDevicePermission();
+    setTimeout(() => {
+      setIsClose(true);
+      setTimeout(() => {
+        setIsLoadingComplete(true);
+      }, 800);
+    }, 1500);
   }, []);
 
   return (
@@ -24,6 +34,8 @@ const Town = () => {
       <Game />
       <Snow />
       <SleepyBoard />
+
+      {isLoadingComplete || <Loading isClose={isClose} />}
     </>
   );
 };

@@ -10,7 +10,8 @@ export class OtherPlayer extends Player {
     const prevState = this.state;
     this.state = state;
 
-    if (this.x !== x || this.y !== y) changePosition(this, x, y);
+    if (this.x !== x || this.y !== y)
+      changePosition(this, x - this.x, y - this.y);
     if (prevState !== this.state) changeState(this);
   }
 }
