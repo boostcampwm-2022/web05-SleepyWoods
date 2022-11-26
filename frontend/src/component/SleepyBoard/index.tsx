@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { modal, header, sleepyBoardBtn } from './sleepyboard.styled';
+import {
+  modal,
+  header,
+  title,
+  sleepyBoardBtn,
+  contentWrapper,
+} from './sleepyboard.styled';
+import Content from './content';
+
+import { boardData } from './boardData';
 
 const SleepyBoard = () => {
   const [isShowModal, setIsShowModal] = useState(false);
@@ -19,9 +28,14 @@ const SleepyBoard = () => {
     <>
       {isShowModal && (
         <section css={modal(animation)}>
-          <header>
-            <h2 css={header}>SleepyBoard</h2>
+          <header css={header}>
+            <h2 css={title}>SleepyBoard</h2>
           </header>
+          <ul css={contentWrapper}>
+            {boardData.map((data: any) => (
+              <Content key={data.id} data={data} />
+            ))}
+          </ul>
         </section>
       )}
       <button type="button" onClick={handleModal} css={sleepyBoardBtn}></button>
