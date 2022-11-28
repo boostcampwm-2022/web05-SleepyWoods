@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { devicePermissionState } from '../../../store/atom/deviceSetting';
 import Device from './device';
 import { deviceListType } from './setting';
 import { deviceWrapper } from './setting.styled';
 
-const DeviceSetting = (permission: { permission: boolean }) => {
+const DeviceSetting = () => {
+  const permission = useRecoilValue(devicePermissionState);
   const [deviceList, setDeviceList] = useState<deviceListType>();
 
   useEffect(() => {

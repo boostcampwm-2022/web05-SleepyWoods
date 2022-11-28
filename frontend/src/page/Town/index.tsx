@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Game from '../../component/Game';
 import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
 import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
+import { snowState } from '../../store/atom/backgroundSetting';
+import { devicePermissionState } from '../../store/atom/deviceSetting';
 
 const Town = () => {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const [isClose, setIsClose] = useState(false);
 
-  // 전역으로 관리할 예정 (이후 props drilling 제거)
-  const [permission, setPermission] = useState(false);
+  const [permission, setPermission] = useRecoilState(devicePermissionState);
+  const isSnowing = useRecoilValue(snowState);
 
   useEffect(() => {
     const getDevicePermission = async () => {
@@ -30,9 +33,9 @@ const Town = () => {
 
   return (
     <>
-      <Sidebar permission={permission} />
+      <Sidebar />
       <Game />
-      <Snow />
+      {isSnowing && <Snow />}
       <SleepyBoard />
 
       {isLoadingComplete || <Loading isClose={isClose} />}
