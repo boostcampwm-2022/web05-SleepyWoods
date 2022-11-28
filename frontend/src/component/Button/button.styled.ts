@@ -63,9 +63,19 @@ export const userChangeButton = css`
   height: 30px;
   border-radius: 10px;
   background-color: ${theme.lightGreen};
-  font-size: 12px;
+  font-size: 14px;
 
   :hover {
     background-color: ${theme.green};
   }
+`;
+
+export const withdrawalBtn = css`
+  ${flexCenter}
+
+  width: 100%;
+  height: 30px;
+  border-radius: 10px;
+  background-color: ${theme.red};
+  font-size: 12px;
 `;
