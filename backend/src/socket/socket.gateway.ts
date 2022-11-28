@@ -51,7 +51,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // 퇴장 햇을 시
   public handleDisconnect(client: Socket): void {
-    console.log('disconnected', client.id);
+    this.server.emit('userLeaved', client.id);
   }
 
   @SubscribeMessage('message')
