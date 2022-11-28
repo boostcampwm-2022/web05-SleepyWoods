@@ -130,10 +130,14 @@ export class UserController {
 
   @Delete()
   @UseGuards(AuthGuard('criticalGuard'))
-  deleteUser(@Req() req: any) {
+  deleteUser(@Req() req: any, @Res() res: any) {
     const { id, social }: UserIdentifierDto = req.user;
 
+    res.cookie('accessToken', '', {
+      maxAge: 0,
+    });
+
     this.userService.deleteUser({ id, social });
-    return '캐릭터가 삭제 되었습니다.';
+    res.status(200).send('캐릭터가 삭제 되었습니다.');
   }
 }
