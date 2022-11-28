@@ -17,7 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
     });
   }
 
-  // 빡빡한 가드
   async validate(payload: UserDataDto): Promise<UserDataDto> {
     if (!payload.nickname) {
       throw new UnauthorizedException(
@@ -43,7 +42,25 @@ export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
     });
   }
 
-  // 느슨한 가드
+  async validate(payload: UserDataDto): Promise<UserDataDto> {
+    return payload;
+  }
+}
+
+@Injectable()
+export class JwtStrategyForWs extends PassportStrategy(Strategy, 'ws-jwt') {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        request => {
+          return request?.cookies?.accessToken;
+        },
+      ]),
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_SECRET_KEY,
+    });
+  }
+
   async validate(payload: UserDataDto): Promise<UserDataDto> {
     return payload;
   }
