@@ -41,7 +41,7 @@ export class MyPlayer extends Player {
     // motion
     if (keyR.isDown) {
       this.speed = 1.5;
-      this.checkAndSetState('roll');
+      this.checkAndSetState('roll', 100);
     } else if (keyShift.isDown) {
       this.speed = 1.2;
       this.checkAndSetState('run');
