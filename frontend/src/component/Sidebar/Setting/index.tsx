@@ -2,11 +2,11 @@ import BackgroundSetting from './backgroundSetting';
 import DeviceSetting from './deviceSetting';
 import { settingWrapper } from './setting.styled';
 
-const Setting = ({ permission }: { permission: boolean }) => {
+const Setting = () => {
   return (
     <ul css={settingWrapper}>
       <BackgroundSetting />
-      <DeviceSetting permission={permission} />
+      <DeviceSetting />
     </ul>
   );
 };

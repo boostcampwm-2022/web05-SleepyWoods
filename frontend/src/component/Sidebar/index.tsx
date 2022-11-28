@@ -19,14 +19,14 @@ type componentType = {
   [key: string]: EmotionJSX.Element;
 };
 
-const Sidebar = ({ permission }: { permission: boolean }) => {
-  const component: componentType = {
-    mypage: <Mypage />,
-    friends: <Friends />,
-    chatting: <Chat />,
-    setting: <Setting permission={permission} />,
-  };
+const component: componentType = {
+  mypage: <Mypage />,
+  friends: <Friends />,
+  chatting: <Chat />,
+  setting: <Setting />,
+};
 
+const Sidebar = () => {
   const [isOpen, setOpen] = useState(true);
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
