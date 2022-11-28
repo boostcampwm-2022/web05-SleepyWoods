@@ -19,7 +19,7 @@ const Mypage = () => {
 
   const withdrawal = async () => {
     if (user.nickname === inputValue) {
-      const check = confirm('정말 회원탈퇴 하실건가요..?');
+      const check = confirm('다시는 돌아올 수 없습니다?!');
 
       if (check) {
         const res = await axios.delete('/api/user');
