@@ -1,22 +1,38 @@
 import CarouselContent from './CarouselContent';
 import NickNameContent from './NickNameContent';
 import * as style from './mypage.styled';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import Content from '../Content';
 import { WithdrawalButton } from '../../Button';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../../store/atom/user';
+import axios from 'axios';
 
 const Mypage = () => {
   const [isWithdrawal, setIsWithdrawal] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const user = useRecoilValue(userState);
 
   const handleIsWithdrawal = () => {
     setIsWithdrawal(!isWithdrawal);
   };
 
-  const withdrawal = () => {
-    // 비밀번호 확인 로직
-    const check = confirm('정말 회원탈퇴 하실건가요..?');
+  const withdrawal = async () => {
+    if (user.nickname === inputValue) {
+      const check = confirm('정말 회원탈퇴 하실건가요..?');
 
-    if (check) console.log('회원탈퇴!!');
+      if (check) {
+        const res = await axios.delete('/api/user');
+        if (res.status === 200) location.href = '/';
+        else alert('다시 시도해주세요');
+      }
+    } else {
+      alert('닉네임을 확인해주세요');
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
   return (
@@ -28,12 +44,14 @@ const Mypage = () => {
         {isWithdrawal ? (
           <>
             <div css={style.infoMessage}>
-              회원탈퇴를 위해 비밀번호를 입력해주세요
+              회원탈퇴를 위해 넥네임을 입력해주세요
             </div>
             <input
-              type="password"
+              type="text"
               css={style.input}
-              placeholder={'비밀번호를 입력해주세요.'}
+              placeholder={user.nickname}
+              value={inputValue}
+              onChange={handleChange}
             />
             <WithdrawalButton event={withdrawal} />
           </>
