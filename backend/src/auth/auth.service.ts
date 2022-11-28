@@ -18,8 +18,13 @@ export class AuthService {
     };
   }
 
-  async verify(accessToken: string) {
-    console.log(this.jwtService.verify(accessToken));
+  verify(accessToken: string) {
+    try {
+      const userData = this.jwtService.verify(accessToken);
+      return userData;
+    } catch (e) {
+      return false;
+    }
   }
 
   async socialOauth(social: socialPlatform, code: string): Promise<string> {

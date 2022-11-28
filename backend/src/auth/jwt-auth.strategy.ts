@@ -4,7 +4,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserDataDto } from './dto/user-data.dto';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
+export class criticalJwtStrategy extends PassportStrategy(
+  Strategy,
+  'criticalGuard'
+) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -29,26 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
 }
 
 @Injectable()
-export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
-  constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        request => {
-          return request?.cookies?.accessToken;
-        },
-      ]),
-      ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET_KEY,
-    });
-  }
-
-  async validate(payload: UserDataDto): Promise<UserDataDto> {
-    return payload;
-  }
-}
-
-@Injectable()
-export class JwtStrategyForWs extends PassportStrategy(Strategy, 'ws-jwt') {
+export class looseJwtStrategy extends PassportStrategy(Strategy, 'looseGuard') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
