@@ -5,6 +5,7 @@ import {
   signupButton,
   arrowButton,
   userChangeButton,
+  withdrawalBtn,
 } from './button.styled';
 
 type mainButtonType = {
@@ -23,6 +24,8 @@ type arrowButtonType = {
   event: MouseEventHandler;
 };
 
+type WithdrawalButtonType = { event: MouseEventHandler };
+
 export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
   return (
     <button type="button" css={button(type)} onClick={handleClick}>
@@ -30,22 +33,6 @@ export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
     </button>
   );
 };
-
-// export const SignButton = ({ type }: { type: string }) => {
-//   const handleClickEvent = async () => {
-//     await axios({
-//       method: 'GET',
-//       url: `http://localhost:3333/user/login?social=${type}`,
-//       withCredentials: true,
-//     });
-//   };
-
-//   return (
-//     <button type="button" css={signButton(type)} onClick={handleClickEvent}>
-//       {type}로 로그인하기
-//     </button>
-//   );
-// };
 
 export const SignButton = ({ type }: { type: string }) => {
   const oauth = `http://localhost:3333/user/login?social=${type}`;
@@ -80,6 +67,14 @@ export const UserChangeButton = ({
   return (
     <button type="button" css={userChangeButton} onClick={event}>
       {children}
+    </button>
+  );
+};
+
+export const WithdrawalButton = ({ event }: WithdrawalButtonType) => {
+  return (
+    <button type="button" css={withdrawalBtn} onClick={event}>
+      회원탈퇴
     </button>
   );
 };
