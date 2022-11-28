@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
-import theme from '../../styles/theme';
 import { flexCenter } from '../../styles/mixin.styled';
-import characterAsset from '../../assets/character/waiting/wait.png';
+import characterAsset from '../../assets/character/wait/wait.png';
 import { hairPos } from './hair';
 
 export const characterWrapper = css`

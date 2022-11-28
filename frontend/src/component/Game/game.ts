@@ -16,29 +16,15 @@ export default class Game extends Phaser.Scene {
     this.load.audio('christmas', ['./src/assets/audio/christmas.mp3']);
 
     // 캐릭터 동작
-    this.load.atlas(
-      'wait',
-      './src/assets/character/waiting/wait.png',
-      './src/assets/character/sprite.json'
-    );
+    const actions = ['wait', 'walk', 'run', 'roll', 'jump'];
 
-    this.load.atlas(
-      'walk',
-      './src/assets/character/walking/walk.png',
-      './src/assets/character/sprite.json'
-    );
-
-    this.load.atlas(
-      'run',
-      './src/assets/character/run/run.png',
-      './src/assets/character/sprite.json'
-    );
-
-    this.load.atlas(
-      'roll',
-      './src/assets/character/roll/roll.png',
-      './src/assets/character/sprite.json'
-    );
+    actions.forEach((action: string) => {
+      this.load.atlas(
+        action,
+        `./src/assets/character/${action}/${action}.png`,
+        `./src/assets/character/sprite.json`
+      );
+    });
 
     // 이펙트
     this.load.spritesheet('dust', './src/assets/character/dust.png', {
@@ -53,93 +39,41 @@ export default class Game extends Phaser.Scene {
     const music = this.sound.add('christmas');
     music.play();
 
-    this.anims.create({
-      key: 'character-wait',
-      frames: this.anims.generateFrameNames('wait', {
-        prefix: 'base',
-        start: 1,
-        end: 9,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
+    const spriteInfo = [
+      { action: 'wait', start: 1, end: 9 },
+      { action: 'walk', start: 1, end: 8 },
+      { action: 'run', start: 1, end: 8 },
+      { action: 'roll', start: 2, end: 5 },
+      { action: 'jump', start: 1, end: 9 },
+    ];
 
-    this.anims.create({
-      key: 'hair-wait',
-      frames: this.anims.generateFrameNames('wait', {
-        prefix: `${hair}`,
-        start: 1,
-        end: 9,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
+    spriteInfo.forEach(
+      (info: { action: string; start: number; end: number }) => {
+        const { action, start, end } = info;
 
-    this.anims.create({
-      key: 'character-walk',
-      frames: this.anims.generateFrameNames('walk', {
-        prefix: 'base',
-        start: 1,
-        end: 8,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
+        this.anims.create({
+          key: `character-${action}`,
+          frames: this.anims.generateFrameNames(action, {
+            prefix: 'base',
+            start,
+            end,
+          }),
+          frameRate: 10,
+          repeat: -1,
+        });
 
-    this.anims.create({
-      key: 'hair-walk',
-      frames: this.anims.generateFrameNames('walk', {
-        prefix: `${hair}`,
-        start: 1,
-        end: 8,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: 'character-run',
-      frames: this.anims.generateFrameNames('run', {
-        prefix: 'base',
-        start: 1,
-        end: 8,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: 'hair-run',
-      frames: this.anims.generateFrameNames('run', {
-        prefix: `${hair}`,
-        start: 1,
-        end: 8,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: 'character-roll',
-      frames: this.anims.generateFrameNames('roll', {
-        prefix: 'base',
-        start: 2,
-        end: 5,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: 'hair-roll',
-      frames: this.anims.generateFrameNames('roll', {
-        prefix: `${hair}`,
-        start: 2,
-        end: 5,
-      }),
-      frameRate: 15,
-      repeat: -1,
-    });
+        this.anims.create({
+          key: `hair-${action}`,
+          frames: this.anims.generateFrameNames(action, {
+            prefix: `${hair}`,
+            start,
+            end,
+          }),
+          frameRate: 10,
+          repeat: -1,
+        });
+      }
+    );
 
     this.anims.create({
       key: 'dust',
