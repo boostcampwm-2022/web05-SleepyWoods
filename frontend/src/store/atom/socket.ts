@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 import { io, Socket } from 'socket.io-client';
 
-export const socketState = atom<Socket>({
+export const socketState = atom<Socket | null>({
   key: 'socketState',
-  default: io('ws://localhost:3333'),
+  default: null,
 });
