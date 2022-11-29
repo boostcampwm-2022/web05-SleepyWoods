@@ -44,7 +44,7 @@ const Mypage = () => {
         {isWithdrawal ? (
           <>
             <div css={style.infoMessage}>
-              회원탈퇴를 위해 넥네임을 입력해주세요
+              회원탈퇴를 위해 닉네임을 입력해주세요
             </div>
             <input
               type="text"
