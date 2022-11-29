@@ -20,6 +20,7 @@ import {
   UserDataDto,
   UserIdentifierDto,
 } from './dto/user-data.dto';
+import { characterNameValidationPipe } from './pipes/characterName.pipe';
 import { socialPlatformValidationPipe } from './pipes/social-platform.pipe';
 import { socialPlatform } from './user.enum';
 import { UserService } from './user.service';
@@ -94,7 +95,8 @@ export class UserController {
   @Post()
   @UseGuards(AuthGuard('looseGuard'))
   async signUp(
-    @Body('signupData', ValidationPipe) signupData: signupDataDto,
+    @Body('signupData', ValidationPipe, characterNameValidationPipe)
+    signupData: signupDataDto,
     @Req() req: any,
     @Res() res: Response
   ) {
@@ -128,10 +130,14 @@ export class UserController {
 
   @Delete()
   @UseGuards(AuthGuard('criticalGuard'))
-  deleteUser(@Req() req: any) {
+  deleteUser(@Req() req: any, @Res() res: any) {
     const { id, social }: UserIdentifierDto = req.user;
 
+    res.cookie('accessToken', '', {
+      maxAge: 0,
+    });
+
     this.userService.deleteUser({ id, social });
-    return '캐릭터가 삭제 되었습니다.';
+    res.status(200).send('캐릭터가 삭제 되었습니다.');
   }
 }
