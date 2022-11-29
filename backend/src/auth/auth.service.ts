@@ -18,6 +18,15 @@ export class AuthService {
     };
   }
 
+  verify(accessToken: string) {
+    try {
+      const userData = this.jwtService.verify(accessToken);
+      return userData;
+    } catch (e) {
+      return false;
+    }
+  }
+
   async socialOauth(social: socialPlatform, code: string): Promise<string> {
     const socialOauthUrl = {
       [socialPlatform.NAVER]: `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${process.env.NAVER_OAUTH_CLIENT_ID}&client_secret=${process.env.NAVER_OAUTH_SECRET}&redirect_uri=${process.env.SERVER_URL}/user/callback/naver

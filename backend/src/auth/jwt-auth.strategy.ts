@@ -4,7 +4,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserDataDto } from './dto/user-data.dto';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
+export class criticalJwtStrategy extends PassportStrategy(
+  Strategy,
+  'criticalGuard'
+) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -17,7 +20,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
     });
   }
 
-  // 빡빡한 가드
   async validate(payload: UserDataDto): Promise<UserDataDto> {
     if (!payload.nickname) {
       throw new UnauthorizedException(
@@ -30,7 +32,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'criticalGuard') {
 }
 
 @Injectable()
-export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
+export class looseJwtStrategy extends PassportStrategy(Strategy, 'looseGuard') {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -43,7 +45,6 @@ export class JwtStrategy2 extends PassportStrategy(Strategy, 'looseGuard') {
     });
   }
 
-  // 느슨한 가드
   async validate(payload: UserDataDto): Promise<UserDataDto> {
     return payload;
   }
