@@ -22,9 +22,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   constructor(private readonly authService: AuthService) {}
 
-  // 입장 햇을 시
-
-  public getRoomUserData(roomName) {
+  public getRoomUserData(roomName: string) {
     const roomUser = [];
     this.server.sockets.adapter.rooms.get(roomName).forEach(e => {
       roomUser.push(this.server.sockets.sockets.get(e)['userData']);
@@ -32,9 +30,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     return roomUser;
   }
+
   public handleConnection(client: Socket): void {
     const key = client.handshake.headers.authorization;
-    const roomName = client.handshake.headers.room;
+    const roomName = client.handshake.headers.room.toString();
     const userData = this.authService.verify(key);
     if (!userData || !roomName) {
       client.disconnect();
@@ -58,9 +57,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       .emit('userCreated', this.getRoomUserData(roomName));
   }
 
-  // 퇴장 햇을 시
   public handleDisconnect(client: Socket): void {
-    this.server.emit('userLeaved', client.id);
+    this.server.emit('userLeaved', client['userData']['id']);
   }
 
   @UsePipes(new ValidationPipe())
@@ -74,9 +72,28 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(client['userData']['roomName']).emit('move', client['userData']);
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
-    console.log('hi');
-    return 'Hello world!';
+  // 전체채팅
+  @SubscribeMessage('chat')
+  handleMessage(client: any, payload: any): void {
+    const msgPayload = {
+      fromUserId: client['userData']['id'],
+      timestamp: Date.now(),
+      message: payload['message'] || '',
+    };
+
+    client.to(client['userData']['roomName']).emit('chat', msgPayload);
+  }
+
+  @SubscribeMessage('directMessage')
+  handleDirectMessage(client: any, payload: any): void {
+    const targetUserId = payload['targetUserId'];
+    const targetSockeitId = payload['targetSocketId'];
+
+    const msgPayload = {
+      fromUserId: client['userData']['id'],
+      timestamp: Date.now(),
+      message: payload['message'] || '',
+    };
+    client.to(targetSockeitId).emit('directMessage', msgPayload);
   }
 }
