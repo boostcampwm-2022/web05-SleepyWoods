@@ -4,7 +4,7 @@ import { Board } from './board.entity';
 
 @Entity('board_like')
 export class BoardLike {
-  @PrimaryColumn()
+  @PrimaryColumn('varchar', { length: 64 })
   userId: string;
 
   @PrimaryColumn()
