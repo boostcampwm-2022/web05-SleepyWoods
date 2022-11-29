@@ -19,6 +19,7 @@ import { movementValidationPipe } from './pipes/movement.pipe';
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
+  socketIdByUser = new Map();
 
   constructor(private readonly authService: AuthService) {}
 
@@ -35,7 +36,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const key = client.handshake.headers.authorization;
     const roomName = client.handshake.headers.room.toString();
     const userData = this.authService.verify(key);
-    if (!userData || !roomName) {
+    if (!userData || !roomName || this.socketIdByUser.get(userData['id'])) {
       client.disconnect();
       return;
     }
@@ -44,11 +45,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       ...userData,
       x: -25,
       y: 400,
-      socketId: client.id,
       direction: 'right',
       state: 'walk',
       roomName,
     };
+    this.socketIdByUser.set(userData['id'], client.id);
 
     client.join(roomName);
     client.to(roomName).emit('userCreated', client['userData']);
@@ -59,6 +60,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   public handleDisconnect(client: Socket): void {
     this.server.emit('userLeaved', client['userData']['id']);
+    this.socketIdByUser.delete(client['userData']['id']);
   }
 
   @UsePipes(new ValidationPipe())
@@ -87,13 +89,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('directMessage')
   handleDirectMessage(client: any, payload: any): void {
     const targetUserId = payload['targetUserId'];
-    const targetSockeitId = payload['targetSocketId'];
 
     const msgPayload = {
       fromUserId: client['userData']['id'],
       timestamp: Date.now(),
       message: payload['message'] || '',
     };
-    client.to(targetSockeitId).emit('directMessage', msgPayload);
+    client
+      .to(this.socketIdByUser.get(targetUserId))
+      .emit('directMessage', msgPayload);
   }
 }
