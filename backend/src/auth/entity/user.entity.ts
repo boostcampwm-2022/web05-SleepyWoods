@@ -6,15 +6,18 @@ import { socialPlatform } from '../user.enum';
 
 @Entity('user')
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn('varchar', { length: 64 })
   id: string;
 
-  @Column({
+  @Column('char', {
+    length: 16,
     unique: true,
   })
   nickname: string;
 
-  @Column()
+  @Column('char', {
+    length: 16,
+  })
   characterName: string;
 
   @Column({
