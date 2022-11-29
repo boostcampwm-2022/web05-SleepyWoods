@@ -1,33 +1,27 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import Background from '../../component/Background';
 import MainContent from '../../component/MainContent';
 import { socketState } from '../../store/atom/socket';
 import { userState } from '../../store/atom/user';
-import { io, Socket } from 'socket.io-client';
 
-const getCookieValue = (key: string) => {
-  let cookieKey = key + '=';
-  let result = '';
+export const getCookieValue = (key: string) => {
   const cookieArr = document.cookie.split(';');
+  let result = '';
 
-  for (let i = 0; i < cookieArr.length; i++) {
-    if (cookieArr[i][0] === ' ') {
-      cookieArr[i] = cookieArr[i].substring(1);
-    }
+  cookieArr.forEach((cookie: string) => {
+    const [k, v] = cookie.split('=');
+    if (k === key) result = v;
+  });
 
-    if (cookieArr[i].indexOf(cookieKey) === 0) {
-      result = cookieArr[i].slice(cookieKey.length, cookieArr[i].length);
-      return result;
-    }
-  }
   return result;
 };
 
 const Main = () => {
   const [hasToken, setHasToken] = useState(false);
   const [user, setUser] = useRecoilState(userState);
+  const [socket, setSocket] = useRecoilState(socketState);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -41,19 +35,14 @@ const Main = () => {
           hair: response.data.characterName,
         });
 
-        const socket = io('localhost:3333', {
-          extraHeaders: {
-            authorization: getCookieValue(document.cookie),
-            room: '',
-          },
+        socket.connect();
+
+        socket.on('connect', () => {
+          console.log('connect');
         });
 
         socket.on('userCreated', (data: any) => {
           console.log(data);
-        });
-
-        socket.on('connect', () => {
-          console.log('test connected');
         });
       } else setHasToken(false);
     };
