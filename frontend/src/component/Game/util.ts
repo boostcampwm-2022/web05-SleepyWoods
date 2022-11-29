@@ -78,3 +78,5 @@ export const sortHeldDirection = (scene: any, cursors: any) => {
     }
   });
 };
+
+export const emitter = new Phaser.Events.EventEmitter();
