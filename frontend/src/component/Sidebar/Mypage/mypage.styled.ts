@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import theme from '../../../styles/theme';
+import { flexCenter } from '../../../styles/mixin.styled';
 
 export const mypageWrapper = css`
   display: flex;
@@ -13,11 +13,18 @@ export const header = css`
   padding-bottom: 20px;
 `;
 
-export const nickname = css`
+export const input = css`
   width: 100%;
   min-height: 30px;
   border: none;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
+`;
+
+export const infoMessage = css`
+  ${flexCenter}
+
+  padding: 10px 0px;
+  font-size: 12px;
 `;

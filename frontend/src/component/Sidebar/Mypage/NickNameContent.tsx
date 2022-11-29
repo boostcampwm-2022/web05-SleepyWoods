@@ -21,7 +21,7 @@ const NickNameContent = () => {
       <div css={nicknameContainer}>
         <input
           type="text"
-          css={style.nickname}
+          css={style.input}
           value={nickName}
           onChange={handleChange}
           placeholder="변경할 닉네임을 입력하세요."
