@@ -1,14 +1,37 @@
+import { Socket } from 'socket.io-client';
 import { MyPlayer } from './Phaser/Player/myPlayer';
+import { OtherPlayer } from './Phaser/Player/otherPlayer';
+import { emitter } from './util';
 
 const hair = 'bowlhair';
 
 export default class Game extends Phaser.Scene {
-  player?: Phaser.GameObjects.Sprite;
+  myPlayer?: Phaser.GameObjects.Sprite;
+  otherPlayer: { [key: string]: Phaser.GameObjects.Sprite };
+  socket?: Socket;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
 
-    this.player;
+    this.socket;
+    this.myPlayer;
+    this.otherPlayer = {};
+  }
+
+  init() {
+    emitter.on('init', (data: any) => {
+      this.socket = data.socket;
+
+      this.myPlayer = new MyPlayer(
+        this,
+        -25,
+        400,
+        data.characterName,
+        data.nickname
+      );
+
+      this.socketInit();
+    });
   }
 
   preload() {
@@ -85,10 +108,18 @@ export default class Game extends Phaser.Scene {
       repeat: -1,
     });
 
-    this.player = new MyPlayer(this, -25, 400);
+    emitter.emit('ready');
   }
 
   update() {
-    this.player?.update();
+    this.myPlayer?.update();
+  }
+
+  socketInit() {
+    if (!this.socket) return;
+
+    this.socket.on('userCreated', (data: any) => {
+      this.otherPlayer[data.id] = new OtherPlayer(this, data);
+    });
   }
 }

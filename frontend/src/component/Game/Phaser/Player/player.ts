@@ -4,15 +4,21 @@ export class Player extends Phaser.GameObjects.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
   hair: Phaser.GameObjects.Sprite | undefined;
   dust: Phaser.GameObjects.Sprite | undefined;
-  state: string = 'right';
+  direction: string;
   isChangeState: boolean;
-  direction: string = 'wait';
+  state: string;
   x: number;
   y: number;
   speed: number;
   heldDirection: string[];
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    hair: string,
+    nickname: string
+  ) {
     super(scene, 0, 0, 'character');
     this.direction = 'right';
     this.state = 'wait';
