@@ -9,9 +9,15 @@ import { Board } from './board/entity/board.entity';
 import { Following } from './friendship/entity/follwing.entity';
 import { FriendshipModule } from './friendship/friendship.module';
 import { SocketModule } from './socket/socket.module';
+import { ChatModule } from './chat/chat.module';
+import { Chat } from './chat/entity/chat.entity';
+import { ChatRoom } from './chat/entity/chat-room.entity';
+import { ChatMark } from './chat/entity/chat-mark.entity';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
@@ -21,7 +27,7 @@ import { SocketModule } from './socket/socket.module';
         username: process.env.DB_ID,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [User, Board, BoardLike, Following],
+        entities: [User, Board, BoardLike, Following, Chat, ChatRoom, ChatMark],
         synchronize: true,
       }),
     }),
@@ -29,6 +35,7 @@ import { SocketModule } from './socket/socket.module';
     BoardModule,
     FriendshipModule,
     SocketModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
