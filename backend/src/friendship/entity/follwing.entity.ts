@@ -3,10 +3,10 @@ import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('following')
 export class Following {
-  @PrimaryColumn()
+  @PrimaryColumn('varchar', { length: 64 })
   userId: string;
 
-  @PrimaryColumn()
+  @PrimaryColumn('varchar', { length: 64 })
   targetUserId: string;
 
   @ManyToOne(() => User, user => user.following, { onDelete: 'CASCADE' })

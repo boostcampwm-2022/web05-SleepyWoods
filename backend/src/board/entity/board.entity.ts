@@ -17,10 +17,10 @@ export class Board {
   })
   id: number;
 
-  @Column()
+  @Column('varchar', { length: 64 })
   userId: string;
 
-  @Column()
+  @Column('varchar', { length: 128 })
   content: string;
 
   @Column({
