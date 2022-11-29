@@ -18,7 +18,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
-    "recoil": "^0.7.6"
+    "recoil": "^0.7.6",
+    "socket.io-client": "^4.5.4"
   },
   "devDependencies": {
     "@emotion/babel-plugin": "^11.10.5",
