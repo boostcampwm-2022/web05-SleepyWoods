@@ -37,7 +37,7 @@ export default class Game extends Phaser.Scene {
     this.add.image(0, 0, 'background').setScale(3);
 
     const music = this.sound.add('christmas');
-    music.play();
+    // music.play();
 
     const spriteInfo = [
       { action: 'wait', start: 1, end: 9 },
