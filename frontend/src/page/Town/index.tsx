@@ -7,6 +7,7 @@ import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
 import { snowState } from '../../store/atom/backgroundSetting';
 import { devicePermissionState } from '../../store/atom/deviceSetting';
+import { socketState } from '../../store/atom/socket';
 
 const Town = () => {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
@@ -14,6 +15,7 @@ const Town = () => {
 
   const [permission, setPermission] = useRecoilState(devicePermissionState);
   const isSnowing = useRecoilValue(snowState);
+  const socket = useRecoilValue(socketState);
 
   useEffect(() => {
     const getDevicePermission = async () => {
@@ -23,12 +25,17 @@ const Town = () => {
     };
 
     getDevicePermission();
+
     setTimeout(() => {
       setIsClose(true);
       setTimeout(() => {
         setIsLoadingComplete(true);
       }, 800);
     }, 1500);
+
+    // socket.on('userCreated', data => {
+    //   console.log(data);
+    // });
   }, []);
 
   return (

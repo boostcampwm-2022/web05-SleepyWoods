@@ -8,6 +8,16 @@ const hairName: { [key: string]: string } = {
   5: 'curlyhair',
 };
 
+const hairIdx: { [key: string]: number } = {
+  nohair: -1,
+  longhair: 0,
+  mophair: 1,
+  shorthair: 2,
+  spikeyhair: 3,
+  bowlhair: 4,
+  curlyhair: 5,
+};
+
 const hairPos: { [key: string]: number } = {
   nohair: 0,
   longhair: 64,
@@ -18,4 +28,4 @@ const hairPos: { [key: string]: number } = {
   curlyhair: 384,
 };
 
-export { hairName, hairPos };
+export { hairName, hairIdx, hairPos };

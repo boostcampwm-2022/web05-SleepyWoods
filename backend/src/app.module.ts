@@ -8,6 +8,7 @@ import { BoardLike } from './board/entity/board-like.entity';
 import { Board } from './board/entity/board.entity';
 import { Following } from './friendship/entity/follwing.entity';
 import { FriendshipModule } from './friendship/friendship.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FriendshipModule } from './friendship/friendship.module';
     AuthModule,
     BoardModule,
     FriendshipModule,
+    SocketModule,
   ],
   controllers: [],
   providers: [],

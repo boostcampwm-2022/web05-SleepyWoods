@@ -28,7 +28,11 @@
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/platform-socket.io": "^9.2.0",
+    "@nestjs/platform-ws": "^9.2.0",
     "@nestjs/typeorm": "^9.0.1",
+    "@nestjs/websockets": "^9.2.0",
+    "@socket.io/admin-ui": "^0.5.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/passport": "^1.0.11",
     "class-transformer": "^0.5.1",
@@ -40,7 +44,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.10"
+    "typeorm": "^0.3.10",
+    "ws": "^8.11.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -50,6 +55,7 @@
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
     "@types/passport-jwt": "^3.0.7",
+    "@types/socket.io": "^3.0.2",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
