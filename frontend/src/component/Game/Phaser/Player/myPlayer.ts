@@ -1,3 +1,4 @@
+import { Socket } from 'socket.io-client';
 import {
   sortHeldDirection,
   changePosition,
@@ -7,14 +8,19 @@ import {
 import { Player } from './player';
 
 export class MyPlayer extends Player {
+  socket: Socket;
+
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
     hair: string,
-    nickname: string
+    nickname: string,
+    socket: Socket
   ) {
     super(scene, x, y, hair, nickname);
+
+    this.socket = socket;
 
     if (this.character) {
       this.scene.cameras.main.startFollow(this.character, true);
@@ -62,11 +68,20 @@ export class MyPlayer extends Player {
     sortHeldDirection(this, cursors);
     if (this.heldDirection.length) {
       const move: any = calcMoveToPos(this, this.heldDirection);
-      changePosition(this, move.x, move.y);
+      changePosition(this, move.x * this.speed, move.y * this.speed);
     } else {
       this.checkAndSetState('wait');
     }
 
     if (prevState !== this.state) changeState(this);
+
+    if (prevState !== this.state || this.heldDirection.length) {
+      this.socket.emit('move', {
+        state: this.state,
+        direction: this.direction,
+        x: this.x,
+        y: this.y,
+      });
+    }
   }
 }

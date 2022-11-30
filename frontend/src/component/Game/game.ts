@@ -7,7 +7,7 @@ const hair = 'bowlhair';
 
 export default class Game extends Phaser.Scene {
   myPlayer?: Phaser.GameObjects.Sprite;
-  otherPlayer: { [key: string]: Phaser.GameObjects.Sprite };
+  otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
@@ -27,7 +27,8 @@ export default class Game extends Phaser.Scene {
         -25,
         400,
         data.characterName,
-        data.nickname
+        data.nickname,
+        data.socket
       );
 
       this.socketInit();
@@ -120,6 +121,10 @@ export default class Game extends Phaser.Scene {
 
     this.socket.on('userCreated', (data: any) => {
       this.otherPlayer[data.id] = new OtherPlayer(this, data);
+    });
+
+    this.socket.on('move', (data: any) => {
+      this.otherPlayer[data.id].update(data.state, data.x, data.y);
     });
   }
 }
