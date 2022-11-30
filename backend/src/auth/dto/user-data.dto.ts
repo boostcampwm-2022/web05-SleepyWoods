@@ -47,8 +47,8 @@ export class UserDataFromSocialDto {
 export class signupDataDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(4)
-  @MaxLength(12)
+  @MinLength(2)
+  @MaxLength(16)
   @Matches(/^[a-zA-z0-9ㄱ-ㅎㅏ-ㅣ가-힣 ]*$/, {
     message: '특수문자는 불가합니다.',
   })
