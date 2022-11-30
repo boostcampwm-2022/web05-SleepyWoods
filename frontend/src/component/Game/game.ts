@@ -39,6 +39,10 @@ export default class Game extends Phaser.Scene {
     emitter.on('updateNickname', (nickname: string) => {
       this.myPlayer?.updateNickname(nickname);
     });
+
+    emitter.on('updateHair', (hair: string) => {
+      this.myPlayer?.updateHair(hair);
+    });
   }
 
   preload() {
@@ -76,6 +80,7 @@ export default class Game extends Phaser.Scene {
     ];
 
     const hairInfo = [
+      'nohair',
       'longhair',
       'mophair',
       'shorthair',

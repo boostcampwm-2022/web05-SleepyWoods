@@ -64,4 +64,9 @@ export class Player extends Phaser.GameObjects.Sprite {
   updateNickname(nickname: string) {
     this.nicknameText?.setText(nickname);
   }
+
+  updateHair(hair: string) {
+    this.hairName = hair;
+    changeState(this);
+  }
 }
