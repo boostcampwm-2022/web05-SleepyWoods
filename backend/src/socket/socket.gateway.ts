@@ -62,13 +62,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(roomName).emit('userCreated', client['userData']);
     this.server
       .to(client.id)
-      .emit('userCreated', this.getRoomUserData(roomName + ''));
+      .emit('userInitiated', this.getRoomUserData(roomName + ''));
   }
 
   public handleDisconnect(client: Socket): void {
-    this.server.emit('userLeaved', client['userData']['nickname']);
+    this.server.emit('userLeaved', client['userData']);
     this.socketIdByUser.delete(client['userData']['id']);
-    console.log(this.socketIdByUser.entries());
   }
 
   @UsePipes(new ValidationPipe())
@@ -82,32 +81,35 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(client['userData']['roomName']).emit('move', client['userData']);
   }
 
-  @SubscribeMessage('chat')
+  @SubscribeMessage('publicChat')
   handleMessage(client: any, payload: any): void {
     const msgPayload = {
       fromUserId: client['userData']['id'],
+      nickname: client['userData']['nickname'],
       timestamp: Date.now(),
       message: payload['message'] || '',
     };
 
-    client.to(client['userData']['roomName']).emit('chat', msgPayload);
+    client.to(client['userData']['roomName']).emit('publicChat', msgPayload);
   }
 
-  @SubscribeMessage('directMessage')
+  @SubscribeMessage('privateChat')
   handleDirectMessage(client: any, payload: any): void {
+    console.log(payload);
     const targetUserId = payload['targetUserId'];
 
     const msgPayload = {
       fromUserId: client['userData']['id'],
+      nickname: client['userData']['nickname'],
       timestamp: Date.now(),
       message: payload['message'] || '',
     };
-
+    console.log({ ...msgPayload, targetUserId });
     this.event.emit('saveChat', { ...msgPayload, targetUserId });
 
     client
       .to(this.socketIdByUser.get(targetUserId))
-      .emit('directMessage', msgPayload);
+      .emit('privateChat', msgPayload);
   }
 
   @SubscribeMessage('chatRoomEntered')
@@ -128,7 +130,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('disconnecting')
   handleDisconnecting(client: any) {
-    console.log(client['userData']['id'], 'disconnecting...');
     client.disconnect();
   }
 }
