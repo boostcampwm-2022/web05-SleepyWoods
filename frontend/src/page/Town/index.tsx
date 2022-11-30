@@ -15,7 +15,6 @@ const Town = () => {
 
   const [permission, setPermission] = useRecoilState(devicePermissionState);
   const isSnowing = useRecoilValue(snowState);
-  const socket = useRecoilValue(socketState);
 
   useEffect(() => {
     const getDevicePermission = async () => {
@@ -32,10 +31,6 @@ const Town = () => {
         setIsLoadingComplete(true);
       }, 800);
     }, 1500);
-
-    // socket.on('userCreated', data => {
-    //   console.log(data);
-    // });
   }, []);
 
   return (

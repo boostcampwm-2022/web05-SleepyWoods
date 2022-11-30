@@ -6,7 +6,7 @@ import { emitter } from './util';
 const hair = 'bowlhair';
 
 export default class Game extends Phaser.Scene {
-  myPlayer?: Phaser.GameObjects.Sprite;
+  myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
 
@@ -20,8 +20,7 @@ export default class Game extends Phaser.Scene {
 
   init() {
     emitter.on('init', (data: any) => {
-      this.socket = data.socket;
-
+      this.socket = data.socket.connect();
       this.myPlayer = new MyPlayer(
         this,
         -25,
@@ -31,7 +30,9 @@ export default class Game extends Phaser.Scene {
         data.socket
       );
 
-      this.socketInit();
+      this.socket?.on('connect', () => {
+        this.socketInit();
+      });
     });
   }
 
