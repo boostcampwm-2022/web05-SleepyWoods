@@ -46,7 +46,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       x: -25,
       y: 400,
       direction: 'right',
-      state: 'walk',
+      state: 'wait',
       roomName,
     };
     this.socketIdByUser.set(userData['id'], client.id);

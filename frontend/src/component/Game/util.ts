@@ -51,18 +51,19 @@ export const calcMoveToPos = (scene: any, dir: string[]) => {
   return move;
 };
 
-export const changePosition = (scene: any, x: number, y: number) => {
-  if (!scene.character || !scene.hair) return;
+export const changePosition = (player: any, x: number, y: number) => {
+  if (!player.character || !player.hair) return;
 
-  scene.x += x * scene.speed;
-  scene.y += y * scene.speed;
+  player.x += x;
+  player.y += y;
 
-  changeDirection(scene, x);
-  scene.character.setPosition(scene.x, scene.y);
-  scene.hair.setPosition(scene.x, scene.y);
+  changeDirection(player, x);
 
-  const editPosNum = scene.direction === 'left' ? 25 : -25;
-  scene.dust.setPosition(scene.x + editPosNum, scene.y + 5);
+  player.character.setPosition(player.x, player.y);
+  player.hair.setPosition(player.x, player.y);
+
+  const editPosNum = player.direction === 'left' ? 25 : -25;
+  player.dust.setPosition(player.x + editPosNum, player.y + 5);
 };
 
 export const sortHeldDirection = (scene: any, cursors: any) => {
