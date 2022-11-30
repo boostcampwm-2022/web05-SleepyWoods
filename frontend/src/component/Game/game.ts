@@ -6,8 +6,8 @@ import { emitter } from './util';
 const hair = 'bowlhair';
 
 export default class Game extends Phaser.Scene {
-  myPlayer?: Phaser.GameObjects.Sprite;
-  otherPlayer: { [key: string]: Phaser.GameObjects.Sprite };
+  myPlayer?: MyPlayer;
+  otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
   autoPlay: boolean;
 
@@ -22,17 +22,19 @@ export default class Game extends Phaser.Scene {
 
   init() {
     emitter.on('init', (data: any) => {
-      this.socket = data.socket;
-
+      this.socket = data.socket.connect();
       this.myPlayer = new MyPlayer(
         this,
         -25,
         400,
         data.characterName,
-        data.nickname
+        data.nickname,
+        data.socket
       );
 
-      this.socketInit();
+      this.socket?.on('connect', () => {
+        this.socketInit();
+      });
     });
   }
 
@@ -121,7 +123,18 @@ export default class Game extends Phaser.Scene {
     if (!this.socket) return;
 
     this.socket.on('userCreated', (data: any) => {
-      this.otherPlayer[data.id] = new OtherPlayer(this, data);
+      if (!Array.isArray(data)) data = [data];
+
+      data.map((user: any) => {
+        if (this.myPlayer?.nickname === user.nickname) return false;
+        if (this.otherPlayer[user.nickname]) return false;
+
+        this.otherPlayer[user.nickname] = new OtherPlayer(this, user);
+      });
+    });
+
+    this.socket.on('move', (data: any) => {
+      this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
     });
   }
 

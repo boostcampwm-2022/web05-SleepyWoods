@@ -4,6 +4,7 @@ export enum directionOptions {
 }
 
 export enum stateOptions {
+  WAIT = 'wait',
   RUN = 'run',
   WALK = 'walk',
   ROLL = 'roll',
