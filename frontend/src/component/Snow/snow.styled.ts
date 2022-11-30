@@ -3,7 +3,7 @@ import theme from '../../styles/theme';
 
 export const snow = (idx: number) => css`
   position: absolute;
-  top: 0;
+  /* top: 0; */
   left: ${4 * idx}%;
   width: 7px;
   height: 7px;
@@ -23,14 +23,14 @@ export const snow = (idx: number) => css`
 
   @keyframes fall {
     0% {
-      margin-top: -10px;
+      top: -10px;
       opacity: 1;
     }
     60% {
       margin-left: 45px;
     }
     100% {
-      margin-top: 80%;
+      top: 100%;
       opacity: 0.3;
     }
   }
