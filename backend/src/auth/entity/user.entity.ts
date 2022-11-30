@@ -1,5 +1,7 @@
 import { BoardLike } from 'src/board/entity/board-like.entity';
 import { Board } from 'src/board/entity/board.entity';
+import { ChatMark } from 'src/chat/entity/chat-mark.entity';
+import { Chat } from 'src/chat/entity/chat.entity';
 import { Following } from 'src/friendship/entity/follwing.entity';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { socialPlatform } from '../user.enum';
@@ -49,4 +51,10 @@ export class User {
 
   @OneToMany(() => Following, following => following.targetUserId)
   followedBy: Following[];
+
+  @OneToMany(() => Chat, chat => chat.sender)
+  chats: Chat[];
+
+  @OneToMany(() => ChatMark, mark => mark.user)
+  chatMark: ChatMark[];
 }

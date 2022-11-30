@@ -9,6 +9,7 @@ export default class Game extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
+  autoPlay: boolean;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
@@ -16,6 +17,7 @@ export default class Game extends Phaser.Scene {
     this.socket;
     this.myPlayer;
     this.otherPlayer = {};
+    this.autoPlay = false;
   }
 
   init() {
@@ -60,9 +62,7 @@ export default class Game extends Phaser.Scene {
 
   create() {
     this.add.image(0, 0, 'background').setScale(3);
-
-    const music = this.sound.add('christmas');
-    // music.play();
+    this.sound.add('christmas');
 
     const spriteInfo = [
       { action: 'wait', start: 1, end: 9 },
@@ -115,6 +115,8 @@ export default class Game extends Phaser.Scene {
 
   update() {
     this.myPlayer?.update();
+
+    this.musicControll();
   }
 
   socketInit() {
@@ -133,6 +135,20 @@ export default class Game extends Phaser.Scene {
 
     this.socket.on('move', (data: any) => {
       this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
+    });
+  }
+
+  musicControll() {
+    const music = this.sound.get('christmas');
+    if (this.autoPlay && !this.sound.get('christmas').isPlaying) music.play();
+
+    emitter.on('musicControll', (state: boolean) => {
+      const changeState = music.isPlaying === state ? false : true;
+
+      if (!changeState) return;
+
+      music.isPlaying ? music.stop() : music.play();
+      this.autoPlay = !this.autoPlay;
     });
   }
 }
