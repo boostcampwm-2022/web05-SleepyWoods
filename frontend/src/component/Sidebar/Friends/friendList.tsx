@@ -1,3 +1,4 @@
+import { MouseEvent } from 'react';
 import Content from '../Content';
 import FriendItem from './friendItem';
 import { friendType } from './friends';
@@ -47,10 +48,19 @@ const data = [
 ];
 
 const FriendList = () => {
+  const handleDrag = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+
+    target.classList.toggle('dragging');
+  };
+
   return (
     <Content>
       <h2 className="srOnly">친구 목록</h2>
-      <ul css={friendListWrapper}>
+      <ul
+        css={friendListWrapper}
+        onDragStart={handleDrag}
+        onDragEnd={handleDrag}>
         {data.map((friend: friendType) => FriendItem(friend))}
       </ul>
       <div css={findFriend}>

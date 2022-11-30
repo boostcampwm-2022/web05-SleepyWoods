@@ -32,8 +32,19 @@ export const friendListWrapper = css`
 `;
 
 export const callingList = css`
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 12px;
   height: 250px;
   ${backgroundImage(phoneIcon)};
+
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const friendItemWrapper = css`

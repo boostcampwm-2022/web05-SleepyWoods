@@ -3,6 +3,7 @@ import { friendType } from './friends';
 import { friendItemWrapper, userName } from './friends.styled';
 import message from '../../../assets/icon/messageIcon.svg';
 import unfollow from '../../../assets/icon/unfollowIcon.svg';
+import { MouseEvent } from 'react';
 
 const FriendItem = (data: friendType) => {
   const { id, isOnline, name } = data;
