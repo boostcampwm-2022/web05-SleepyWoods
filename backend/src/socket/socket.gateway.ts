@@ -16,7 +16,10 @@ import { movementValidationPipe } from './pipes/movement.pipe';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @UseFilters(WsExceptionFilter)
-@WebSocketGateway()
+@WebSocketGateway({
+  pingInterval: 5000,
+  pingTimeout: 3000,
+})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
@@ -65,6 +68,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   public handleDisconnect(client: Socket): void {
     this.server.emit('userLeaved', client['userData']['id']);
     this.socketIdByUser.delete(client['userData']['id']);
+    console.log(this.socketIdByUser.entries());
   }
 
   @UsePipes(new ValidationPipe())
@@ -108,11 +112,23 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('chatRoomEntered')
   handleChatRoomEntered(client: any, payload: any) {
-    this.event.emit('createChatRoom', payload);
+    this.event.emit('createChatRoom', {
+      fromUserId: client['userData']['id'],
+      ...payload,
+    });
   }
 
   @SubscribeMessage('chatRoomLeaved')
   handleChatRoomLeaved(client: any, payload: any) {
-    // this.event.emit('markMsg');
+    this.event.emit('leaveChatRoom', {
+      fromUserId: client['userData']['id'],
+      ...payload,
+    });
+  }
+
+  @SubscribeMessage('disconnecting')
+  handleDisconnecting(client: any) {
+    console.log(client['userData']['id'], 'disconnecting...');
+    client.disconnect();
   }
 }

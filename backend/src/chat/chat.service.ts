@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,27 +15,92 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>
   ) {}
 
-  async getChatRoom(payload: any): Promise<any[] | undefined> {
-    //exists, in
-    const { fromUserId, targetUserId } = payload;
-    const chatRoom = await this.chatMarkRepository
-      .createQueryBuilder('chatMark')
-      .select([
-        'chatMark.roomId AS roomId',
-        'MAX(chatMark.readCount) as maxReadCount',
-      ])
-      .where('chatMark.userId=:userA OR chatMark.userId=:userB', {
-        userA: fromUserId,
-        userB: targetUserId,
-      })
-      .groupBy('chatMark.roomId')
-      .having('COUNT(chatMark.roomId)>1')
-      .getRawMany();
-
-    return chatRoom[0] || undefined;
+  async getChatContent(roomId: string) {
+    // userId, targetUserId 를 기준으로 roomId 획득
+    // 이후 roomId로 chat table 전체 긁어서 return
+    try {
+      const chatContent = await this.chatRepository
+        .createQueryBuilder('chat')
+        .select('*')
+        .where('chat.roomId=:roomId', {
+          roomId,
+        })
+        .getRawMany();
+      return chatContent;
+    } catch (e) {
+      console.log(e);
+      throw new NotFoundException('채팅 내용을 불러올 수 없습니다.');
+    }
   }
 
-  async createChatRoom(payload: any): Promise<number> {
+  async getChatRoomList(userId: string) {
+    try {
+      // select    roomId, readCount + maxCount
+      const chatRoomList = await this.chatMarkRepository
+        .createQueryBuilder('chatMark')
+        .select('*')
+        .innerJoin('chatMark.room', 'chat_room')
+        .where('chatMark.userId=:userId', { userId })
+        .getRawMany();
+
+      const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
+      const friendList = await this.chatMarkRepository
+        .createQueryBuilder('chatMark')
+        .select()
+        .where(
+          'chatMark.userId != :userId AND chatMark.roomId in (:...roomIdList)',
+          { userId, roomIdList }
+        )
+        .getRawMany();
+
+      const result = chatRoomList.map(
+        ({ roomId, readCount, totalmsgcount }) => {
+          return {
+            roomId,
+            unreadCount: totalmsgcount - readCount,
+            targetUserId: friendList.find(
+              friend => friend.chatMark_roomId == roomId
+            ).chatMark_userId,
+          };
+        }
+      );
+
+      return result || [];
+    } catch (e) {
+      throw new NotFoundException('채팅방 불러오기 실패');
+    }
+  }
+
+  async getConnectedChatRoom(payload: any): Promise<any> {
+    let chatRoom;
+    try {
+      const { fromUserId, targetUserId } = payload;
+      chatRoom = await this.chatMarkRepository
+        .createQueryBuilder('chatMark')
+        .select([
+          'chatMark.roomId AS roomId',
+          'MAX(chat_room.totalmsgcount) as totalmsgcount',
+        ])
+        .innerJoin('chatMark.room', 'chat_room')
+        .where('chatMark.userId=:userA OR chatMark.userId=:userB', {
+          userA: fromUserId,
+          userB: targetUserId,
+        })
+        .groupBy('chatMark.roomId')
+        .having('COUNT(chatMark.roomId)>1')
+        .getRawMany();
+    } catch (e) {
+      throw new NotFoundException('해당하는 방이 없습니다.');
+    }
+
+    if (!chatRoom || chatRoom.length == 0) {
+      throw new NotFoundException('해당하는 방이 없습니다.');
+    } else {
+      return chatRoom[0];
+    }
+  }
+
+  async createChatRoom(): Promise<number> {
     const chatRoom = await this.chatRoomRepository.insert({
       totalmsgcount: 0,
     });
@@ -59,7 +124,7 @@ export class ChatService {
     await this.chatMarkRepository.save({
       roomId: chatRoomData['roomid'],
       userId,
-      readCount: chatRoomData['maxreadcount'],
+      readCount: chatRoomData['totalmsgcount'],
     });
   }
 
