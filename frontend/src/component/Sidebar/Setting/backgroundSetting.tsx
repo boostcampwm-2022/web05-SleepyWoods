@@ -3,6 +3,7 @@ import Content from '../Content';
 import { backgroundSettingWrapper } from './setting.styled';
 import Toggle from './toggle';
 import { musicState, snowState } from '../../../store/atom/backgroundSetting';
+import { emitter } from '../../Game/util';
 
 const BackgroundSetting = () => {
   const [isMusicOn, setMusic] = useRecoilState(musicState);
@@ -10,6 +11,8 @@ const BackgroundSetting = () => {
 
   const handleMusicStatus = () => {
     setMusic(!isMusicOn);
+
+    emitter.emit('musicControll', !isMusicOn);
   };
 
   const handleSnowingStatus = () => {
