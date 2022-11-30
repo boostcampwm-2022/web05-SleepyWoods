@@ -11,13 +11,13 @@ export class User {
   @PrimaryColumn('varchar', { length: 64 })
   id: string;
 
-  @Column('char', {
+  @Column('varchar', {
     length: 16,
     unique: true,
   })
   nickname: string;
 
-  @Column('char', {
+  @Column('varchar', {
     length: 16,
   })
   characterName: string;
