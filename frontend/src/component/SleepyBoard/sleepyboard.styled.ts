@@ -3,6 +3,7 @@ import tree from '../../assets/tree.svg';
 import trophy from '../../assets/trophy.svg';
 import like from '../../assets/icon/like.svg';
 import unlike from '../../assets/icon/unlike.svg';
+import { flexCenter } from '../../styles/mixin.styled';
 
 export const sleepyBoardBtn = css`
   width: 60px;
@@ -55,6 +56,10 @@ export const modal = (animation: string) => css`
 `;
 
 export const header = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   width: 100%;
   margin-bottom: 20px;
 `;
@@ -176,5 +181,27 @@ export const likeBtn = (isLike: boolean) => css`
     background-image: url(${isLike ? like : unlike});
     background-repeat: no-repeat;
     background-size: contain;
+  }
+`;
+export const filterBtnBox = css`
+  display: flex;
+`;
+
+export const filterBtn = (icon: string, width: number, height: number) => css`
+  ${flexCenter}
+  width: 60px;
+  height: 40px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  margin-left: 10px;
+
+  ::after {
+    content: '';
+    display: block;
+    width: ${width + 'px'};
+    height: ${height + 'px'};
+    background-image: url(${icon});
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 `;
