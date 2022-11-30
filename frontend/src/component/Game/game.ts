@@ -36,6 +36,10 @@ export default class Game extends Phaser.Scene {
         this.socketInit();
       });
     });
+
+    emitter.on('updateNickname', (nickname: string) => {
+      this.myPlayer?.updateNickname(nickname);
+    });
   }
 
   preload() {
