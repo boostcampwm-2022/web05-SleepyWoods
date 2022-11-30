@@ -27,8 +27,18 @@ export class ChatController {
     @Req() req: any,
     @Query('targetUserId', ValidationPipe) targetUserId: string
   ) {
-    const userId = req.user.id;
-    await this.chatService.getChatContent(userId, targetUserId);
+    const fromUserId = req.user.id;
+    const chatRoomData = await this.chatService.getConnectedChatRoom({
+      fromUserId,
+      targetUserId,
+    });
+
+    const chatContent = await this.chatService.getChatContent(
+      chatRoomData['roomid']
+    );
+
+    await this.chatService.updateReadCount(fromUserId, chatRoomData);
+    return chatContent;
   }
 
   @OnEvent('createChatRoom')
@@ -42,9 +52,16 @@ export class ChatController {
     await this.chatService.createChatMark(chatRoomId, payload);
   }
 
+  @OnEvent('leaveChatRoom')
+  async leaveChatRoom(payload: any) {
+    const { fromUserId } = payload;
+    const chatRoomData = await this.chatService.getConnectedChatRoom(payload);
+    await this.chatService.updateReadCount(fromUserId, chatRoomData);
+  }
+
   @OnEvent('saveChat')
   async saveChatReceiver(payload: any) {
     const chatRoomData = await this.chatService.getConnectedChatRoom(payload);
-    this.chatService.saveChat(chatRoomData['roomid'], payload);
+    await this.chatService.saveChat(chatRoomData['roomid'], payload);
   }
 }

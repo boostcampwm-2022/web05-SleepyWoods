@@ -45,8 +45,9 @@ export class FriendshipService {
   }
 
   async unfollowFriend(userId: string, targetUserId: string): Promise<true> {
+    let deleteResult;
     try {
-      const deleteResult = await this.followingRepository
+      deleteResult = await this.followingRepository
         .createQueryBuilder()
         .delete()
         .from(Following)
@@ -55,9 +56,12 @@ export class FriendshipService {
           targetUserId,
         })
         .execute();
-      if (deleteResult.affected) return true;
-      else throw new NotFoundException('팔로우 취소 실패');
     } catch (e) {
+      throw new NotFoundException('팔로우 취소 실패');
+    }
+
+    if (deleteResult.affected) return true;
+    else {
       throw new NotFoundException('팔로우 취소 실패');
     }
   }
