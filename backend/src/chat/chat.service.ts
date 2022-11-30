@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,35 +16,41 @@ export class ChatService {
   ) {}
 
   async getChatRoomList(userId: string) {
-    // select    roomId, readCount + maxCount
-    const chatRoomList = await this.chatMarkRepository
-      .createQueryBuilder('chatMark')
-      .select('*')
-      .innerJoin('chatMark.room', 'chat_room')
-      .where('chatMark.userId=:userId', { userId })
-      .getRawMany();
+    try {
+      // select    roomId, readCount + maxCount
+      const chatRoomList = await this.chatMarkRepository
+        .createQueryBuilder('chatMark')
+        .select('*')
+        .innerJoin('chatMark.room', 'chat_room')
+        .where('chatMark.userId=:userId', { userId })
+        .getRawMany();
 
-    const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
-    const friendList = await this.chatMarkRepository
-      .createQueryBuilder('chatMark')
-      .select()
-      .where(
-        'chatMark.userId != :userId AND chatMark.roomId in (:...roomIdList)',
-        { userId, roomIdList }
-      )
-      .getRawMany();
+      const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
+      const friendList = await this.chatMarkRepository
+        .createQueryBuilder('chatMark')
+        .select()
+        .where(
+          'chatMark.userId != :userId AND chatMark.roomId in (:...roomIdList)',
+          { userId, roomIdList }
+        )
+        .getRawMany();
 
-    const result = chatRoomList.map(({ roomId, readCount, totalmsgcount }) => {
-      return {
-        roomId,
-        unreadCount: totalmsgcount - readCount,
-        targetUserId: friendList.find(
-          friend => friend.chatMark_roomId == roomId
-        ).chatMark_userId,
-      };
-    });
+      const result = chatRoomList.map(
+        ({ roomId, readCount, totalmsgcount }) => {
+          return {
+            roomId,
+            unreadCount: totalmsgcount - readCount,
+            targetUserId: friendList.find(
+              friend => friend.chatMark_roomId == roomId
+            ).chatMark_userId,
+          };
+        }
+      );
 
-    return result;
+      return result || [];
+    } catch (e) {
+      throw new NotFoundException('채팅방 불러오기 실패');
+    }
   }
 
   async getConnectedChatRoom(payload: any): Promise<any[] | undefined> {

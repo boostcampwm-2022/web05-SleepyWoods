@@ -49,12 +49,10 @@ export class ChatController {
   @Get('roomList')
   async getChatRoomList(@Req() req: any) {
     const userId = req.user.id;
-    this.chatService.getChatRoomList(userId);
-    // 이 아이디랑 방을 맺은 방들을 찾아보기 chatMark,
-    return 'ok';
+    const chatRoomList = await this.chatService.getChatRoomList(userId);
+    return chatRoomList;
   }
 
-  // @Get('chatList')
   @OnEvent('createChatRoom')
   async createChatRoom(payload: any) {
     const chatRoomData = await this.chatService.getConnectedChatRoom(payload);
