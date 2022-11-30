@@ -121,11 +121,18 @@ export default class Game extends Phaser.Scene {
     if (!this.socket) return;
 
     this.socket.on('userCreated', (data: any) => {
-      this.otherPlayer[data.id] = new OtherPlayer(this, data);
+      if (!Array.isArray(data)) data = [data];
+
+      data.map((user: any) => {
+        if (this.myPlayer?.nickname === user.nickname) return false;
+        if (this.otherPlayer[user.nickname]) return false;
+
+        this.otherPlayer[user.nickname] = new OtherPlayer(this, user);
+      });
     });
 
     this.socket.on('move', (data: any) => {
-      this.otherPlayer[data.id].update(data.state, data.x, data.y);
+      this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
     });
   }
 }

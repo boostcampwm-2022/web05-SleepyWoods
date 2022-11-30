@@ -11,6 +11,8 @@ export class Player extends Phaser.GameObjects.Sprite {
   y: number;
   speed: number;
   heldDirection: string[];
+  hairName: string;
+  nickname: string;
 
   constructor(
     scene: Phaser.Scene,
@@ -23,6 +25,8 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.direction = 'right';
     this.state = 'wait';
     this.isChangeState = true;
+    this.hairName = hair;
+    this.nickname = nickname;
     this.x = x;
     this.y = y;
     this.speed = 1;
