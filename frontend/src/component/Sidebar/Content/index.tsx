@@ -12,7 +12,7 @@ const Content = ({
   isexpand = false,
 }: contentType) => {
   return (
-    <li css={container(isexpand)} draggable={draggable}>
+    <li css={container(draggable, isexpand)} draggable={draggable}>
       {children}
     </li>
   );

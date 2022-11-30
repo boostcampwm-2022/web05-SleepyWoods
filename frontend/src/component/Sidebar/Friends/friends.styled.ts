@@ -25,10 +25,6 @@ export const friendListWrapper = css`
   ::-webkit-scrollbar {
     display: none;
   }
-
-  > li {
-    cursor: move;
-  }
 `;
 
 export const callingList = css`
@@ -47,12 +43,13 @@ export const callingList = css`
   }
 `;
 
-export const friendItemWrapper = css`
+export const friendItemWrapper = (isOnline: boolean) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 5px;
   padding: 7px 5px;
+  ${!isOnline && 'opacity: 0.5;'}
 
   div {
     display: flex;
