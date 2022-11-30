@@ -2,55 +2,33 @@ import {
   Controller,
   UseGuards,
   Get,
-  Post,
-  Body,
-  Res,
   Req,
+  ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ChatService } from './chat.service';
-import { OnEvent, EventEmitter2 } from '@nestjs/event-emitter';
+import { OnEvent } from '@nestjs/event-emitter';
 
 @Controller('chat')
 @UseGuards(AuthGuard('criticalGuard'))
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  // 채팅방 내용 조회
-  @Get('test1')
-  getChatContent1() {
-    // 성준 -> 형진
-    this.chatService.getConnectedChatRoom({
-      fromUserId: 'Z-NVwpPpbw7oOjHEn-CYEZ8V9nU3P9IIChz_9PuuVak',
-      targetUserId: 'IZI_1Wzwhqblu0A4KA_TCrtkl4mM55Qstc_FDKMv_sY',
-    });
-  }
-  // 채팅방 내용 조회
-  @Get('test2')
-  getChatContent2() {
-    // 형진 -> 성준
-    this.chatService.getConnectedChatRoom({
-      fromUserId: 'IZI_1Wzwhqblu0A4KA_TCrtkl4mM55Qstc_FDKMv_sY',
-      targetUserId: 'Z-NVwpPpbw7oOjHEn-CYEZ8V9nU3P9IIChz_9PuuVak',
-    });
-  }
-
-  @Get('test3')
-  async getChatContent3() {
-    // 형전 -> 현서
-    console.log(
-      await this.chatService.getConnectedChatRoom({
-        fromUserId: 'IZI_1Wzwhqblu0A4KA_TCrtkl4mM55Qstc_FDKMv_sY',
-        targetUserId: '9B8X7YWtA0XlNTBzCItRGmLlUKBYkHdshMPqtsE7sWE',
-      })
-    );
-  }
-
   @Get('roomList')
   async getChatRoomList(@Req() req: any) {
     const userId = req.user.id;
     const chatRoomList = await this.chatService.getChatRoomList(userId);
     return chatRoomList;
+  }
+
+  @Get('content')
+  async getChatList(
+    @Req() req: any,
+    @Query('targetUserId', ValidationPipe) targetUserId: string
+  ) {
+    const userId = req.user.id;
+    await this.chatService.getChatContent(userId, targetUserId);
   }
 
   @OnEvent('createChatRoom')

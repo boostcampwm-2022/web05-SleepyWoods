@@ -15,6 +15,28 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>
   ) {}
 
+  async getChatContent(fromUserId, targetUserId) {
+    // userId, targetUserId 를 기준으로 roomId 획득
+    // 이후 roomId로 chat table 전체 긁어서 return
+    try {
+      const room = await this.getConnectedChatRoom({
+        fromUserId,
+        targetUserId,
+      });
+
+      const chatContent = await this.chatRepository
+        .createQueryBuilder('chat')
+        .select('*')
+        .where('chat.roomId=:roomId', {
+          roomId: room['roomid'],
+        })
+        .getRawMany();
+      return chatContent;
+    } catch (e) {
+      throw new NotFoundException('채팅 내용을 불러올 수 없습니다.');
+    }
+  }
+
   async getChatRoomList(userId: string) {
     try {
       // select    roomId, readCount + maxCount
