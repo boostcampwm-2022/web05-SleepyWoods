@@ -36,7 +36,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3);
 
-    this.hair = this.scene.add.sprite(this.x, this.y, 'hair-wait');
+    this.hair = this.scene.add.sprite(this.x, this.y, `${this.hairName}-wait`);
     this.hair.setScale(3);
 
     this.nicknameText = this.scene.add.text(

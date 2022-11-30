@@ -3,8 +3,6 @@ import { MyPlayer } from './Phaser/Player/myPlayer';
 import { OtherPlayer } from './Phaser/Player/otherPlayer';
 import { emitter } from './util';
 
-const hair = 'bowlhair';
-
 export default class Game extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
@@ -23,12 +21,13 @@ export default class Game extends Phaser.Scene {
   init() {
     emitter.on('init', (data: any) => {
       this.socket = data.socket.connect();
+
       this.myPlayer = new MyPlayer(
         this,
         -25,
         400,
-        data.characterName,
-        data.nickname.trim(),
+        data.hair,
+        data.nickname,
         data.socket
       );
 
@@ -76,6 +75,15 @@ export default class Game extends Phaser.Scene {
       { action: 'jump', start: 1, end: 9 },
     ];
 
+    const hairInfo = [
+      'longhair',
+      'mophair',
+      'shorthair',
+      'spikeyhair',
+      'bowlhair',
+      'curlyhair',
+    ];
+
     spriteInfo.forEach(
       (info: { action: string; start: number; end: number }) => {
         const { action, start, end } = info;
@@ -91,15 +99,17 @@ export default class Game extends Phaser.Scene {
           repeat: -1,
         });
 
-        this.anims.create({
-          key: `hair-${action}`,
-          frames: this.anims.generateFrameNames(action, {
-            prefix: `${hair}`,
-            start,
-            end,
-          }),
-          frameRate: 10,
-          repeat: -1,
+        hairInfo.forEach((hair: string) => {
+          this.anims.create({
+            key: `${hair}-${action}`,
+            frames: this.anims.generateFrameNames(action, {
+              prefix: `${hair}`,
+              start,
+              end,
+            }),
+            frameRate: 10,
+            repeat: -1,
+          });
         });
       }
     );
