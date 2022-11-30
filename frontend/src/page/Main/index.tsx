@@ -18,29 +18,9 @@ export const getCookieValue = (key: string) => {
 };
 
 const Main = () => {
-  const [hasToken, setHasToken] = useState(false);
-  const [user, setUser] = useRecoilState(userState);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const response = await axios.get('/api/user/auth');
-
-      if (response.status === 200) {
-        setHasToken(true);
-
-        setUser({
-          nickname: response.data.nickname,
-          hair: response.data.characterName,
-        });
-      } else setHasToken(false);
-    };
-
-    checkAuth();
-  }, []);
-
   return (
     <Background>
-      <MainContent hasToken={hasToken} />
+      <MainContent />
     </Background>
   );
 };
