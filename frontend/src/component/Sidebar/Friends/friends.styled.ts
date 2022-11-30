@@ -25,23 +25,31 @@ export const friendListWrapper = css`
   ::-webkit-scrollbar {
     display: none;
   }
-
-  > li {
-    cursor: move;
-  }
 `;
 
 export const callingList = css`
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 12px;
   height: 250px;
   ${backgroundImage(phoneIcon)};
+
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
-export const friendItemWrapper = css`
+export const friendItemWrapper = (isOnline: boolean) => css`
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 5px;
   padding: 7px 5px;
+  ${!isOnline && 'opacity: 0.5;'}
 
   div {
     display: flex;

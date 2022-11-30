@@ -16,8 +16,8 @@ const FriendItem = (data: friendType) => {
   };
 
   return (
-    <Content draggable={true} key={id}>
-      <section css={friendItemWrapper}>
+    <Content draggable={isOnline} key={id}>
+      <section id={id} css={friendItemWrapper(isOnline)}>
         <div css={userName(isOnline)}>{name}</div>
         <div>
           <img src={message} alt="채팅하기" onClick={sendChatting}></img>
