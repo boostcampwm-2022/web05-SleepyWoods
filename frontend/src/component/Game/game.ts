@@ -3,8 +3,6 @@ import { MyPlayer } from './Phaser/Player/myPlayer';
 import { OtherPlayer } from './Phaser/Player/otherPlayer';
 import { emitter } from './util';
 
-const hair = 'bowlhair';
-
 export default class Game extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
@@ -23,11 +21,12 @@ export default class Game extends Phaser.Scene {
   init() {
     emitter.on('init', (data: any) => {
       this.socket = data.socket.connect();
+
       this.myPlayer = new MyPlayer(
         this,
         -25,
         400,
-        data.characterName,
+        data.hair,
         data.nickname,
         data.socket
       );
@@ -35,6 +34,14 @@ export default class Game extends Phaser.Scene {
       this.socket?.on('connect', () => {
         this.socketInit();
       });
+    });
+
+    emitter.on('updateNickname', (nickname: string) => {
+      this.myPlayer?.updateNickname(nickname);
+    });
+
+    emitter.on('updateHair', (hair: string) => {
+      this.myPlayer?.updateHair(hair);
     });
   }
 
@@ -72,6 +79,16 @@ export default class Game extends Phaser.Scene {
       { action: 'jump', start: 1, end: 9 },
     ];
 
+    const hairInfo = [
+      'nohair',
+      'longhair',
+      'mophair',
+      'shorthair',
+      'spikeyhair',
+      'bowlhair',
+      'curlyhair',
+    ];
+
     spriteInfo.forEach(
       (info: { action: string; start: number; end: number }) => {
         const { action, start, end } = info;
@@ -87,15 +104,17 @@ export default class Game extends Phaser.Scene {
           repeat: -1,
         });
 
-        this.anims.create({
-          key: `hair-${action}`,
-          frames: this.anims.generateFrameNames(action, {
-            prefix: `${hair}`,
-            start,
-            end,
-          }),
-          frameRate: 10,
-          repeat: -1,
+        hairInfo.forEach((hair: string) => {
+          this.anims.create({
+            key: `${hair}-${action}`,
+            frames: this.anims.generateFrameNames(action, {
+              prefix: `${hair}`,
+              start,
+              end,
+            }),
+            frameRate: 10,
+            repeat: -1,
+          });
         });
       }
     );
@@ -122,22 +141,30 @@ export default class Game extends Phaser.Scene {
   socketInit() {
     if (!this.socket) return;
 
-    this.socket.on('userCreated', (data: any) => {
+    this.socket.on('userInitiated', (data: any) => {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: any) => {
-        if (this.myPlayer?.nickname === user.nickname) return;
-        if (this.otherPlayer[user.nickname]) return;
+        const nickname = user.nickname.trim();
+        if (this.myPlayer?.nickname === nickname) return;
+        if (this.otherPlayer[nickname]) return;
 
-        this.otherPlayer[user.nickname] = new OtherPlayer(this, user);
+        this.otherPlayer[nickname] = new OtherPlayer(this, user);
       });
     });
 
-    this.socket.on('move', (data: any) => {
-      this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
+    this.socket.on('userCreated', (user: any) => {
+      const nickname = user.nickname.trim();
+      this.otherPlayer[nickname] = new OtherPlayer(this, user);
     });
 
-    this.socket.on('userLeaved', (nickname: string) => {
+    this.socket.on('move', (data: any) => {
+      const nickname = data.nickname.trim();
+      this.otherPlayer[nickname].update(data.state, data.x, data.y);
+    });
+
+    this.socket.on('userLeaved', (data: string) => {
+      const nickname = data.trim();
       this.otherPlayer[nickname].delete();
       delete this.otherPlayer[nickname];
     });

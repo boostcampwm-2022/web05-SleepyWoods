@@ -190,6 +190,195 @@
       }
     },
     {
+      "filename": "nohair1",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair2",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair3",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair4",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair5",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair6",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair7",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair8",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "nohair9",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
+      },
+      "sourceSize": {
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
       "filename": "longhair1",
       "frame": {
         "x": 33,

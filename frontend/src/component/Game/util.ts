@@ -1,34 +1,34 @@
 const responsiveness = 5;
 
-export const changeState = (scene: any) => {
-  if (!scene.character || !scene.hair) return;
+export const changeState = (player: any) => {
+  if (!player.character || !player.hair) return;
 
-  scene.character.play(`character-${scene.state}`);
-  scene.hair.play(`hair-${scene.state}`);
+  player.character.play(`character-${player.state}`);
+  player.hair.play(`${player.hairName}-${player.state}`);
 
-  if (scene.state === 'run' || scene.state === 'roll') {
-    scene.dust.visible = true;
-    scene.dust.play('dust');
+  if (player.state === 'run' || player.state === 'roll') {
+    player.dust.visible = true;
+    player.dust.play('dust');
   } else {
-    scene.dust.visible = false;
-    scene.dust.stop();
+    player.dust.visible = false;
+    player.dust.stop();
   }
 };
 
-export const changeDirection = (scene: any, moveX: number) => {
-  if (!scene.character || !scene.hair) return;
-  if (scene.direction === 'left' && moveX <= 0) return;
-  if (scene.direction === 'right' && moveX >= 0) return;
+export const changeDirection = (player: any, moveX: number) => {
+  if (!player.character || !player.hair) return;
+  if (player.direction === 'left' && moveX <= 0) return;
+  if (player.direction === 'right' && moveX >= 0) return;
 
-  scene.character.toggleFlipX();
-  scene.hair.toggleFlipX();
-  scene.dust.toggleFlipX();
+  player.character.toggleFlipX();
+  player.hair.toggleFlipX();
+  player.dust.toggleFlipX();
 
-  scene.direction = scene.direction === 'left' ? 'right' : 'left';
+  player.direction = player.direction === 'left' ? 'right' : 'left';
 };
 
-export const calcMoveToPos = (scene: any, dir: string[]) => {
-  if (!scene.character || !scene.hair) return;
+export const calcMoveToPos = (player: any, dir: string[]) => {
+  if (!player.character || !player.hair) return;
 
   const move = { x: 0, y: 0 };
   const leftIdx = dir.indexOf('left');
@@ -61,6 +61,8 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);
+  player.nicknameText.x = player.x - player.nickname.length * 3.5;
+  player.nicknameText.y = player.y + 25;
 
   const editPosNum = player.direction === 'left' ? 25 : -25;
   player.dust.setPosition(player.x + editPosNum, player.y + 5);
