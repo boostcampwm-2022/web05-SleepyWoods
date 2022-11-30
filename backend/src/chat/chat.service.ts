@@ -75,6 +75,7 @@ export class ChatService {
     let chatRoom;
     try {
       const { fromUserId, targetUserId } = payload;
+      console.log(fromUserId, targetUserId);
       chatRoom = await this.chatMarkRepository
         .createQueryBuilder('chatMark')
         .select([
