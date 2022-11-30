@@ -141,7 +141,7 @@ export default class Game extends Phaser.Scene {
   socketInit() {
     if (!this.socket) return;
 
-    this.socket.on('userCreated', (data: any) => {
+    this.socket.on('userInitiated', (data: any) => {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: any) => {
@@ -151,6 +151,11 @@ export default class Game extends Phaser.Scene {
 
         this.otherPlayer[nickname] = new OtherPlayer(this, user);
       });
+    });
+
+    this.socket.on('userCreated', (user: any) => {
+      const nickname = user.nickname.trim();
+      this.otherPlayer[nickname] = new OtherPlayer(this, user);
     });
 
     this.socket.on('move', (data: any) => {
