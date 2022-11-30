@@ -43,4 +43,9 @@ export class Player extends Phaser.GameObjects.Sprite {
 
     changeState(this);
   }
+
+  delete() {
+    this.character?.destroy();
+    this.hair?.destroy();
+  }
 }

@@ -136,6 +136,11 @@ export default class Game extends Phaser.Scene {
     this.socket.on('move', (data: any) => {
       this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
     });
+
+    this.socket.on('userLeaved', (nickname: string) => {
+      this.otherPlayer[nickname].delete();
+      delete this.otherPlayer[nickname];
+    });
   }
 
   musicControll() {

@@ -66,7 +66,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleDisconnect(client: Socket): void {
-    this.server.emit('userLeaved', client['userData']['id']);
+    this.server.emit('userLeaved', client['userData']['nickname']);
     this.socketIdByUser.delete(client['userData']['id']);
     console.log(this.socketIdByUser.entries());
   }
