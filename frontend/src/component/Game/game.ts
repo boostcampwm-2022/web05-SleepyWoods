@@ -28,7 +28,7 @@ export default class Game extends Phaser.Scene {
         -25,
         400,
         data.characterName,
-        data.nickname,
+        data.nickname.trim(),
         data.socket
       );
 
@@ -126,18 +126,21 @@ export default class Game extends Phaser.Scene {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: any) => {
-        if (this.myPlayer?.nickname === user.nickname) return;
-        if (this.otherPlayer[user.nickname]) return;
+        const nickname = user.nickname.trim();
+        if (this.myPlayer?.nickname === nickname) return;
+        if (this.otherPlayer[nickname]) return;
 
-        this.otherPlayer[user.nickname] = new OtherPlayer(this, user);
+        this.otherPlayer[nickname] = new OtherPlayer(this, user);
       });
     });
 
     this.socket.on('move', (data: any) => {
-      this.otherPlayer[data.nickname].update(data.state, data.x, data.y);
+      const nickname = data.nickname.trim();
+      this.otherPlayer[nickname].update(data.state, data.x, data.y);
     });
 
-    this.socket.on('userLeaved', (nickname: string) => {
+    this.socket.on('userLeaved', (data: string) => {
+      const nickname = data.trim();
       this.otherPlayer[nickname].delete();
       delete this.otherPlayer[nickname];
     });

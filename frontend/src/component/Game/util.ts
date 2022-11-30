@@ -61,6 +61,8 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);
+  player.nicknameText.x = player.x - player.nickname.length * 3.5;
+  player.nicknameText.y = player.y + 25;
 
   const editPosNum = player.direction === 'left' ? 25 : -25;
   player.dust.setPosition(player.x + editPosNum, player.y + 5);
