@@ -125,9 +125,9 @@ export default class Game extends Phaser.Scene {
     this.socket.on('userCreated', (data: any) => {
       if (!Array.isArray(data)) data = [data];
 
-      data.map((user: any) => {
-        if (this.myPlayer?.nickname === user.nickname) return false;
-        if (this.otherPlayer[user.nickname]) return false;
+      data.forEach((user: any) => {
+        if (this.myPlayer?.nickname === user.nickname) return;
+        if (this.otherPlayer[user.nickname]) return;
 
         this.otherPlayer[user.nickname] = new OtherPlayer(this, user);
       });
