@@ -33,7 +33,7 @@ const Setting = () => {
 
       if (e.response.status === 400) {
         setErrorMessage(
-          '닉네임은 4 ~ 12글자이어야 하고, 한글, 영어 및 숫자만 가능합니다'
+          '닉네임은 2 ~ 16글자이어야 하고, 한글, 영어 및 숫자만 가능합니다'
         );
       } else if (e.response.status === 401) {
         setErrorMessage('토큰이 유효하지 않습니다');
