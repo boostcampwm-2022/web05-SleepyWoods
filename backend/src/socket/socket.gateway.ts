@@ -13,6 +13,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { playerMovementDataDto } from './dto/player.dto';
 import { WsExceptionFilter } from './filter/ws.filter';
 import { movementValidationPipe } from './pipes/movement.pipe';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway()
@@ -21,7 +22,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
   socketIdByUser = new Map();
 
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private event: EventEmitter2
+  ) {}
 
   public getRoomUserData(roomName: string) {
     const roomUser = [];
@@ -33,8 +37,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleConnection(client: Socket): void {
-    const key = client.handshake.headers.authorization;
-    const roomName = client.handshake.headers.room.toString();
+    const key = client.handshake?.headers?.authorization;
+    const roomName = client.handshake?.headers?.room;
     const userData = this.authService.verify(key);
     if (!userData || !roomName || this.socketIdByUser.get(userData['id'])) {
       client.disconnect();
@@ -55,7 +59,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(roomName).emit('userCreated', client['userData']);
     this.server
       .to(client.id)
-      .emit('userCreated', this.getRoomUserData(roomName));
+      .emit('userCreated', this.getRoomUserData(roomName + ''));
   }
 
   public handleDisconnect(client: Socket): void {
@@ -74,7 +78,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(client['userData']['roomName']).emit('move', client['userData']);
   }
 
-  // 전체채팅
   @SubscribeMessage('chat')
   handleMessage(client: any, payload: any): void {
     const msgPayload = {
@@ -95,8 +98,21 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       timestamp: Date.now(),
       message: payload['message'] || '',
     };
+
+    this.event.emit('saveChat', { ...msgPayload, targetUserId });
+
     client
       .to(this.socketIdByUser.get(targetUserId))
       .emit('directMessage', msgPayload);
+  }
+
+  @SubscribeMessage('chatRoomEntered')
+  handleChatRoomEntered(client: any, payload: any) {
+    this.event.emit('createChatRoom', payload);
+  }
+
+  @SubscribeMessage('chatRoomLeaved')
+  handleChatRoomLeaved(client: any, payload: any) {
+    // this.event.emit('markMsg');
   }
 }
