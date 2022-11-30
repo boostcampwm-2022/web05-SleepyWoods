@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { flexCenter } from '../../../styles/mixin.styled';
+import theme from '../../../styles/theme';
 
 export const mypageWrapper = css`
   display: flex;
@@ -27,4 +28,10 @@ export const infoMessage = css`
 
   padding: 10px 0px;
   font-size: 12px;
+`;
+
+export const errorMessage = css`
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: ${theme.red};
 `;
