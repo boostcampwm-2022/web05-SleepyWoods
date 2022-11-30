@@ -108,7 +108,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('chatRoomEntered')
   handleChatRoomEntered(client: any, payload: any) {
-    this.event.emit('createChatRoom', payload);
+    this.event.emit('createChatRoom', {
+      fromUserId: client['userData']['id'],
+      ...payload,
+    });
   }
 
   @SubscribeMessage('chatRoomLeaved')

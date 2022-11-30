@@ -1,12 +1,5 @@
 import { User } from 'src/auth/entity/user.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { ChatRoom } from './chat-room.entity';
 
 @Entity('chat_mark')

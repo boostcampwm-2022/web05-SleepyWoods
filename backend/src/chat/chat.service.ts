@@ -15,7 +15,39 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>
   ) {}
 
-  async getChatRoom(payload: any): Promise<any[] | undefined> {
+  async getChatRoomList(userId: string) {
+    // select    roomId, readCount + maxCount
+    const chatRoomList = await this.chatMarkRepository
+      .createQueryBuilder('chatMark')
+      .select('*')
+      .innerJoin('chatMark.room', 'chat_room')
+      .where('chatMark.userId=:userId', { userId })
+      .getRawMany();
+
+    const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
+    const friendList = await this.chatMarkRepository
+      .createQueryBuilder('chatMark')
+      .select()
+      .where(
+        'chatMark.userId != :userId AND chatMark.roomId in (:...roomIdList)',
+        { userId, roomIdList }
+      )
+      .getRawMany();
+
+    const result = chatRoomList.map(({ roomId, readCount, totalmsgcount }) => {
+      return {
+        roomId,
+        unreadCount: totalmsgcount - readCount,
+        targetUserId: friendList.find(
+          friend => friend.chatMark_roomId == roomId
+        ).chatMark_userId,
+      };
+    });
+
+    return result;
+  }
+
+  async getConnectedChatRoom(payload: any): Promise<any[] | undefined> {
     //exists, in
     const { fromUserId, targetUserId } = payload;
     const chatRoom = await this.chatMarkRepository
@@ -35,7 +67,7 @@ export class ChatService {
     return chatRoom[0] || undefined;
   }
 
-  async createChatRoom(payload: any): Promise<number> {
+  async createChatRoom(): Promise<number> {
     const chatRoom = await this.chatRoomRepository.insert({
       totalmsgcount: 0,
     });
