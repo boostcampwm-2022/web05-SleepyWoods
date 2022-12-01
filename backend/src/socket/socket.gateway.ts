@@ -14,6 +14,7 @@ import { playerMovementDataDto } from './dto/player.dto';
 import { WsExceptionFilter } from './filter/ws.filter';
 import { movementValidationPipe } from './pipes/movement.pipe';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { signupDataDto } from 'src/auth/dto/user-data.dto';
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway({
@@ -68,6 +69,17 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   public handleDisconnect(client: Socket): void {
     this.server.emit('userLeaved', client['userData']);
     this.socketIdByUser.delete(client['userData']['id']);
+  }
+
+  @SubscribeMessage('userDataChanged')
+  handleUserDataChanged(
+    @ConnectedSocket() client: any,
+    @MessageBody(ValidationPipe) payload: signupDataDto
+  ) {
+    client['userData'] = { ...client['userData'], ...payload };
+    client
+      .to(client['userData']['roomName'])
+      .emit('userDataChanged', client['userData']);
   }
 
   @UsePipes(new ValidationPipe())
