@@ -2,7 +2,6 @@ import { atom } from 'recoil';
 
 export interface friendsProps {
   [key: string]: {
-    id: string;
     name: string;
     isOnline: boolean;
     isCalling: boolean;
@@ -12,52 +11,44 @@ export interface friendsProps {
 export const friendsState = atom<friendsProps>({
   key: 'friendsState',
   default: {
-    '1': {
-      id: '1',
-      isOnline: false,
+    안현서: {
+      isOnline: true,
       name: '안현서',
       isCalling: false,
     },
-    '2': {
-      id: '2',
+    원종빈: {
       isOnline: true,
       name: '원종빈',
       isCalling: true,
     },
-    '3': {
-      id: '3',
+    강성준: {
       isOnline: true,
       name: '강성준',
       isCalling: true,
     },
-    '4': {
-      id: '4',
+    이형진: {
       isOnline: true,
       name: '이형진',
       isCalling: false,
     },
-    '5': {
-      id: '5',
+    안현서2: {
       isOnline: false,
-      name: '안현서',
+      name: '안현서2',
       isCalling: false,
     },
-    '6': {
-      id: '6',
+    원종빈2: {
       isOnline: false,
-      name: '원종빈',
+      name: '원종빈2',
       isCalling: false,
     },
-    '7': {
-      id: '7',
+    강성준2: {
       isOnline: true,
-      name: '강성준',
+      name: '강성준2',
       isCalling: false,
     },
-    '8': {
-      id: '8',
+    이형진2: {
       isOnline: true,
-      name: '이형진',
+      name: '이형진2',
       isCalling: false,
     },
   },

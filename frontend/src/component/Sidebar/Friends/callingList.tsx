@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
 import Content from '../Content';
 import FriendItem from './friendItem';
@@ -7,7 +7,7 @@ import { friendType } from './friends';
 import { callingList } from './friends.styled';
 
 const CallingList = () => {
-  const friends = useRecoilValue(friendsState);
+  const [friends, setFriends] = useRecoilState(friendsState);
   const friendList = Object.values(friends).filter(value => value.isCalling);
 
   const handleDragOver = (e: MouseEvent) => {
@@ -19,7 +19,15 @@ const CallingList = () => {
 
     if (target.tagName !== 'UL' || !draggingElement) return;
 
-    target.appendChild(draggingElement);
+    const id = draggingElement.children[0].id;
+
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        isCalling: true,
+      },
+    });
   };
 
   return (
