@@ -7,9 +7,10 @@ import axios from 'axios';
 const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
   const [roomList, setRoomList] = useState<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isClose, setIsClose] = useState(false);
+  const [isClose, setIsClose] = useState(false); // 애니메이션
 
   useEffect(() => {
+    // 채팅 목록 가져오기
     const getRoomList = async () => {
       try {
         const { data } = await axios('/api/chat/roomList');
