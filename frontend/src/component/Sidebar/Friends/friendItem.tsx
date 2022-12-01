@@ -6,7 +6,7 @@ import unfollow from '../../../assets/icon/unfollowIcon.svg';
 import axios from 'axios';
 
 const FriendItem = (data: friendType) => {
-  const { id, isOnline, name } = data;
+  const { isOnline, name } = data;
 
   const sendChatting = () => {
     alert(`${name}님과 채팅하기`);
@@ -27,8 +27,8 @@ const FriendItem = (data: friendType) => {
   };
 
   return (
-    <Content draggable={isOnline} key={id}>
-      <section id={id} css={friendItemWrapper(isOnline)}>
+    <Content draggable={isOnline} key={name}>
+      <section id={name} css={friendItemWrapper(isOnline)}>
         <div css={userName(isOnline)}>{name}</div>
         <div>
           <img src={message} alt="채팅하기" onClick={sendChatting}></img>
