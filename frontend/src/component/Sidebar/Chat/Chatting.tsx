@@ -47,10 +47,12 @@ const Chatting = ({
     }, 300);
   };
 
+  // 채팅 input 값 관리
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setChatValue(e.target.value);
   };
 
+  // Enter 키 클릭 시 업데이트
   const checkEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter' || !chatValue) return;
 
@@ -66,6 +68,7 @@ const Chatting = ({
     setChatValue('');
   };
 
+  // 채팅을 보내면 가장 하단(새로운 메세지)으로 이동
   useEffect(() => {
     if (!chatRef.current) return;
     chatRef.current.scrollTop = chatRef.current.scrollHeight;
