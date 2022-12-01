@@ -3,18 +3,19 @@ import { useRecoilValue } from 'recoil';
 import Content from '../Content';
 import FriendItem from './friendItem';
 import { friendType } from './friends';
-import { findFriend, friendListWrapper } from './friends.styled';
+import { friendListWrapper } from './friends.styled';
 import { friendsState } from '../../../store/atom/friends';
+import Search from './search';
 
 const FriendList = () => {
+  const friends = useRecoilValue(friendsState);
+  const friendList = Object.values(friends).filter(value => !value.isCalling);
+
   const handleDrag = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
 
     target.classList.toggle('dragging');
   };
-
-  const friends = useRecoilValue(friendsState);
-  const friendList = Object.values(friends).filter(value => !value.isCalling);
 
   return (
     <Content>
@@ -25,9 +26,7 @@ const FriendList = () => {
         onDragEnd={handleDrag}>
         {friendList.map((friend: friendType) => FriendItem(friend))}
       </ul>
-      <div css={findFriend}>
-        <input type="text" placeholder="추가할 친구 이름" />
-      </div>
+      <Search />
     </Content>
   );
 };

@@ -73,6 +73,7 @@ export const userName = (state: boolean) => css`
 `;
 
 export const findFriend = css`
+  position: relative;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -82,6 +83,36 @@ export const findFriend = css`
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.7);
   margin-top: 10px;
+
+  ul {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 8px;
+
+    width: 180px;
+    transform: translate(50px, -100%);
+    background-color: rgba(245, 245, 245, 0.9);
+    border-radius: 10px;
+    padding: 5px;
+    margin-top: -5px;
+
+    li {
+      border-radius: 5px;
+      font-weight: 700;
+      padding: 5px;
+
+      cursor: pointer;
+
+      :hover {
+        color: ${theme.green};
+        background-color: rgba(255, 255, 255, 0.9);
+      }
+    }
+  }
 
   ::before {
     content: url(${addFriendIcon});
