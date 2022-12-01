@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../store/atom/user';
 import * as style from './chat.styled';
@@ -10,6 +10,7 @@ const Chat = () => {
   const [isExtend, setIsExtend] = useState(true);
   const [chatDatas, setChatDatas] = useState<any[]>([]);
   const [chatValue, setChatValue] = useState('');
+  const chatRef = useRef<null | HTMLUListElement>(null);
 
   useEffect(() => {
     const sessionStorageChat = sessionStorage.getItem('chat');
@@ -40,6 +41,11 @@ const Chat = () => {
     setChatValue('');
   };
 
+  useEffect(() => {
+    if (!chatRef.current) return;
+    chatRef.current.scrollTop = chatRef.current.scrollHeight;
+  }, [chatDatas]);
+
   return (
     <section css={style.chatContainer(isExtend)}>
       <button
@@ -47,7 +53,7 @@ const Chat = () => {
         css={style.extendBtn(isExtend)}
         onClick={handleExtend}></button>
 
-      <ul css={style.chatText(isExtend)}>
+      <ul css={style.chatText(isExtend)} ref={chatRef}>
         {chatDatas.map((data: any, idx) => (
           <ChatContent key={idx} data={data} />
         ))}
