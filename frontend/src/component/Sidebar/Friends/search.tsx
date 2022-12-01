@@ -1,8 +1,9 @@
+import axios from 'axios';
 import { FormEvent, MouseEvent, useState } from 'react';
 import { findFriend } from './friends.styled';
 
 const testSearchWord = (word: string) =>
-  ['k', 'kt', 'ktm', 'ktmi', 'ktmih', 'ktmihs'].filter(
+  ['hj', 'jongbin', 'kt', 'ktm', 'ktmi', 'ktmih', 'ktmihs'].filter(
     name => name.indexOf(word) !== -1
   );
 
@@ -10,7 +11,7 @@ const Search = () => {
   const [searchWord, setSearchWord] = useState<string>('');
   const [nicknameList, setNicknameList] = useState<string[]>([]);
 
-  const addToFriend = (e: MouseEvent) => {
+  const addToFriend = async (e: MouseEvent) => {
     const target = e.target as HTMLUListElement;
 
     const selectedWord = target.innerText;
@@ -19,7 +20,15 @@ const Search = () => {
     setNicknameList([]);
 
     const response = confirm(`${selectedWord}를 친구추가 하시겠습니까?`);
-    if (response) console.log('서버로 요청 보내기');
+    if (response) {
+      try {
+        await axios.put(`/api/friendship/${selectedWord}`);
+
+        alert('팔로우 되었습니다.');
+      } catch {
+        alert('팔로우 실패');
+      }
+    }
   };
 
   const [timer, setTimer] = useState<NodeJS.Timeout>();
