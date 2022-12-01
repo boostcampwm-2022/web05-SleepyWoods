@@ -163,8 +163,8 @@ export default class Game extends Phaser.Scene {
       this.otherPlayer[nickname].update(data.state, data.x, data.y);
     });
 
-    this.socket.on('userLeaved', (data: string) => {
-      const nickname = data.trim();
+    this.socket.on('userLeaved', (data: any) => {
+      const nickname = data.nickname.trim();
       this.otherPlayer[nickname].delete();
       delete this.otherPlayer[nickname];
     });
