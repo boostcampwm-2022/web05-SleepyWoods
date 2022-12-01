@@ -19,13 +19,15 @@ export class BoardService {
     private readonly friendshipService: FriendshipService
   ) {}
 
-  async getAllBoard(userId: string): Promise<Board[]> {
+  async getBoardList(userId: string, range: string): Promise<Board[]> {
     // 팔로잉 리스트
     // in
     try {
-      const followingList = await this.friendshipService.getFollowingList(
-        userId
-      );
+      const followingList =
+        range == 'me'
+          ? []
+          : await this.friendshipService.getFollowingList(userId);
+
       const followingIdList = [userId, ...followingList.map(user => user.id)];
 
       const articleList = await this.boardRepository
