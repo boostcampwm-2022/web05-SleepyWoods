@@ -53,8 +53,9 @@ const Main = () => {
         });
 
         (async () => {
-          const friendList: friendList[] = await axios.get('/api/friendship');
+          const response = await axios.get('/api/friendship');
 
+          const friendList: friendList[] = response.data;
           if (!friendList.length) return;
 
           const initialList: any = {};
