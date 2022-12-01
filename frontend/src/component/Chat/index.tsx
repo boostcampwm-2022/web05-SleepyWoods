@@ -11,6 +11,13 @@ const Chat = () => {
   const [chatDatas, setChatDatas] = useState<any[]>([]);
   const [chatValue, setChatValue] = useState('');
 
+  useEffect(() => {
+    const sessionStorageChat = sessionStorage.getItem('chat');
+    if (sessionStorageChat) {
+      setChatDatas(JSON.parse(sessionStorageChat));
+    }
+  }, []);
+
   const handleExtend = () => {
     setIsExtend(!isExtend);
   };
@@ -28,6 +35,7 @@ const Chat = () => {
       text: chatValue,
     };
 
+    sessionStorage.setItem('chat', JSON.stringify([...chatDatas, chat]));
     setChatDatas([...chatDatas, chat]);
     setChatValue('');
   };
