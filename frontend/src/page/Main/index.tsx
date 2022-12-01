@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import Background from '../../component/Background';
 import MainContent from '../../component/MainContent';
+import { friendsState } from '../../store/atom/friends';
 import { socketState } from '../../store/atom/socket';
 import { userState } from '../../store/atom/user';
 
@@ -18,10 +19,16 @@ export const getCookieValue = (key: string) => {
   return result;
 };
 
+type friendList = {
+  nickname: string;
+  characterName: string;
+};
+
 const Main = () => {
   const [hasToken, setHasToken] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [socket, setSocket] = useRecoilState(socketState);
+  const [friends, setFriends] = useRecoilState(friendsState);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -44,6 +51,23 @@ const Main = () => {
         socket.on('userCreated', (data: any) => {
           console.log(data);
         });
+
+        (async () => {
+          const friendList: friendList[] = await axios.get('/api/friendship');
+
+          if (!friendList.length) return;
+
+          const initialList: any = {};
+          friendList.forEach(({ nickname }) => {
+            initialList[nickname] = {
+              isOnline: false,
+              name: nickname,
+              isCalling: false,
+            };
+          });
+
+          setFriends(initialList);
+        })();
       } else setHasToken(false);
     };
 
