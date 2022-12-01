@@ -19,9 +19,32 @@ export class BoardService {
     private readonly friendshipService: FriendshipService
   ) {}
 
+  async getLikeBoardList(userId: string): Promise<Board[]> {
+    try {
+      const likeArticleList = await this.boardRepository
+        .createQueryBuilder('board')
+        .select([
+          'board.id as id',
+          'board.userId as userId',
+          'board.content as content',
+          'board.category as category',
+          'board.created_at as created_at',
+        ])
+        .innerJoin('board.likes', 'boardLike')
+        .where('boardLike.userId = :userId AND board.deleted = false', {
+          userId,
+        })
+        .addSelect('user.nickname', 'nickname')
+        .innerJoin('board.user', 'user') // 최신순 정렬처리'
+        .orderBy('board.id', 'DESC')
+        .getRawMany();
+      return likeArticleList;
+    } catch (e) {
+      throw new NotFoundException('좋아요 게시글 목록 불러오기 실패');
+    }
+  }
+
   async getBoardList(userId: string, range: string): Promise<Board[]> {
-    // 팔로잉 리스트
-    // in
     try {
       const followingList =
         range == 'me'
@@ -29,17 +52,22 @@ export class BoardService {
           : await this.friendshipService.getFollowingList(userId);
 
       const followingIdList = [userId, ...followingList.map(user => user.id)];
-
       const articleList = await this.boardRepository
         .createQueryBuilder('board')
-        .select(['board', 'user.nickname'])
+        .select([
+          'board.id as id',
+          'user.nickname as nickname',
+          'board.userId as userId',
+          'board.content as content',
+          'board.category as category',
+          'board.created_at as created_at',
+        ])
         .innerJoin('board.user', 'user')
         .where('board.userId IN (:...list) AND board.deleted = false', {
           list: followingIdList,
         })
-        .orderBy('board.created_at', 'DESC') // 최신순 정렬처리
-        .getMany();
-
+        .orderBy('board.id', 'DESC')
+        .getRawMany();
       return articleList;
     } catch (e) {
       throw new NotFoundException('게시글 불러오기 오류');
@@ -80,7 +108,6 @@ export class BoardService {
 
   async deleteLike(articleId: number, userId: string): Promise<boolean> {
     try {
-      //좋아요 처리
       const deleteResult = await this.boardLikeRepository
         .createQueryBuilder()
         .delete()
@@ -98,7 +125,6 @@ export class BoardService {
 
   async insertlike(articleId: number, userId: string): Promise<boolean> {
     try {
-      //좋아요 처리
       const insertResult = await this.boardLikeRepository
         .createQueryBuilder()
         .insert()
