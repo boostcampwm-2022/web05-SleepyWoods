@@ -23,20 +23,19 @@ import { articleCategoryValidationPipe } from './pipes/category.pipe';
 @UseGuards(AuthGuard('criticalGuard'))
 export class BoardController {
   constructor(private readonly service: BoardService) {}
-  @Get()
-  async getAllBoard(@Req() req: any) {
+
+  @Get('like')
+  async getLikeList(@Req() req: any) {
     const userId = req.user.id;
-    const articleList = await this.service.getAllBoard(userId);
-    return articleList.map(article => {
-      const { id, content, category, created_at } = article;
-      return {
-        id,
-        nickname: article.user.nickname,
-        content,
-        category,
-        created_at,
-      };
-    });
+    const articleList = await this.service.getLikeBoardList(userId);
+    return articleList;
+  }
+
+  @Get(':range')
+  async getBoardList(@Req() req: any, @Param('range') range: string) {
+    const userId = req.user.id;
+    const articleList = await this.service.getBoardList(userId, range);
+    return articleList;
   }
 
   @Post()

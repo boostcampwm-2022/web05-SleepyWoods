@@ -31,7 +31,7 @@ export class Board {
 
   @Column({
     type: 'timestamp',
-    default: 'NOW()',
+    default: () => 'CURRENT_TIMESTAMP',
   })
   created_at: Date;
 
