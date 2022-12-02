@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import Chat from '../../component/Chat';
 import Game from '../../component/Game';
 import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
@@ -7,7 +8,6 @@ import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
 import { snowState } from '../../store/atom/backgroundSetting';
 import { devicePermissionState } from '../../store/atom/deviceSetting';
-import { socketState } from '../../store/atom/socket';
 
 const Town = () => {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
@@ -39,6 +39,7 @@ const Town = () => {
       <Game />
       {isSnowing && <Snow />}
       <SleepyBoard />
+      <Chat />
 
       {isLoadingComplete || <Loading isClose={isClose} />}
     </>
