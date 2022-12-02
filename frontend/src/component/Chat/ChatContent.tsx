@@ -1,15 +1,15 @@
 import { chat, chatTime, chatUser } from './chat.styled';
 
 const ChatContent = ({ data }: { data: any }) => {
-  const { time, nickname, text } = data;
+  const { timestamp, nickname, message } = data;
 
   return (
     <li css={chat}>
       <div css={chatUser}>
-        <span css={chatTime}>[{time}]</span>
+        <span css={chatTime}>[{timestamp}]</span>
         <span>{nickname}</span>
       </div>
-      <span>{text}</span>
+      <span>{message}</span>
     </li>
   );
 };
