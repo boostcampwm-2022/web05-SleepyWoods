@@ -6,10 +6,13 @@ import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
 import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
+import { pageGuard } from '../../guard';
 import { snowState } from '../../store/atom/backgroundSetting';
 import { devicePermissionState } from '../../store/atom/deviceSetting';
 
 const Town = () => {
+  pageGuard();
+
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const [isClose, setIsClose] = useState(false);
 
