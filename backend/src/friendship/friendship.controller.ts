@@ -48,8 +48,11 @@ export class FriendshipController {
       targetNickname
     );
     await this.friendshipService.followFriend(userId, targetUserId);
-
-    return '팔로우 성공';
+    const followingList = await this.friendshipService.getFollowingList(userId);
+    return followingList.map(following => {
+      const { nickname, characterName } = following;
+      return { nickname, characterName };
+    });
   }
 
   @Delete('/:targetNickname')
@@ -63,7 +66,10 @@ export class FriendshipController {
       targetNickname
     );
     await this.friendshipService.unfollowFriend(userId, targetUserId);
-
-    return '팔로우 취소 성공';
+    const followingList = await this.friendshipService.getFollowingList(userId);
+    return followingList.map(following => {
+      const { nickname, characterName } = following;
+      return { nickname, characterName };
+    });
   }
 }
