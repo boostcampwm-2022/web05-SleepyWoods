@@ -14,11 +14,13 @@ export class Player extends Phaser.GameObjects.Sprite {
   heldDirection: string[];
   hairName: string;
   nickname: string;
+  id: string;
 
   constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,
+    id: string,
     hair: string,
     nickname: string
   ) {
@@ -32,6 +34,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.y = y;
     this.speed = 1;
     this.heldDirection = [];
+    this.id = id;
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3);
@@ -60,6 +63,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.character?.destroy();
     this.hair?.destroy();
     this.nicknameText?.destroy();
+    this.dust?.destroy();
   }
 
   updateNickname(nickname: string) {
