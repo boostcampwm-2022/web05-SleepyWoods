@@ -51,7 +51,10 @@ export class BoardService {
           ? []
           : await this.friendshipService.getFollowingList(userId);
 
-      const followingIdList = [userId, ...followingList.map(user => user.id)];
+      const followingIdList = [
+        userId,
+        ...followingList.map(user => user.userId),
+      ];
       const articleList = await this.boardRepository
         .createQueryBuilder('board')
         .select([
@@ -61,8 +64,12 @@ export class BoardService {
           'board.content as content',
           'board.category as category',
           'board.created_at as created_at',
+          'CASE WHEN boardLike.articleId is null THEN false ELSE true END AS liked',
         ])
         .innerJoin('board.user', 'user')
+        .leftJoin('board.likes', 'boardLike', 'boardLike.userId = :userId', {
+          userId,
+        })
         .where('board.userId IN (:...list) AND board.deleted = false', {
           list: followingIdList,
         })
