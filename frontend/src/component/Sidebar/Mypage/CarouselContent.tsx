@@ -8,8 +8,10 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../../store/atom/user';
 import axios from 'axios';
 import { emitter } from '../../Game/util';
+import { socketState } from '../../../store/atom/socket';
 
 const CarouselContent = () => {
+  const socket = useRecoilValue(socketState);
   const user = useRecoilValue(userState);
   const [selectHairIdx, setSelectHairIdx] = useState(hairIdx[user.hair]);
 
@@ -29,6 +31,10 @@ const CarouselContent = () => {
 
       if (status === 200) {
         emitter.emit('updateHair', hairName[selectHairIdx]);
+        socket.emit('userDataChanged', {
+          nickname: user.nickname,
+          characterName: hairName[selectHairIdx],
+        });
       }
     } catch (e) {
       alert('다시 시도해주세요');

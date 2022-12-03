@@ -24,6 +24,7 @@ const Router = () => {
 
       if (status === 200) {
         setUser({
+          id: data.id.toString().trim(),
           nickname: data.nickname.trim(),
           hair: data.characterName.trim(),
         });
