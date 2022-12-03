@@ -24,10 +24,7 @@ export class FriendshipController {
   async getFollowingList(@Req() req: any) {
     const userId = req.user.id;
     const followingList = await this.friendshipService.getFollowingList(userId);
-    return followingList.map(following => {
-      const { nickname, characterName } = following;
-      return { nickname, characterName };
-    });
+    return followingList;
   }
 
   @Get('/:searchNickname')
@@ -49,10 +46,9 @@ export class FriendshipController {
     );
     await this.friendshipService.followFriend(userId, targetUserId);
     const followingList = await this.friendshipService.getFollowingList(userId);
-    return followingList.map(following => {
-      const { nickname, characterName } = following;
-      return { nickname, characterName };
-    });
+    return followingList.find(
+      following => following.nickname === targetNickname
+    );
   }
 
   @Delete('/:targetNickname')
@@ -66,10 +62,6 @@ export class FriendshipController {
       targetNickname
     );
     await this.friendshipService.unfollowFriend(userId, targetUserId);
-    const followingList = await this.friendshipService.getFollowingList(userId);
-    return followingList.map(following => {
-      const { nickname, characterName } = following;
-      return { nickname, characterName };
-    });
+    return '팔로우 취소 성공';
   }
 }

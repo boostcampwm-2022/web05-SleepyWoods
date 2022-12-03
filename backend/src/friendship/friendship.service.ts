@@ -11,7 +11,7 @@ export class FriendshipService {
     private followingRepository: Repository<Following>
   ) {}
 
-  async getFollowingList(userId: string): Promise<User[]> {
+  async getFollowingList(userId: string): Promise<any[]> {
     // following테이블의 userId 컬럼이 user테이블의 id랑  natural join 데이터에서ㅡ nickcolumn만 select
     try {
       const resultList = await this.followingRepository
@@ -20,9 +20,14 @@ export class FriendshipService {
         .where('following.userId = :userId AND user.deleted = false', {
           userId,
         })
-        .getMany();
-
-      const followingList = resultList.map(result => result.targetUser);
+        .getRawMany();
+      const followingList = resultList.map(result => {
+        return {
+          userId: result.user_id,
+          nickname: result.user_nickname,
+          characterName: result.user_characterName,
+        };
+      });
       return followingList;
     } catch (e) {
       throw new NotFoundException('팔로잉 목록 조회 오류');
