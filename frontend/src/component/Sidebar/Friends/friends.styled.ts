@@ -25,6 +25,14 @@ export const friendListWrapper = css`
   ::-webkit-scrollbar {
     display: none;
   }
+
+  > div {
+    margin: auto 0;
+    text-align: center;
+    line-height: 30px;
+    font-weight: 700;
+    color: rgba(0, 0, 0, 0.6);
+  }
 `;
 
 export const callingList = css`
