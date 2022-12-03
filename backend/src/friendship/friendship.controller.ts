@@ -6,6 +6,7 @@ import {
   Put,
   Req,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/auth/user.service';
@@ -27,6 +28,13 @@ export class FriendshipController {
       const { nickname, characterName } = following;
       return { nickname, characterName };
     });
+  }
+
+  @Get('/:searchNickname')
+  async getUserListByNickname(
+    @Param('searchNickname', ValidationPipe) searchNickname: string
+  ) {
+    return await this.userService.findUserListByNickname(searchNickname);
   }
 
   // PUT friendship 요청
