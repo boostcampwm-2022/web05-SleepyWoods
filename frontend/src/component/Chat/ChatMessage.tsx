@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as style from './chat.styled';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
+import ChatContent from './ChatContent';
 
 const ChatMessage = ({
   updateChat,
@@ -29,8 +30,30 @@ const ChatMessage = ({
       updateChat(chat);
     });
 
+    socket.on('userCreated', (data: any) => {
+      const chat = {
+        type: 'info',
+        nickname: data.nickname,
+        timestamp: Date.now(),
+        message: '님이 입장하셨습니다.',
+      };
+      updateChat(chat);
+    });
+
+    socket.on('userLeaved', (data: any) => {
+      const chat = {
+        type: 'info',
+        nickname: data.nickname,
+        timestamp: Date.now(),
+        message: '님이 퇴장하셨습니다.',
+      };
+      updateChat(chat);
+    });
+
     return () => {
       socket.removeListener('publicChat');
+      socket.removeListener('userCreated');
+      socket.removeListener('userLeaved');
     };
   }, []);
 
@@ -42,18 +65,9 @@ const ChatMessage = ({
 
   return (
     <ul css={style.chatText(isExtend)} ref={chatRef}>
-      {chatDatas.map((data: any, idx: any) => {
-        const { timestamp, nickname, message } = data;
-        return (
-          <li css={style.chat} key={idx}>
-            <div css={style.chatUser}>
-              <span css={style.chatTime}>[{timestamp}]</span>
-              <span>{nickname}</span>
-            </div>
-            <span>{message}</span>
-          </li>
-        );
-      })}
+      {chatDatas.map((data: any, idx: any) => (
+        <ChatContent data={data} key={idx} />
+      ))}
     </ul>
   );
 };

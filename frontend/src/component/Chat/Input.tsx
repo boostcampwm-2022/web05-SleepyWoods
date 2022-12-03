@@ -19,6 +19,7 @@ const Input = ({ updateChat }: { updateChat: Function }) => {
     if (e.key !== 'Enter' || !chatValue) return;
 
     const chat = {
+      type: 'chat',
       timestamp: Date.now(),
       nickname: user.nickname,
       message: chatValue,
