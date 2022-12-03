@@ -2,7 +2,7 @@ import { chat, chatTime, chatUser, info } from './chat.styled';
 
 const ChatContent = ({ data }: { data: any }) => {
   const { type, timestamp, nickname, message } = data;
-  console.log(type, timestamp, nickname, message);
+
   return (
     <li css={chat}>
       {type === 'info' ? (

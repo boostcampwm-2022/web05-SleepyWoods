@@ -8,8 +8,10 @@ import { emitter } from '../../Game/util';
 import { nicknameContainer } from '../../Setting/setting.styled';
 import Content from '../Content';
 import * as style from './mypage.styled';
+import { socketState } from '../../../store/atom/socket';
 
 const NickNameContent = () => {
+  const socket = useRecoilValue(socketState);
   const [nickName, setNickName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const user = useRecoilValue(userState);
@@ -34,6 +36,10 @@ const NickNameContent = () => {
 
       if (status === 200) {
         emitter.emit('updateNickname', nickName);
+        socket.emit('userDataChanged', {
+          nickname: nickName,
+          characterName: user.hair,
+        });
 
         alert(`닉네임이 ${nickName}으로 변경되었습니다`);
         setNickName('');
