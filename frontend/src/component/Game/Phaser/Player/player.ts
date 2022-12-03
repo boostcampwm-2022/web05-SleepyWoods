@@ -63,6 +63,7 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.character?.destroy();
     this.hair?.destroy();
     this.nicknameText?.destroy();
+    this.dust?.destroy();
   }
 
   updateNickname(nickname: string) {
