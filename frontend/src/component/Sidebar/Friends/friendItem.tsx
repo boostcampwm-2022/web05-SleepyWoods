@@ -4,22 +4,32 @@ import { friendItemWrapper, userName } from './friends.styled';
 import message from '../../../assets/icon/messageIcon.svg';
 import unfollow from '../../../assets/icon/unfollowIcon.svg';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { friendsState } from '../../../store/atom/friends';
+import { useEffect } from 'react';
 
-const FriendItem = (data: friendType) => {
-  const { isOnline, name } = data;
+const FriendItem = ({ friend }: { friend: friendType }) => {
+  const [friends, setFriends] = useRecoilState(friendsState);
+
+  const { id, isOnline, nickname } = friend;
 
   const sendChatting = () => {
-    alert(`${name}님과 채팅하기`);
+    alert(`${nickname}님과 채팅하기`);
   };
 
   const unfollowing = async () => {
-    const isConfirm = confirm(`${name}님을 언팔로우 하시겠습니까?`);
+    const isConfirm = confirm(`${nickname}님을 언팔로우 하시겠습니까?`);
 
     if (isConfirm) {
       try {
-        await axios.delete(`/api/friendship/${name}`);
+        await axios.delete(`/api/friendship/${nickname}`);
 
-        alert(`${name}님을 언팔로우 하였습니다.`);
+        const newFriend = { ...friends };
+
+        delete newFriend[nickname];
+        setFriends(newFriend);
+
+        alert(`${nickname}님을 언팔로우 하였습니다.`);
       } catch {
         alert('언팔로우 실패');
       }
@@ -27,9 +37,9 @@ const FriendItem = (data: friendType) => {
   };
 
   return (
-    <Content draggable={isOnline} key={name}>
-      <section id={name} css={friendItemWrapper(isOnline)}>
-        <div css={userName(isOnline)}>{name}</div>
+    <Content draggable={isOnline}>
+      <section id={id} css={friendItemWrapper(isOnline)}>
+        <div css={userName(isOnline)}>{nickname}</div>
         <div>
           <img src={message} alt="채팅하기" onClick={sendChatting}></img>
           <img src={unfollow} alt="친구 끊기" onClick={unfollowing}></img>

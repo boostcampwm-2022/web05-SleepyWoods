@@ -25,7 +25,9 @@ const FriendList = () => {
         onDragStart={handleDrag}
         onDragEnd={handleDrag}>
         {friendList.length ? (
-          friendList.map((friend: friendType) => FriendItem(friend))
+          friendList.map((friend: friendType) => (
+            <FriendItem friend={friend} key={friend.id} />
+          ))
         ) : (
           <div>
             친구를 추가하고 <br />

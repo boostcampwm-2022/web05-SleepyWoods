@@ -113,9 +113,8 @@ export const findFriend = css`
       font-weight: 700;
       padding: 5px;
 
-      cursor: pointer;
-
-      :hover {
+      &:not(.none):hover {
+        cursor: pointer;
         color: ${theme.green};
         background-color: rgba(255, 255, 255, 0.9);
       }
