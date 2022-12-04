@@ -24,16 +24,16 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
   }, []);
 
   const selectChatRoom = (e: React.MouseEvent<HTMLElement>) => {
-    if (!(e.target instanceof HTMLElement)) return;
+    const target = e.target as HTMLUListElement;
+    const id = target.closest('li')?.dataset.id;
 
-    if (e.target.dataset.id) {
-      setIsClose(true);
+    if (!id) return;
 
-      setTimeout(() => {
-        if (!(e.target instanceof HTMLElement)) return;
-        setChatTarget(e.target.dataset.id);
-      }, 300);
-    }
+    setIsClose(true);
+
+    setTimeout(() => {
+      setChatTarget(id);
+    }, 300);
   };
 
   return (
