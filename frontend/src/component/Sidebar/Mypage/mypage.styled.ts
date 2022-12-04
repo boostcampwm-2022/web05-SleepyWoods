@@ -35,3 +35,13 @@ export const errorMessage = css`
   margin-bottom: 10px;
   color: ${theme.red};
 `;
+
+export const logoutBtn = css`
+  ${flexCenter}
+
+  width: 100%;
+  height: 30px;
+  border-radius: 10px;
+  background-color: ${theme.red};
+  font-size: 12px;
+`;

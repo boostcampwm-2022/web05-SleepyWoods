@@ -14,11 +14,12 @@ export class MyPlayer extends Player {
     scene: Phaser.Scene,
     x: number,
     y: number,
+    id: string,
     hair: string,
     nickname: string,
     socket: Socket
   ) {
-    super(scene, x, y, hair, nickname);
+    super(scene, x, y, id, hair, nickname);
 
     this.socket = socket;
 

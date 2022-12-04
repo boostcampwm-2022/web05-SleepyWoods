@@ -88,8 +88,8 @@ export class UserController {
   @Get('auth')
   @UseGuards(AuthGuard('criticalGuard'))
   authorization(@Req() req: any) {
-    const { nickname, characterName }: UserDataDto = req.user;
-    return { nickname, characterName };
+    const { id, nickname, characterName }: UserDataDto = req.user;
+    return { id, nickname, characterName };
   }
 
   @Post()

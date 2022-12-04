@@ -46,7 +46,7 @@ export const chat = css`
   padding-bottom: 5px;
 
   > span {
-    line-height: 18px;
+    line-height: 20px;
   }
 `;
 
@@ -111,4 +111,9 @@ export const extendBtn = (isExtend: boolean) => css`
     background-position: center;
     transform: rotate(${isExtend ? 0 : '180deg'});
   }
+`;
+
+export const info = css`
+  color: ${theme.white};
+  line-height: 20px;
 `;
