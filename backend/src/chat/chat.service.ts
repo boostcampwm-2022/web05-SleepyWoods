@@ -35,42 +35,61 @@ export class ChatService {
 
   async getChatRoomList(userId: string) {
     try {
-      // select    roomId, readCount + maxCount
       const chatRoomList = await this.chatMarkRepository
         .createQueryBuilder('chatMark')
         .select('*')
         .innerJoin('chatMark.room', 'chat_room')
         .where('chatMark.userId=:userId', { userId })
         .getRawMany();
-
       if (chatRoomList.length == 0) {
         return [];
       }
 
-      const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
-      const friendList = await this.chatMarkRepository
+      const roomTargerUser = await this.chatMarkRepository
         .createQueryBuilder('chatMark')
-        .select()
+        .select([
+          'chatMark.roomId as roomId',
+          'chatMark.userId AS targetUserId',
+          'user.nickname AS targetUserNickname',
+          'MAX(chat.id) as lastchatid',
+        ])
         .where(
           'chatMark.userId != :userId AND chatMark.roomId in (:...roomIdList)',
-          { userId, roomIdList }
+          { userId, roomIdList: chatRoomList.map(chatRoom => chatRoom.roomId) }
         )
+        .innerJoin('chatMark.user', 'user')
+        .leftJoin(Chat, 'chat', 'chat.room = chatMark.roomId')
+        .groupBy('chatMark.roomId, chatMark.userId, user.nickname')
         .getRawMany();
 
-      const result = chatRoomList.map(
-        ({ roomId, readCount, totalmsgcount }) => {
-          return {
-            roomId,
-            unreadCount: totalmsgcount - readCount,
-            targetUserId: friendList.find(
-              friend => friend.chatMark_roomId == roomId
-            ).chatMark_userId,
-          };
-        }
-      );
+      const lastMsgInRoom = await this.chatRepository
+        .createQueryBuilder('chat')
+        .select([
+          'chat.id as id',
+          'chat.timestamp as timestamp',
+          'chat.message as message',
+        ])
+        .where('chat.id in (:...lastchatid)', {
+          lastchatid: roomTargerUser.map(r => r.lastchatid),
+        })
+        .getRawMany();
 
+      const result = roomTargerUser.map(room => {
+        const chatRoomInfo = chatRoomList.find(e => e.roomId == room.roomid);
+        const msg = lastMsgInRoom.find(e => e.id == room.lastchatid);
+        return {
+          roomId: room.roomid,
+          targetUserId: room.targetuserid,
+          targetUserNickname: room.targetusernickname,
+          unReadCount: chatRoomInfo.totalmsgcount - chatRoomInfo.readCount,
+          lastMsg: msg,
+        };
+      });
+      console.log('result');
+      console.log(result);
       return result || [];
     } catch (e) {
+      console.log(e);
       throw new NotFoundException('채팅방 불러오기 실패');
     }
   }
