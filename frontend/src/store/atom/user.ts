@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { v1 } from 'uuid';
 
 export interface userProps {
   id: string;
@@ -7,10 +8,11 @@ export interface userProps {
 }
 
 export const userState = atom<userProps>({
-  key: 'userState',
+  key: `userState/${v1}`,
   default: {
     id: '',
     nickname: '',
     hair: '',
   },
+  dangerouslyAllowMutability: true,
 });
