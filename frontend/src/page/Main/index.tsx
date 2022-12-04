@@ -1,5 +1,6 @@
 import Background from '../../component/Background';
 import MainContent from '../../component/MainContent';
+import { pageGuard } from '../../guard';
 
 export const getCookieValue = (key: string) => {
   const cookieArr = document.cookie.split(';');
@@ -14,6 +15,8 @@ export const getCookieValue = (key: string) => {
 };
 
 const Main = () => {
+  pageGuard();
+
   return (
     <Background>
       <MainContent />
