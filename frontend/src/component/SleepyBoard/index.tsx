@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { sleepyBoardBtn } from './sleepyboard.styled';
+import RankContainer from './RankContainer';
+import * as style from './sleepyboard.styled';
 import SleepyBoardContainer from './SleepyBoardContainer';
+import Tab from './Tab';
 
 const SleepyBoard = () => {
+  const [tab, setTab] = useState('board');
   const [isShowModal, setIsShowModal] = useState(false);
   const [animation, setAnimation] = useState('show');
 
@@ -18,8 +21,22 @@ const SleepyBoard = () => {
 
   return (
     <>
-      {isShowModal && <SleepyBoardContainer animation={animation} />}
-      <button type="button" onClick={handleModal} css={sleepyBoardBtn}></button>
+      {isShowModal && (
+        <>
+          <section css={style.modal(animation)}>
+            <Tab selected={tab} setTab={setTab} />
+            {tab === 'board' ? (
+              <SleepyBoardContainer animation={animation} />
+            ) : (
+              <RankContainer animation={animation} />
+            )}
+          </section>
+        </>
+      )}
+      <button
+        type="button"
+        onClick={handleModal}
+        css={style.sleepyBoardBtn}></button>
     </>
   );
 };
