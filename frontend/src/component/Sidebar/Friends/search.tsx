@@ -2,21 +2,25 @@ import axios from 'axios';
 import { FormEvent, MouseEvent, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
+import { friendType } from './friends';
 import { findFriend } from './friends.styled';
 
-const testSearchWord = (word: string) =>
-  ['hj', 'ktmihs22', 'jongbin', 'kt', 'ktm', 'ktmi', 'ktmih', 'ktmihs'].filter(
-    name => name.indexOf(word) !== -1
-  );
+type nicknameType = {
+  userId: string;
+  isCalling: boolean;
+  isOnline: boolean;
+  nickname: string;
+};
 
 const Search = () => {
   const [friends, setFriends] = useRecoilState(friendsState);
   const [searchWord, setSearchWord] = useState<string>('');
-  const [nicknameList, setNicknameList] = useState<string[]>([]);
+  const [nicknameList, setNicknameList] = useState<nicknameType[]>([]);
 
   const addToFriend = async (e: MouseEvent) => {
     const target = e.target as HTMLUListElement;
 
+    if (target.classList.contains('none')) return;
     const selectedWord = target.innerText;
 
     setSearchWord('');
@@ -52,12 +56,28 @@ const Search = () => {
     const value = target.value;
     setSearchWord(value);
 
+    if (!value) {
+      setNicknameList([]);
+      return;
+    }
     if (timer) clearTimeout(timer);
-    const newTimer = setTimeout(() => {
-      // 서버로 리스트 받아오는 요청 보내기
-      const findList = testSearchWord(value);
-      setNicknameList(findList);
-    }, 500);
+
+    const newTimer = setTimeout(async () => {
+      const { data: findList } = await axios(`/api/friendship/${value}`);
+
+      if (findList.length) {
+        setNicknameList(findList);
+      } else if (value) {
+        setNicknameList([
+          {
+            userId: 'none',
+            nickname: '일치하는 유저가 없습니다.',
+            isCalling: false,
+            isOnline: false,
+          },
+        ]);
+      }
+    }, 100);
 
     setTimer(newTimer);
   };
@@ -66,9 +86,13 @@ const Search = () => {
     <section css={findFriend}>
       {nicknameList.length ? (
         <ul onClick={addToFriend}>
-          {nicknameList.map(name => (
-            <li key={name}>{name}</li>
-          ))}
+          {nicknameList.map(
+            ({ nickname, userId }: { nickname: string; userId: string }) => (
+              <li key={nickname} className={userId === 'none' ? 'none' : ''}>
+                {nickname}
+              </li>
+            )
+          )}
         </ul>
       ) : (
         <></>
