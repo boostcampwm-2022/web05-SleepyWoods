@@ -1,7 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-
 import { userState } from '../../../store/atom/user';
 import { UserChangeButton } from '../../Button';
 import { emitter } from '../../Game/util';
@@ -40,6 +39,7 @@ const NickNameContent = () => {
           nickname: nickName,
           characterName: user.hair,
         });
+        user.nickname = nickName;
 
         alert(`닉네임이 ${nickName}으로 변경되었습니다`);
         setNickName('');

@@ -6,9 +6,9 @@ import * as style from './mypage.styled';
 import { hairName, hairIdx } from '../../Carousel/hair';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../../store/atom/user';
-import axios from 'axios';
-import { emitter } from '../../Game/util';
 import { socketState } from '../../../store/atom/socket';
+import { emitter } from '../../Game/util';
+import axios from 'axios';
 
 const CarouselContent = () => {
   const socket = useRecoilValue(socketState);
@@ -35,6 +35,7 @@ const CarouselContent = () => {
           nickname: user.nickname,
           characterName: hairName[selectHairIdx],
         });
+        user.hair = hairName[selectHairIdx];
       }
     } catch (e) {
       alert('다시 시도해주세요');
