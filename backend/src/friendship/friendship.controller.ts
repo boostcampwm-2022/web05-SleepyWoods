@@ -6,6 +6,7 @@ import {
   Put,
   Req,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/auth/user.service';
@@ -23,10 +24,14 @@ export class FriendshipController {
   async getFollowingList(@Req() req: any) {
     const userId = req.user.id;
     const followingList = await this.friendshipService.getFollowingList(userId);
-    return followingList.map(following => {
-      const { nickname, characterName } = following;
-      return { nickname, characterName };
-    });
+    return followingList;
+  }
+
+  @Get('/:searchNickname')
+  async getUserListByNickname(
+    @Param('searchNickname', ValidationPipe) searchNickname: string
+  ) {
+    return await this.userService.findUserListByNickname(searchNickname);
   }
 
   // PUT friendship 요청
@@ -40,8 +45,10 @@ export class FriendshipController {
       targetNickname
     );
     await this.friendshipService.followFriend(userId, targetUserId);
-
-    return '팔로우 성공';
+    const followingList = await this.friendshipService.getFollowingList(userId);
+    return followingList.find(
+      following => following.nickname === targetNickname
+    );
   }
 
   @Delete('/:targetNickname')
@@ -55,7 +62,6 @@ export class FriendshipController {
       targetNickname
     );
     await this.friendshipService.unfollowFriend(userId, targetUserId);
-
     return '팔로우 취소 성공';
   }
 }

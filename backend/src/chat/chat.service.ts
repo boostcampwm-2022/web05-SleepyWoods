@@ -43,6 +43,10 @@ export class ChatService {
         .where('chatMark.userId=:userId', { userId })
         .getRawMany();
 
+      if (chatRoomList.length == 0) {
+        return [];
+      }
+
       const roomIdList = chatRoomList.map(chatRoom => chatRoom.roomId);
       const friendList = await this.chatMarkRepository
         .createQueryBuilder('chatMark')
