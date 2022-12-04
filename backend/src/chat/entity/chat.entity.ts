@@ -30,7 +30,7 @@ export class Chat {
   @Column('varchar', { length: 256 })
   message: string;
 
-  @ManyToOne(() => ChatRoom, room => room.chatRoom)
+  @ManyToOne(() => ChatRoom, room => room.chats)
   @JoinColumn({ name: 'roomId' })
   room: ChatRoom;
 
