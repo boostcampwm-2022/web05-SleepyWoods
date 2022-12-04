@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  modal,
-  header,
-  title,
-  contentWrapper,
-  filterBtn,
-  filterBtnBox,
-} from './sleepyboard.styled';
+import * as style from './sleepyboard.styled';
 import Content from './content';
 import like from '../../assets/icon/like.svg';
 import user from '../../assets/icon/user.svg';
@@ -20,7 +13,6 @@ const SleepyBoardContainer = ({ animation }: { animation: string }) => {
   }, []);
 
   const getPost = async (key: string) => {
-    // API 요청
     try {
       const { data, status } = await axios(`/api/board/${key}`);
       if (status === 200) setBoard(data);
@@ -28,26 +20,29 @@ const SleepyBoardContainer = ({ animation }: { animation: string }) => {
   };
 
   return (
-    <section css={modal(animation)}>
-      <header css={header}>
-        <h2 css={title}>SleepyBoard</h2>
-        <div css={filterBtnBox}>
-          <button
-            type="button"
-            onClick={() => getPost('like')}
-            css={filterBtn(like, 22, 18)}></button>
-          <button
-            type="button"
-            onClick={() => getPost('my')}
-            css={filterBtn(user, 20, 20)}></button>
-        </div>
-      </header>
-      <ul css={contentWrapper}>
+    <>
+      <nav css={style.filterBtnBox}>
+        <button
+          type="button"
+          onClick={() => getPost('all')}
+          css={style.filterBtn('', 0, 0)}>
+          All
+        </button>
+        <button
+          type="button"
+          onClick={() => getPost('like')}
+          css={style.filterBtn(like, 22, 18)}></button>
+        <button
+          type="button"
+          onClick={() => getPost('my')}
+          css={style.filterBtn(user, 20, 20)}></button>
+      </nav>
+      <ul css={style.contentWrapper}>
         {board.map((data: any) => (
           <Content key={data.id} data={data} />
         ))}
       </ul>
-    </section>
+    </>
   );
 };
 export default SleepyBoardContainer;
