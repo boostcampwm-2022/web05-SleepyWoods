@@ -10,23 +10,21 @@ import {
 import Content from './content';
 import like from '../../assets/icon/like.svg';
 import user from '../../assets/icon/user.svg';
-
-import { boardData } from './boardData';
 import axios from 'axios';
 
 const SleepyBoardContainer = ({ animation }: { animation: string }) => {
   const [board, setBoard] = useState<any>([]);
 
   useEffect(() => {
-    // API 요청
-
-    setBoard(boardData);
+    getPost('all');
   }, []);
 
-  const handleFilter = (key: string) => {
+  const getPost = async (key: string) => {
     // API 요청
-
-    setBoard(boardData);
+    try {
+      const { data, status } = await axios(`/api/board/${key}`);
+      if (status === 200) setBoard(data);
+    } catch (e) {}
   };
 
   return (
@@ -36,11 +34,11 @@ const SleepyBoardContainer = ({ animation }: { animation: string }) => {
         <div css={filterBtnBox}>
           <button
             type="button"
-            onClick={() => handleFilter('like')}
+            onClick={() => getPost('like')}
             css={filterBtn(like, 22, 18)}></button>
           <button
             type="button"
-            onClick={() => handleFilter('my')}
+            onClick={() => getPost('my')}
             css={filterBtn(user, 20, 20)}></button>
         </div>
       </header>

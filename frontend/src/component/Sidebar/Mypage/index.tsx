@@ -7,6 +7,7 @@ import { WithdrawalButton } from '../../Button';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../../store/atom/user';
 import axios from 'axios';
+import LogoutButton from './LogoutButton';
 
 const Mypage = () => {
   const [isWithdrawal, setIsWithdrawal] = useState(false);
@@ -39,6 +40,7 @@ const Mypage = () => {
     <ul css={style.mypageWrapper}>
       <CarouselContent />
       <NickNameContent />
+      <LogoutButton />
       <Content>
         <h2 css={style.header}>회원 탈퇴</h2>
         {isWithdrawal ? (

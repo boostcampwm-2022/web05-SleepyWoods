@@ -26,6 +26,7 @@ export default class Game extends Phaser.Scene {
         this,
         -25,
         400,
+        data.id,
         data.hair,
         data.nickname,
         data.socket
@@ -145,28 +146,34 @@ export default class Game extends Phaser.Scene {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: any) => {
-        const nickname = user.nickname.trim();
-        if (this.myPlayer?.nickname === nickname) return;
-        if (this.otherPlayer[nickname]) return;
+        const id = user.id.toString().trim();
+        if (this.myPlayer?.id === id) return;
+        if (this.otherPlayer[id]) return;
 
-        this.otherPlayer[nickname] = new OtherPlayer(this, user);
+        this.otherPlayer[id] = new OtherPlayer(this, user);
       });
     });
 
     this.socket.on('userCreated', (user: any) => {
-      const nickname = user.nickname.trim();
-      this.otherPlayer[nickname] = new OtherPlayer(this, user);
+      const id = user.id.toString().trim();
+      this.otherPlayer[id] = new OtherPlayer(this, user);
     });
 
     this.socket.on('move', (data: any) => {
-      const nickname = data.nickname.trim();
-      this.otherPlayer[nickname].update(data.state, data.x, data.y);
+      const id = data.id.toString().trim();
+      this.otherPlayer[id].update(data.state, data.x, data.y);
     });
 
     this.socket.on('userLeaved', (data: any) => {
-      const nickname = data.nickname.trim();
-      this.otherPlayer[nickname].delete();
-      delete this.otherPlayer[nickname];
+      const id = data.id.toString().trim();
+      this.otherPlayer[id].delete();
+      delete this.otherPlayer[id];
+    });
+
+    this.socket.on('userDataChanged', (data: any) => {
+      const { id, nickname, characterName } = data;
+      this.otherPlayer[id].updateNickname(nickname);
+      this.otherPlayer[id].updateHair(characterName);
     });
   }
 
