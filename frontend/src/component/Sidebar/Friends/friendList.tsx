@@ -24,7 +24,14 @@ const FriendList = () => {
         css={friendListWrapper}
         onDragStart={handleDrag}
         onDragEnd={handleDrag}>
-        {friendList.map((friend: friendType) => FriendItem(friend))}
+        {friendList.length ? (
+          friendList.map((friend: friendType) => FriendItem(friend))
+        ) : (
+          <div>
+            친구를 추가하고 <br />
+            함께 플레이 해보세요:)
+          </div>
+        )}
       </ul>
       <Search />
     </Content>
