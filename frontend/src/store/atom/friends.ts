@@ -1,4 +1,5 @@
 import { atom } from 'recoil';
+import { v1 } from 'uuid';
 
 export interface friendsProps {
   [key: string]: {
@@ -9,7 +10,7 @@ export interface friendsProps {
 }
 
 export const friendsState = atom<friendsProps>({
-  key: 'friendsState',
+  key: `friendsState/${v1}`,
   default: {
     안현서: {
       isOnline: true,
