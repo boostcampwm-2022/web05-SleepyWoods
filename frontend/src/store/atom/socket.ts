@@ -4,7 +4,7 @@ import { getCookieValue } from '../../page/Main';
 import { v1 } from 'uuid';
 
 export const socketState = atom<Socket>({
-  key: `socketState/${v1}`,
+  key: `socketState/${v1()}`,
   default: io('localhost:3333', {
     autoConnect: false,
     extraHeaders: {

@@ -8,7 +8,7 @@ export interface userProps {
 }
 
 export const userState = atom<userProps>({
-  key: `userState/${v1}`,
+  key: `userState/${v1()}`,
   default: {
     id: '',
     nickname: '',
