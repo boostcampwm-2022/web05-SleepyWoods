@@ -23,15 +23,17 @@ export const modal = (animation: string) => css`
   align-items: center;
   flex-flow: column;
 
-  width: 50%;
+  width: 60%;
+  min-width: 600px;
   height: 60%;
+  min-height: 400px;
   padding: 20px;
 
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -60%);
-  border-radius: 20px;
+  border-radius: 0 20px 20px 20px;
   background-color: rgba(255, 255, 255, 0.9);
 
   animation: ${animation} 0.3s ease-in-out;
@@ -64,29 +66,9 @@ export const header = css`
   margin-bottom: 20px;
 `;
 
-export const title = css`
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 5px;
-  padding: 10px 20px;
-  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-
-  ::after {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    background-image: url(${tree});
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    margin-left: 5px;
-  }
-`;
-
 export const contentWrapper = css`
-  width: 70%;
+  width: 80%;
+  min-width: 450px;
   height: 100%;
   padding: 5px;
   overflow: auto;
@@ -185,23 +167,111 @@ export const likeBtn = (isLike: boolean) => css`
 `;
 export const filterBtnBox = css`
   display: flex;
+  margin-bottom: 20px;
 `;
 
 export const filterBtn = (icon: string, width: number, height: number) => css`
   ${flexCenter}
-  width: 60px;
+  width: 80px;
   height: 40px;
   box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
-  margin-left: 10px;
+  margin-left: 15px;
+  font-weight: 900;
 
   ::after {
     content: '';
-    display: block;
+    display: ${icon ? 'block' : 'none'};
     width: ${width + 'px'};
     height: ${height + 'px'};
     background-image: url(${icon});
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  :hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const tabWrapper = css`
+  display: flex;
+  position: absolute;
+  top: -39.6px;
+  left: 0;
+`;
+
+export const tab = (selected: boolean) => css`
+  width: 250px;
+  height: 40px;
+  border-radius: 15px 15px 0 0;
+  background-color: ${selected
+    ? 'rgba(255, 255, 255, 0.9)'
+    : 'rgba(255, 255, 255, 0.7)'};
+`;
+
+export const tabBtn = css`
+  ${flexCenter};
+
+  letter-spacing: 3px;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+  font-weight: 700;
+
+  ::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(${tree});
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    margin-left: 5px;
+  }
+`;
+
+export const topRankContainer = css`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-flow: column;
+
+  width: 100%;
+  height: 30%;
+  padding: 20px 30px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  margin-bottom: 20px;
+
+  > li {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+`;
+
+export const rankContainer = css`
+  width: 100%;
+  height: 60%;
+
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  overflow: auto;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  > li {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
   }
 `;
