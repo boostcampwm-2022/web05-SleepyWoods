@@ -13,7 +13,7 @@ export class ChatRoom {
   totalmsgcount: number;
 
   @OneToMany(() => Chat, chat => chat.room)
-  chatRoom: Chat[];
+  chats: Chat[];
 
   @OneToMany(() => ChatMark, mark => mark.room)
   chatMark: ChatMark[];
