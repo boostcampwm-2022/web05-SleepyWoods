@@ -53,8 +53,9 @@ export const pageGuard = () => {
         const { data } = await axios.get('/api/user/auth');
 
         setUser({
-          nickname: data?.nickname?.trim(),
-          hair: data?.characterName?.trim(),
+          id: data.id.toString().trim(),
+          nickname: data.nickname.trim(),
+          hair: data.characterName.trim(),
         });
       } catch (e) {
         navigate('/');
