@@ -23,7 +23,8 @@ export const modal = (animation: string) => css`
   align-items: center;
   flex-flow: column;
 
-  width: 50%;
+  width: 60%;
+  min-width: 600px;
   height: 60%;
   padding: 20px;
 
@@ -86,7 +87,8 @@ export const title = css`
 `;
 
 export const contentWrapper = css`
-  width: 70%;
+  width: 80%;
+  min-width: 450px;
   height: 100%;
   padding: 5px;
   overflow: auto;
