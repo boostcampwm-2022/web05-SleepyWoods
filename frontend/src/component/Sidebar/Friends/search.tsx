@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { FormEvent, MouseEvent, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { friendsState } from '../../../store/atom/friends';
 import { findFriend } from './friends.styled';
 
 const testSearchWord = (word: string) =>
@@ -8,6 +10,7 @@ const testSearchWord = (word: string) =>
   );
 
 const Search = () => {
+  const [friends, setFriends] = useRecoilState(friendsState);
   const [searchWord, setSearchWord] = useState<string>('');
   const [nicknameList, setNicknameList] = useState<string[]>([]);
 
@@ -22,7 +25,17 @@ const Search = () => {
     const response = confirm(`${selectedWord}를 친구추가 하시겠습니까?`);
     if (response) {
       try {
-        await axios.put(`/api/friendship/${selectedWord}`);
+        const { data } = await axios.put(`/api/friendship/${selectedWord}`);
+
+        setFriends({
+          ...friends,
+          id: {
+            id: data.userId,
+            isOnline: false,
+            nickname: data.nickname,
+            isCalling: false,
+          },
+        });
 
         alert('팔로우 되었습니다.');
       } catch {
