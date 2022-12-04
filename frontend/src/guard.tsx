@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 type friendList = {
+  userId: string;
   nickname: string;
   characterName: string;
 };
@@ -24,13 +25,16 @@ export const routerGuard = () => {
         const friendList: friendList[] = data;
         const initialList: friendsProps = {};
 
-        friendList.forEach(({ nickname }: { nickname: string }) => {
-          initialList[nickname] = {
-            isOnline: false,
-            name: nickname,
-            isCalling: false,
-          };
-        });
+        friendList.forEach(
+          ({ userId, nickname }: { userId: string; nickname: string }) => {
+            initialList[nickname] = {
+              id: userId,
+              isOnline: false,
+              nickname: nickname,
+              isCalling: false,
+            };
+          }
+        );
 
         setFriends(initialList);
       } catch (e) {

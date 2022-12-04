@@ -34,7 +34,9 @@ const CallingList = () => {
     <Content>
       <h2 className="srOnly">전화연결 목록</h2>
       <ul css={callingList} onDragOver={handleDragOver}>
-        {friendList.map((friend: friendType) => FriendItem(friend))}
+        {friendList.map((friend: friendType) => (
+          <FriendItem friend={friend} key={friend.id} />
+        ))}
       </ul>
     </Content>
   );
