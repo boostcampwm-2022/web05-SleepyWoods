@@ -15,7 +15,7 @@ export const routerGuard = () => {
   const setFriends = useSetRecoilState(friendsState);
 
   useEffect(() => {
-    async () => {
+    (async () => {
       try {
         const { data } = await axios.get('/api/friendship');
 
@@ -36,7 +36,7 @@ export const routerGuard = () => {
       } catch (e) {
         console.log(e);
       }
-    };
+    })();
   }, []);
 };
 
