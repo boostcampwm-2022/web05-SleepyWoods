@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { UserDataDto, UserIdentifierDto } from './dto/user-data.dto';
 import { User } from './entity/user.entity';
 
@@ -34,6 +34,18 @@ export class UserService {
       return await this.userRepository.findOneBy(searchOptions);
     } catch (e) {
       throw new NotFoundException('유저를 찾는 데 실패하였습니다.');
+    }
+  }
+
+  async findUserListByNickname(searchNickname: string): Promise<User[]> {
+    try {
+      return await this.userRepository.findBy({
+        nickname: Like(searchNickname + '%'),
+      });
+    } catch (e) {
+      throw new NotFoundException(
+        '해당 nickname으로 시작하는 유저들이 없습니다.'
+      );
     }
   }
 
