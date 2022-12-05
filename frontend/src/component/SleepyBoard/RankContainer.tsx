@@ -4,7 +4,7 @@ import * as style from './sleepyboard.styled';
 import axios from 'axios';
 import { formattingWalk } from './util';
 
-const RankContainer = ({ animation }: { animation: string }) => {
+const RankContainer = () => {
   const [rank, setRank] = useState<any>([]);
   const medals = ['🥇', '🥈', '🥉'];
   useEffect(() => {

@@ -5,7 +5,7 @@ import like from '../../assets/icon/like.svg';
 import user from '../../assets/icon/user.svg';
 import axios from 'axios';
 
-const SleepyBoardContainer = ({ animation }: { animation: string }) => {
+const SleepyBoardContainer = () => {
   const [board, setBoard] = useState<any>([]);
 
   useEffect(() => {
