@@ -6,6 +6,7 @@ import { userState } from '../../../store/atom/user';
 import * as style from './chat.styled';
 import { calcTime, nowTime } from './util';
 import ChatMessage from './ChatMessage';
+import { socketState } from '../../../store/atom/socket';
 
 const Chatting = ({
   chatTarget,
@@ -14,6 +15,7 @@ const Chatting = ({
   chatTarget: string;
   setChatTarget: Function;
 }) => {
+  const socket = useRecoilValue(socketState);
   const user = useRecoilValue(userState);
   const [chatDatas, setChatDatas] = useState<any[]>([]);
   const [isClose, setIsClose] = useState(false); // 애니메이션
@@ -22,6 +24,9 @@ const Chatting = ({
   const chatRef = useRef<null | HTMLUListElement>(null);
 
   useEffect(() => {
+    // chatRoom 생성
+    socket.emit('chatRoomEntered');
+
     // 채팅 메세지 가져오기
     const getMessage = async () => {
       try {
@@ -36,6 +41,16 @@ const Chatting = ({
     };
 
     getMessage();
+
+    socket.on('privateChat', (data: any) => {
+      console.log(data);
+      setChatDatas([...chatDatas, { ...data, id: lastId + 1 }]);
+      setLastId(lastId + 1);
+    });
+
+    return () => {
+      socket.emit('chatRoomLeaved');
+    };
   }, []);
 
   // 애니메이션
@@ -62,6 +77,17 @@ const Chatting = ({
       nickname: user.nickname,
       message: chatValue,
     };
+    //   {
+    //     "fromUserId": "IZI_1Wzwhqblu0A4KA_TCrtkl4mM55Qstc_FDKMv_sY",
+    //     "nickname": "연어초밥",
+    //     "timestamp": 1669820748590,
+    //     "message": "개인 메시지 입니다.."
+    // }
+
+    socket.emit('privateChat', {
+      targetUserId: chatTarget,
+      message: chatValue,
+    });
 
     setChatDatas([...chatDatas, chat]);
     setLastId(lastId + 1);
