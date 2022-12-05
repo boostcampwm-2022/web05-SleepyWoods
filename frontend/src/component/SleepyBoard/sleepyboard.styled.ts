@@ -10,7 +10,7 @@ export const sleepyBoardBtn = css`
   height: 60px;
 
   position: absolute;
-  bottom: 30px;
+  bottom: 55px;
   right: 30px;
   background-image: url(${trophy});
   background-repeat: no-repeat;
@@ -25,8 +25,10 @@ export const modal = (animation: string) => css`
 
   width: 60%;
   min-width: 600px;
+  max-width: 800px;
   height: 60%;
   min-height: 400px;
+  max-height: 600px;
   padding: 20px;
 
   position: absolute;
