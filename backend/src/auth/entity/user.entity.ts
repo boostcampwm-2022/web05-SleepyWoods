@@ -1,3 +1,4 @@
+import { Walk } from 'src/achievement/entity/walk.entity';
 import { BoardLike } from 'src/board/entity/board-like.entity';
 import { Board } from 'src/board/entity/board.entity';
 import { ChatMark } from 'src/chat/entity/chat-mark.entity';
@@ -57,4 +58,7 @@ export class User {
 
   @OneToMany(() => ChatMark, mark => mark.user)
   chatMark: ChatMark[];
+
+  @OneToMany(() => Walk, walk => walk.user)
+  walks: Walk[];
 }
