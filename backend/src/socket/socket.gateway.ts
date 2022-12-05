@@ -15,6 +15,13 @@ import { WsExceptionFilter } from './filter/ws.filter';
 import { movementValidationPipe } from './pipes/movement.pipe';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { signupDataDto } from 'src/auth/dto/user-data.dto';
+import {
+  Cron,
+  CronExpression,
+  Interval,
+  SchedulerRegistry,
+  Timeout,
+} from '@nestjs/schedule';
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway({
@@ -25,6 +32,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
   socketIdByUser = new Map();
+  walkCountByUser = new Map();
 
   constructor(
     private readonly authService: AuthService,
@@ -55,10 +63,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       y: 400,
       direction: 'right',
       state: 'wait',
+      userState: 'on',
+      walk: this.walkCountByUser.get(userData['id']) || 0,
       roomName,
     };
-    this.socketIdByUser.set(userData['id'], client.id);
 
+    this.socketIdByUser.set(userData['id'], client.id);
     client.join(roomName);
     client.to(roomName).emit('userCreated', client['userData']);
     this.server
@@ -68,7 +78,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   public handleDisconnect(client: Socket): void {
     this.server.emit('userLeaved', client['userData']);
+    this.event.emit('walkSave', client['userData']);
     this.socketIdByUser.delete(client['userData']['id']);
+  }
+
+  @Cron('58 23 * * *', { name: 'walkSaveScheduler' })
+  walkSaveScheduler() {
+    this.event.emit('saveWalkCount', [...this.walkCountByUser]);
+    this.walkCountByUser.clear();
   }
 
   @SubscribeMessage('userDataChanged')
@@ -89,8 +106,17 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @MessageBody(movementValidationPipe)
     payload: playerMovementDataDto
   ) {
+    this.walkCountByUser.set(
+      client['userData']['id'],
+      (this.walkCountByUser.get(client['userData']['id']) ?? 0) + 1
+    );
+    client['userData']['walk'] = Math.floor(
+      this.walkCountByUser.get(client['userData']['id']) / 10
+    );
     client['userData'] = { ...client['userData'], ...payload };
-    client.to(client['userData']['roomName']).emit('move', client['userData']);
+    this.server
+      .to(client['userData']['roomName'])
+      .emit('move', client['userData']);
   }
 
   @SubscribeMessage('publicChat')
