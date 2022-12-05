@@ -103,7 +103,7 @@ export class UserController {
     const { id, social }: UserDataDto = req.user;
     // body안에 nickname, characterName FE에 전송 요청
     await this.userService.createUser({
-      id,
+      id: social === socialPlatform.KAKAO ? `k${id}` : id,
       social,
       nickname: signupData['nickname'],
       characterName: signupData['characterName'],
