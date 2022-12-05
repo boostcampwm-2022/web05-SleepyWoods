@@ -10,7 +10,7 @@ const ChatMessage = ({ chat }: { chat: any }) => {
     'Z-NVwpPpbw7oOjHEn-CYEZ8V9nU3P9IIChz_9PuuVak' === chat.senderId;
 
   return (
-    <li key={chat.id} css={style.chatItem(isSender)}>
+    <li css={style.chatItem(isSender)}>
       <div css={style.chatText(isSender)}>{chat.message}</div>
       <div css={style.chatTime}>{chat.timestamp}</div>
     </li>

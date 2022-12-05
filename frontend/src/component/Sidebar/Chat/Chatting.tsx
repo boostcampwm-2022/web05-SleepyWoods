@@ -86,7 +86,7 @@ const Chatting = ({
         </div>
         <ul css={style.textWrapper} ref={chatRef}>
           {chatDatas.map((data: any) => (
-            <ChatMessage chat={data} />
+            <ChatMessage key={data.id} chat={data} />
           ))}
         </ul>
         <input
