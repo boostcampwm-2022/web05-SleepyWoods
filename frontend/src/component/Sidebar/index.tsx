@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useEffect, useState } from 'react';
 import { sidebarWrapper, sidebar, toggleButton } from './sidebar.styled';
 import Mypage from './Mypage';
 
@@ -14,6 +14,8 @@ import { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import Friends from './Friends';
 import Setting from './Setting';
 import Chat from './Chat';
+import { useRecoilState } from 'recoil';
+import { sidebarState } from '../../store/atom/sidebar';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
@@ -31,7 +33,7 @@ const Sidebar = () => {
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
 
-  const [currentTab, setCurrentTab] = useState<string>('friends');
+  const [currentTab, setCurrentTab] = useRecoilState(sidebarState);
 
   const changeTab = (e: MouseEvent) => {
     const navList = e.currentTarget.children;
@@ -43,14 +45,12 @@ const Sidebar = () => {
       const name = node.id;
       const $img = node.children[0];
 
-      $img === target
-        ? ($img.classList.add('active'), setCurrentTab(name))
-        : $img.classList.remove('active');
+      $img === target && setCurrentTab(name);
     });
   };
 
   return (
-    <aside css={sidebarWrapper(isOpen)}>
+    <aside css={sidebarWrapper(isOpen, currentTab)}>
       <div css={sidebar}>
         <nav className="sidebar-tab">
           <ul onClick={changeTab}>
@@ -58,7 +58,7 @@ const Sidebar = () => {
               <img src={mypage} alt="마이페이지"></img>
             </li>
             <li id="friends">
-              <img className="active" src={friends} alt="친구목록"></img>
+              <img src={friends} alt="친구목록"></img>
             </li>
             <li id="chatting">
               <img src={chatting} alt="채팅"></img>

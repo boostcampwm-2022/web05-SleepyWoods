@@ -60,7 +60,10 @@ export class UserController {
 
     // 2단계 : 우리 유저 인지 확인하기
     const userData = await this.userService.findUser({
-      id: userSocialProfile.id,
+      id:
+        social === socialPlatform.KAKAO
+          ? `k${userSocialProfile.id}`
+          : userSocialProfile.id,
       social: social,
     });
     // 탈퇴 감지 로직
@@ -69,7 +72,10 @@ export class UserController {
     }
 
     const jwt = await this.authService.jwtTokenGenerator({
-      id: userSocialProfile.id,
+      id:
+        social === socialPlatform.KAKAO
+          ? `k${userSocialProfile.id}`
+          : userSocialProfile.id,
       social,
       nickname: userData?.nickname,
       characterName: userData?.characterName,
@@ -110,7 +116,7 @@ export class UserController {
     });
 
     const jwt = await this.authService.jwtTokenGenerator({
-      id,
+      id: social === socialPlatform.KAKAO ? `k${id}` : id,
       social,
       nickname: signupData['nickname'],
       characterName: signupData['characterName'],

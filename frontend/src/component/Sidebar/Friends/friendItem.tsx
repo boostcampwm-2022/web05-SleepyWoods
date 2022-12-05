@@ -4,17 +4,21 @@ import { friendItemWrapper, userName } from './friends.styled';
 import message from '../../../assets/icon/messageIcon.svg';
 import unfollow from '../../../assets/icon/unfollowIcon.svg';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
-import { useEffect } from 'react';
+import { sidebarState } from '../../../store/atom/sidebar';
+import { chattingState } from '../../../store/atom/chatting';
 
 const FriendItem = ({ friend }: { friend: friendType }) => {
   const [friends, setFriends] = useRecoilState(friendsState);
+  const setChatTarget = useSetRecoilState(chattingState);
+  const setCurrentTab = useSetRecoilState(sidebarState);
 
-  const { id, isOnline, nickname } = friend;
+  const { id, isOnline, isCalling, nickname } = friend;
 
   const sendChatting = () => {
-    alert(`${nickname}님과 채팅하기`);
+    setChatTarget(id);
+    setCurrentTab('chatting');
   };
 
   const unfollowing = async () => {
@@ -41,8 +45,13 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
       <section id={id} css={friendItemWrapper(isOnline)}>
         <div css={userName(isOnline)}>{nickname}</div>
         <div>
-          <img src={message} alt="채팅하기" onClick={sendChatting}></img>
-          <img src={unfollow} alt="친구 끊기" onClick={unfollowing}></img>
+          <button onClick={sendChatting}>
+            <img src={message} alt="채팅하기 버튼"></img>
+          </button>
+          <button onClick={unfollowing}>
+            <img src={unfollow} alt="친구 끊기 버튼"></img>
+          </button>
+          {isCalling && <div></div>}
         </div>
       </section>
     </Content>
