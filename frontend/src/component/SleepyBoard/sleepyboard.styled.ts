@@ -169,10 +169,10 @@ export const likeBtn = (isLike: boolean) => css`
 `;
 export const filterBtnBox = css`
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 `;
 
-export const filterBtn = (icon: string, width: number, height: number) => css`
+export const filterBtn = (isSelected: boolean, icon: string) => css`
   ${flexCenter}
   width: 80px;
   height: 40px;
@@ -180,15 +180,16 @@ export const filterBtn = (icon: string, width: number, height: number) => css`
   border-radius: 20px;
   margin-left: 15px;
   font-weight: 900;
+  ${isSelected && 'background-color: white;'}
 
   ::after {
     content: '';
     display: ${icon ? 'block' : 'none'};
-    width: ${width + 'px'};
-    height: ${height + 'px'};
+    width: 22px;
+    height: 18px;
     background-image: url(${icon});
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: contain;
   }
 
   :hover {
@@ -233,6 +234,26 @@ export const tabBtn = css`
   }
 `;
 
+export const selectMonthBox = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  height: 10%;
+  margin-bottom: 10px;
+`;
+
+export const selectMonth = (isSelected: boolean) => css`
+  ${flexCenter}
+  ${isSelected && 'background-color: white;'};
+
+  width: 30%;
+  height: 30px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 4px rgb(0 0 0 / 25%);
+`;
+
 export const topRankContainer = css`
   display: flex;
   justify-content: space-around;
@@ -240,7 +261,7 @@ export const topRankContainer = css`
   flex-flow: column;
 
   width: 100%;
-  height: 30%;
+  height: 25%;
   padding: 20px 30px;
   background-color: rgba(255, 255, 255, 0.4);
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
@@ -257,7 +278,7 @@ export const topRankContainer = css`
 
 export const rankContainer = css`
   width: 100%;
-  height: 60%;
+  height: 50%;
 
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.4);
