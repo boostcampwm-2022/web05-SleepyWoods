@@ -25,11 +25,7 @@ const SleepyBoard = () => {
         <>
           <section css={style.modal(animation)}>
             <Tab selected={tab} setTab={setTab} />
-            {tab === 'board' ? (
-              <SleepyBoardContainer animation={animation} />
-            ) : (
-              <RankContainer animation={animation} />
-            )}
+            {tab === 'board' ? <SleepyBoardContainer /> : <RankContainer />}
           </section>
         </>
       )}
