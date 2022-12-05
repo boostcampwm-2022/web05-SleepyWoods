@@ -3,7 +3,7 @@ import { flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 import downArrow from '../../assets/icon/downArrow.svg';
 
-export const chatContainer = (isExtend: boolean) => css`
+export const chatContainer = () => css`
   position: absolute;
   bottom: 0;
   left: 50%;
@@ -13,22 +13,17 @@ export const chatContainer = (isExtend: boolean) => css`
   justify-content: space-between;
   width: 40%;
   min-width: 400px;
-  height: ${isExtend ? '250px' : '80px'};
   transform: translateX(-50%);
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 10px 10px 0 0;
   padding: 10px 10px 5px 10px;
-
-  transition: 0.5s;
 `;
 
-export const chatText = (isExtend: boolean) => css`
+export const chatTextWrapper = (isExtend: boolean) => css`
   width: 100%;
-  flex-grow: 1;
-  font-size: 14px;
-  color: ${theme.white};
-  line-height: 16px;
-  overflow: ${isExtend ? 'auto' : 'hidden'};
+  height: ${isExtend ? '200px' : '25px'};
+  overflow: auto;
+  transition: 0.5s;
 
   ::-webkit-scrollbar {
     width: 10px;
@@ -40,6 +35,14 @@ export const chatText = (isExtend: boolean) => css`
     border: 2px solid transparent;
     border-radius: 10px;
   }
+`;
+
+export const chatText = css`
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  color: ${theme.white};
+  line-height: 16px;
 `;
 
 export const chat = css`

@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Put,
   Req,
@@ -44,6 +45,9 @@ export class FriendshipController {
     const targetUserId = await this.userService.getUserIdByNickname(
       targetNickname
     );
+    if (targetUserId == userId) {
+      throw new NotFoundException('자기 자신은 친구로 추가할 수 없습니다.');
+    }
     await this.friendshipService.followFriend(userId, targetUserId);
     const followingList = await this.friendshipService.getFollowingList(userId);
     return followingList.find(

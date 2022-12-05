@@ -8,7 +8,7 @@ const Chat = () => {
   const [isExtend, setIsExtend] = useState(true);
   const [chatDatas, setChatDatas] = useState<any[]>([]);
 
-  // 채팅 없데이트
+  // 채팅 업데이트
   const updateChat = (chat: any) => {
     chat.timestamp = calcTimeFromMs(chat.timestamp);
 
@@ -22,7 +22,7 @@ const Chat = () => {
   };
 
   return (
-    <section css={style.chatContainer(isExtend)}>
+    <section css={style.chatContainer}>
       <button
         type="button"
         css={style.extendBtn(isExtend)}
