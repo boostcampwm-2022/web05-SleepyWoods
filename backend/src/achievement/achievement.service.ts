@@ -10,6 +10,7 @@ export class AchievementService {
   ) {}
 
   async getUsersWalkCounts(
+    userId: string,
     year: number,
     month: number,
     range: string,
@@ -31,13 +32,17 @@ export class AchievementService {
           range == 'all'
             ? 'walk.year = :year AND walk.month = :month'
             : 'walk.year = :year AND walk.month = :month AND walk.userid in (:...userList)',
-          { year, month, userList: userList.map(user => user.userId) }
+          {
+            year,
+            month,
+            userList: [userId, ...userList.map(user => user.userId)],
+          }
         )
         .orderBy('SUM(walk.walk)', 'DESC')
         .getRawMany();
       return result;
     } catch (e) {
-      return [];
+      throw new NotFoundException('유저들의 걸음 수를 불러올 수 없습니다.');
     }
   }
 

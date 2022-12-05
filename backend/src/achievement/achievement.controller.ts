@@ -30,6 +30,7 @@ export class AchievementController {
     const userList = await this.friendshipService.getFollowingList(userId);
 
     const usersWalkCounts = await this.achievementService.getUsersWalkCounts(
+      userId,
       year,
       month,
       range,
