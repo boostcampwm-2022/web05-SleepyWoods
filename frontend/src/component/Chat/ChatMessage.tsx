@@ -16,7 +16,7 @@ const ChatMessage = ({
   setChatDatas: Function;
 }) => {
   const socket = useRecoilValue(socketState);
-  const chatRef = useRef<null | HTMLUListElement>(null);
+  const chatRef = useRef<null | HTMLDivElement>(null);
 
   useEffect(() => {
     // 채팅창 초기화
@@ -64,11 +64,13 @@ const ChatMessage = ({
   }, [chatDatas]);
 
   return (
-    <ul css={style.chatText(isExtend)} ref={chatRef}>
-      {chatDatas.map((data: any, idx: any) => (
-        <ChatContent data={data} key={idx} />
-      ))}
-    </ul>
+    <div css={style.chatTextWrapper(isExtend)} ref={chatRef}>
+      <ul css={style.chatText}>
+        {chatDatas.map((data: any, idx: any) => (
+          <ChatContent data={data} key={idx} />
+        ))}
+      </ul>
+    </div>
   );
 };
 
