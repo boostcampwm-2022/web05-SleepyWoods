@@ -48,7 +48,9 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
           <button onClick={sendChatting}>
             <img src={message} alt="채팅하기 버튼"></img>
           </button>
-          <img src={unfollow} alt="친구 끊기 버튼" onClick={unfollowing}></img>
+          <button onClick={unfollowing}>
+            <img src={unfollow} alt="친구 끊기 버튼"></img>
+          </button>
           {isCalling && <div></div>}
         </div>
       </section>
