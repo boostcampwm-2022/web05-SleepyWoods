@@ -3,7 +3,7 @@ import sidebarOpen from '../../assets/sidebar-open.svg';
 import sidebarClose from '../../assets/sidebar-close.svg';
 import { flexCenter } from '../../styles/mixin.styled';
 
-export const sidebarWrapper = (isOpen: boolean) => css`
+export const sidebarWrapper = (isOpen: boolean, currentTab: string) => css`
   position: absolute;
   top: 0;
   left: 0;
@@ -24,12 +24,14 @@ export const sidebarWrapper = (isOpen: boolean) => css`
     cursor: pointer;
     opacity: 0.5;
 
-    &.active {
-      opacity: 1;
-    }
-
     :hover {
       opacity: 0.8;
+    }
+  }
+
+  li#${currentTab} {
+    img {
+      opacity: 1;
     }
   }
 `;
