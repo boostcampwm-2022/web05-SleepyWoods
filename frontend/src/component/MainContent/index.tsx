@@ -4,7 +4,8 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../store/atom/user';
 import { MainButton } from '../Button';
 import { buttons } from '../Button/button.styled';
-import { container, logo } from './mainContent.styled';
+import logo from '../../assets/logo.png';
+import * as style from './mainContent.styled';
 
 const ClientButton = () => {
   const handleLogoutEvent = async () => {
@@ -39,8 +40,8 @@ const MainContent = () => {
   const user = useRecoilValue(userState);
 
   return (
-    <section css={container}>
-      <h1 css={logo}>Sleepy Woods</h1>
+    <section css={style.container}>
+      <img src={logo} css={style.logo} alt="슬리피우드 로고 이미지"></img>
       <div css={buttons}>
         {user.nickname ? <ClientButton /> : <GuestButton />}
       </div>
