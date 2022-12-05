@@ -20,5 +20,6 @@ export const container = css`
 export const logo = css`
   font-size: 64px;
   font-weight: 700;
-  color: ${theme.white};
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.4));
+  margin-bottom: 50px;
 `;
