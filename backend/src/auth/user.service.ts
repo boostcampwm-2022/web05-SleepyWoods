@@ -16,13 +16,7 @@ export class UserService {
 
   async createUser(signupData: UserDataDto): Promise<void> {
     try {
-      await this.userRepository.update(
-        { social: signupData['social'], id: signupData['id'] },
-        {
-          nickname: signupData['nickname'],
-          characterName: signupData['characterName'],
-        }
-      );
+      await this.userRepository.save(signupData);
     } catch (e) {
       console.log(e);
       throw new NotAcceptableException('닉네임이 중복됩니다.');
