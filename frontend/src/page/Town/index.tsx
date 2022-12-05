@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Chat from '../../component/Chat';
 import Game from '../../component/Game';
+import Info from '../../component/Info';
 import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
 import SleepyBoard from '../../component/SleepyBoard';
@@ -43,6 +44,7 @@ const Town = () => {
       {isSnowing && <Snow />}
       <SleepyBoard />
       <Chat />
+      <Info />
 
       {isLoadingComplete || <Loading isClose={isClose} />}
     </>
