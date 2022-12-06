@@ -14,9 +14,13 @@ import { Chat } from './chat/entity/chat.entity';
 import { ChatRoom } from './chat/entity/chat-room.entity';
 import { ChatMark } from './chat/entity/chat-mark.entity';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { AchievementModule } from './achievement/achievement.module';
+import { Walk } from './achievement/entity/walk.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
@@ -27,7 +31,16 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
         username: process.env.DB_ID,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [User, Board, BoardLike, Following, Chat, ChatRoom, ChatMark],
+        entities: [
+          User,
+          Board,
+          BoardLike,
+          Following,
+          Chat,
+          ChatRoom,
+          ChatMark,
+          Walk,
+        ],
         synchronize: true,
       }),
     }),
@@ -36,6 +49,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     FriendshipModule,
     SocketModule,
     ChatModule,
+    AchievementModule,
   ],
   controllers: [],
   providers: [],

@@ -18,10 +18,15 @@ export const button = (type: string) => css`
   height: 50px;
   background-color: ${type === 'dark' ? theme.black : theme.white};
   color: ${type === 'dark' ? theme.white : theme.black};
-  opacity: 0.9;
+  opacity: 0.8;
   border-radius: 20px;
   font-weight: 700;
   text-align: center;
+  transition: 0.3s;
+
+  :hover {
+    opacity: 1;
+  }
 `;
 
 export const signButton = (type: string) => css`
