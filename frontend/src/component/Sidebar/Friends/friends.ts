@@ -1,6 +1,6 @@
 export type friendType = {
   id: string;
   isCalling: boolean;
-  isOnline: boolean;
+  status: string;
   nickname: string;
 };
