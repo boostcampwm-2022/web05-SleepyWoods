@@ -29,7 +29,7 @@ export const routerGuard = () => {
           ({ userId, nickname }: { userId: string; nickname: string }) => {
             initialList[nickname] = {
               id: userId,
-              isOnline: false,
+              status: 'offline',
               nickname: nickname,
               isCalling: false,
             };

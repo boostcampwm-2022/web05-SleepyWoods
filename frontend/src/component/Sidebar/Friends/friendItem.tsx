@@ -14,7 +14,8 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
   const setChatTarget = useSetRecoilState(chattingState);
   const setCurrentTab = useSetRecoilState(sidebarState);
 
-  const { id, isOnline, isCalling, nickname } = friend;
+  const { id, status, isCalling, nickname } = friend;
+  const isOnline = status === 'online';
 
   const sendChatting = () => {
     setChatTarget(id);
