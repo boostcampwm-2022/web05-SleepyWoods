@@ -118,7 +118,7 @@ export class ChatService {
     }
 
     if (!chatRoom || chatRoom.length == 0) {
-      throw new NotFoundException('해당하는 방이 없습니다.');
+      return false;
     } else {
       return chatRoom[0];
     }
