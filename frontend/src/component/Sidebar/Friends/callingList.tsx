@@ -25,9 +25,12 @@ const CallingList = () => {
       ...friends,
       [id]: {
         ...friends[id],
+        status: 'busy',
         isCalling: true,
       },
     });
+
+    // socket: 해당 친구 busy로 변경
   };
 
   return (
