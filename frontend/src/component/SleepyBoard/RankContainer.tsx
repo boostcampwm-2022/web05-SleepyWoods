@@ -9,9 +9,9 @@ const RankContainer = () => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const dateList = [
-    `${month - 2 > 0 ? year : year - 1}년 ${month - 2}월`,
-    `${month - 1 > 0 ? year : year - 1}년 ${month - 1}월`,
-    `${year}년 ${month}월`,
+    { year: month - 2 > 0 ? year : year - 1, month: month - 2 },
+    { year: month - 1 > 0 ? year : year - 1, month: month - 1 },
+    { year: year, month: month },
   ];
 
   const [monthIdx, setMonthIdx] = useState(2);
@@ -20,40 +20,18 @@ const RankContainer = () => {
   const medals = ['🥇', '🥈', '🥉'];
 
   useEffect(() => {
+    const getRank = async (key: string) => {
+      try {
+        const { data, status } = await axios(
+          `/api/achievement/walk?year=${dateList[monthIdx].year}&month=${dateList[monthIdx].month}&range=${filter}`
+        );
+
+        if (status === 200) setRank(data);
+      } catch (e) {}
+    };
+
     getRank(filter);
-  }, [filter]);
-
-  const getRank = async (key: string) => {
-    try {
-      // const { data, status } = API 요청
-      const status = 200;
-      const data = [
-        { nickname: '안현서', walk: 300020 },
-        { nickname: '이형진', walk: 300019 },
-        { nickname: '강성준', walk: 300018 },
-        { nickname: '원종빈', walk: 300017 },
-        { nickname: '원종빈', walk: 300016 },
-        { nickname: '원종빈', walk: 300015 },
-        { nickname: '원종빈', walk: 300014 },
-        { nickname: '원종빈', walk: 300013 },
-        { nickname: '원종빈', walk: 300012 },
-        { nickname: '원종빈', walk: 300011 },
-        { nickname: '원종빈', walk: 300010 },
-        { nickname: '원종빈', walk: 300009 },
-        { nickname: '원종빈', walk: 300008 },
-        { nickname: '원종빈', walk: 300007 },
-        { nickname: '원종빈', walk: 300006 },
-        { nickname: '원종빈', walk: 300005 },
-        { nickname: '원종빈', walk: 300004 },
-        { nickname: '원종빈', walk: 300003 },
-        { nickname: '원종빈', walk: 300002 },
-        { nickname: '원종빈', walk: 300001 },
-        { nickname: '원종빈', walk: 300000 },
-      ];
-
-      if (status === 200) setRank(data);
-    } catch (e) {}
-  };
+  }, [filter, monthIdx]);
 
   return (
     <>
@@ -74,11 +52,12 @@ const RankContainer = () => {
 
       <div css={style.contentWrapper}>
         <div css={style.selectMonthBox}>
-          {dateList.map((date: string, idx: number) => (
+          {dateList.map((date: any, idx: number) => (
             <button
+              key={date.month}
               css={style.selectMonth(monthIdx === idx)}
               onClick={() => setMonthIdx(idx)}>
-              {date}
+              {`${date.year}년 ${date.month}월`}
             </button>
           ))}
         </div>
@@ -90,7 +69,7 @@ const RankContainer = () => {
                 <span>
                   {medals[idx]} {user.nickname}
                 </span>
-                <span>{formattingWalk(user.walk) + ' 보'}</span>
+                <span>{formattingWalk(user.walkcount) + ' 보'}</span>
               </li>
             );
           })}
@@ -103,7 +82,7 @@ const RankContainer = () => {
                 <span>
                   {idx + 1 + '.'} {user.nickname}
                 </span>
-                <span>{formattingWalk(user.walk) + ' 보'}</span>
+                <span>{formattingWalk(user.walkcount) + ' 보'}</span>
               </li>
             );
           })}
