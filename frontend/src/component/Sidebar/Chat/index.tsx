@@ -9,7 +9,7 @@ const Chat = () => {
 
   return (
     <ul css={chatContainer}>
-      {chatTarget ? (
+      {chatTarget.id ? (
         <Chatting chatTarget={chatTarget} setChatTarget={setChatTarget} />
       ) : (
         <ChatList setChatTarget={setChatTarget} />

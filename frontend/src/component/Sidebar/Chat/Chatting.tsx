@@ -4,7 +4,6 @@ import Content from '../Content';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../../store/atom/user';
 import * as style from './chat.styled';
-import { calcTime, nowTime } from './util';
 import ChatMessage from './ChatMessage';
 import { socketState } from '../../../store/atom/socket';
 
@@ -12,7 +11,7 @@ const Chatting = ({
   chatTarget,
   setChatTarget,
 }: {
-  chatTarget: string;
+  chatTarget: any;
   setChatTarget: Function;
 }) => {
   const socket = useRecoilValue(socketState);
@@ -25,17 +24,16 @@ const Chatting = ({
 
   useEffect(() => {
     // chatRoom 생성
-    socket.emit('chatRoomEntered');
+    socket.emit('chatRoomEntered', { targetUserId: chatTarget.id });
 
     // 채팅 메세지 가져오기
     const getMessage = async () => {
       try {
         const { data } = await axios(
-          `/api/chat/content?targetUserId=${chatTarget}`
+          `/api/chat/content?targetUserId=${chatTarget.id}`
         );
 
-        data.forEach((msg: any) => (msg.timestamp = calcTime(msg.timestamp)));
-        setLastId(data[data.length - 1].id);
+        setLastId(() => data[data.length - 1].id);
         setChatDatas(data);
       } catch (e) {}
     };
@@ -43,22 +41,26 @@ const Chatting = ({
     getMessage();
 
     socket.on('privateChat', (data: any) => {
-      console.log(data);
-      setChatDatas([...chatDatas, { ...data, id: lastId + 1 }]);
-      setLastId(lastId + 1);
+      setChatDatas(chatDatas => [
+        ...chatDatas,
+        { ...data, id: (() => lastId + 1)() },
+      ]);
+      setLastId(() => lastId + 1);
     });
 
     return () => {
-      socket.emit('chatRoomLeaved');
+      socket.emit('chatRoomLeaved', { targetUserId: chatTarget.id });
+      socket.removeListener('privateChat');
     };
   }, []);
 
   // 애니메이션
   const handleChatRoom = () => {
+    socket.emit('chatRoomLeaved', { targetUserId: chatTarget.id });
     setIsClose(true);
 
     setTimeout(() => {
-      setChatTarget('');
+      setChatTarget({ id: '', nickname: '' });
     }, 300);
   };
 
@@ -73,24 +75,20 @@ const Chatting = ({
 
     const chat = {
       id: lastId + 1,
-      timestamp: nowTime(),
+      fromUserId: user.id,
+      timestamp: Date.now(),
       nickname: user.nickname,
       message: chatValue,
+      senderId: user.id,
     };
-    //   {
-    //     "fromUserId": "IZI_1Wzwhqblu0A4KA_TCrtkl4mM55Qstc_FDKMv_sY",
-    //     "nickname": "연어초밥",
-    //     "timestamp": 1669820748590,
-    //     "message": "개인 메시지 입니다.."
-    // }
 
     socket.emit('privateChat', {
-      targetUserId: chatTarget,
+      targetUserId: chatTarget.id,
       message: chatValue,
     });
 
     setChatDatas([...chatDatas, chat]);
-    setLastId(lastId + 1);
+    setLastId(() => lastId + 1);
     setChatValue('');
   };
 
@@ -104,7 +102,7 @@ const Chatting = ({
     <Content isexpand={true}>
       <div css={style.chatConatiner(isClose)}>
         <div css={style.chatUserBox}>
-          <span css={style.chatUserName}>{'닉네임'}</span>
+          <span css={style.chatUserName}>{chatTarget.nickname}</span>
           <button
             type="button"
             css={style.prevBtn}
