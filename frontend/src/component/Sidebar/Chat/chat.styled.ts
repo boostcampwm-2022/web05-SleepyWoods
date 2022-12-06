@@ -39,7 +39,7 @@ export const chatItemWrapper = css`
   height: 100%;
 `;
 
-export const chatInfo = (unreadCount: number) => css`
+export const chatInfo = (unReadCount: number) => css`
   ${flexCenter};
 
   justify-content: space-between;
@@ -59,13 +59,14 @@ export const chatInfo = (unreadCount: number) => css`
   }
 
   ::before {
-    content: ${unreadCount ? unreadCount : ''};
-    ${unreadCount ? flexCenter : ''};
+    content: '${unReadCount}';
+    ${unReadCount ? flexCenter : 'display: none;'};
+
     position: absolute;
     bottom: 0;
     right: 0;
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     font-size: 10px;
     font-weight: 700;
 
@@ -79,6 +80,7 @@ export const message = css`
   text-overflow: ellipsis;
   white-space: nowrap;
   padding-right: 20px;
+  opacity: 0.5;
 `;
 
 export const emptyMessage = css`
@@ -144,7 +146,7 @@ export const textWrapper = css`
 export const chatItem = (isSender: boolean) => css`
   display: flex;
   flex-flow: column;
-  align-items: ${isSender ? 'flex-start' : 'flex-end'};
+  align-items: ${isSender ? 'flex-end' : 'flex-start'};
   margin-bottom: 10px;
 
   :last-of-type {
@@ -159,7 +161,7 @@ export const chatText = (isSender: boolean) => css`
   border-radius: 10px;
   padding: 5px 10px;
 
-  background-color: ${isSender ? theme.white : theme.lightGreen};
+  background-color: ${isSender ? theme.lightGreen : theme.white};
 `;
 
 export const chatTime = css`

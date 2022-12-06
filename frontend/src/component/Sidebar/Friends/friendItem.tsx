@@ -4,12 +4,14 @@ import { friendItemWrapper, userName } from './friends.styled';
 import message from '../../../assets/icon/messageIcon.svg';
 import unfollow from '../../../assets/icon/unfollowIcon.svg';
 import axios from 'axios';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
 import { sidebarState } from '../../../store/atom/sidebar';
 import { chattingState } from '../../../store/atom/chatting';
+import { socketState } from '../../../store/atom/socket';
 
 const FriendItem = ({ friend }: { friend: friendType }) => {
+  const socket = useRecoilValue(socketState);
   const [friends, setFriends] = useRecoilState(friendsState);
   const setChatTarget = useSetRecoilState(chattingState);
   const setCurrentTab = useSetRecoilState(sidebarState);
@@ -18,7 +20,8 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
   const isOnline = status === 'online';
 
   const sendChatting = () => {
-    setChatTarget(id);
+    socket.emit('chatRoomEntered', { targetUserId: id });
+    setChatTarget({ id, nickname });
     setCurrentTab('chatting');
   };
 

@@ -4,12 +4,24 @@ import * as style from './sleepyboard.styled';
 import axios from 'axios';
 import { formattingWalk } from './util';
 
-const RankContainer = ({ animation }: { animation: string }) => {
+const RankContainer = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const dateList = [
+    `${month - 2 > 0 ? year : year - 1}년 ${month - 2}월`,
+    `${month - 1 > 0 ? year : year - 1}년 ${month - 1}월`,
+    `${year}년 ${month}월`,
+  ];
+
+  const [monthIdx, setMonthIdx] = useState(2);
+  const [filter, setFilter] = useState('all');
   const [rank, setRank] = useState<any>([]);
   const medals = ['🥇', '🥈', '🥉'];
+
   useEffect(() => {
-    getRank('all');
-  }, []);
+    getRank(filter);
+  }, [filter]);
 
   const getRank = async (key: string) => {
     try {
@@ -48,18 +60,28 @@ const RankContainer = ({ animation }: { animation: string }) => {
       <nav css={style.filterBtnBox}>
         <button
           type="button"
-          onClick={() => getRank('all')}
-          css={style.filterBtn('', 0, 0)}>
+          onClick={() => setFilter('all')}
+          css={style.filterBtn(filter === 'all', '')}>
           All
         </button>
         <button
           type="button"
-          onClick={() => getRank('friend')}
-          css={style.filterBtn('', 0, 0)}>
+          onClick={() => setFilter('friend')}
+          css={style.filterBtn(filter === 'friend', '')}>
           Friend
         </button>
       </nav>
+
       <div css={style.contentWrapper}>
+        <div css={style.selectMonthBox}>
+          {dateList.map((date: string, idx: number) => (
+            <button
+              css={style.selectMonth(monthIdx === idx)}
+              onClick={() => setMonthIdx(idx)}>
+              {date}
+            </button>
+          ))}
+        </div>
         <ul css={style.topRankContainer}>
           {rank.map((user: any, idx: number) => {
             if (idx >= 3) return;

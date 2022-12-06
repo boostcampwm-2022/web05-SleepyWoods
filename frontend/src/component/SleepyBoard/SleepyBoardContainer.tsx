@@ -5,12 +5,13 @@ import like from '../../assets/icon/like.svg';
 import user from '../../assets/icon/user.svg';
 import axios from 'axios';
 
-const SleepyBoardContainer = ({ animation }: { animation: string }) => {
+const SleepyBoardContainer = () => {
+  const [filter, setFilter] = useState('all');
   const [board, setBoard] = useState<any>([]);
 
   useEffect(() => {
-    getPost('all');
-  }, []);
+    getPost(filter);
+  }, [filter]);
 
   const getPost = async (key: string) => {
     try {
@@ -24,18 +25,18 @@ const SleepyBoardContainer = ({ animation }: { animation: string }) => {
       <nav css={style.filterBtnBox}>
         <button
           type="button"
-          onClick={() => getPost('all')}
-          css={style.filterBtn('', 0, 0)}>
+          onClick={() => setFilter('all')}
+          css={style.filterBtn(filter === 'all', '')}>
           All
         </button>
         <button
           type="button"
-          onClick={() => getPost('like')}
-          css={style.filterBtn(like, 22, 18)}></button>
+          onClick={() => setFilter('like')}
+          css={style.filterBtn(filter === 'like', like)}></button>
         <button
           type="button"
-          onClick={() => getPost('my')}
-          css={style.filterBtn(user, 20, 20)}></button>
+          onClick={() => setFilter('my')}
+          css={style.filterBtn(filter === 'my', user)}></button>
       </nav>
       <ul css={style.contentWrapper}>
         {board.map((data: any) => (
