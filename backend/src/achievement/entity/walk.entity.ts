@@ -9,10 +9,19 @@ export class Walk {
   userid: string;
 
   @PrimaryColumn({
-    type: 'date',
-    default: () => 'CURRENT_TIMESTAMP',
+    type: 'int',
   })
-  date: Date;
+  year: number;
+
+  @PrimaryColumn({
+    type: 'int',
+  })
+  month: number;
+
+  @PrimaryColumn({
+    type: 'int',
+  })
+  day: number;
 
   @Column({
     type: 'int',

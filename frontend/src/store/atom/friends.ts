@@ -5,7 +5,7 @@ export interface friendsProps {
   [key: string]: {
     id: string;
     nickname: string;
-    isOnline: boolean;
+    status: string;
     isCalling: boolean;
   };
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import Call from '../../component/Call';
 import Chat from '../../component/Chat';
 import Game from '../../component/Game';
 import Info from '../../component/Info';
@@ -17,7 +18,7 @@ const Town = () => {
   const [isLoadingComplete, setIsLoadingComplete] = useState(false);
   const [isClose, setIsClose] = useState(false);
 
-  const [permission, setPermission] = useRecoilState(devicePermissionState);
+  const setPermission = useSetRecoilState(devicePermissionState);
   const isSnowing = useRecoilValue(snowState);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const Town = () => {
 
   return (
     <>
+      <Call />
       <Sidebar />
       <Game />
       {isSnowing && <Snow />}

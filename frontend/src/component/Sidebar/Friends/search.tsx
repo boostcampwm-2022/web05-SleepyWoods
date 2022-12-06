@@ -2,13 +2,12 @@ import axios from 'axios';
 import { FormEvent, MouseEvent, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
-import { friendType } from './friends';
 import { findFriend } from './friends.styled';
 
 type nicknameType = {
   userId: string;
   isCalling: boolean;
-  isOnline: boolean;
+  status: string;
   nickname: string;
 };
 
@@ -35,7 +34,7 @@ const Search = () => {
           ...friends,
           id: {
             id: data.userId,
-            isOnline: false,
+            status: 'offline',
             nickname: data.nickname,
             isCalling: false,
           },
@@ -73,7 +72,7 @@ const Search = () => {
             userId: 'none',
             nickname: '일치하는 유저가 없습니다.',
             isCalling: false,
-            isOnline: false,
+            status: 'offline',
           },
         ]);
       }
