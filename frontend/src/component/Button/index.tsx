@@ -35,7 +35,13 @@ export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
 };
 
 export const SignButton = ({ type }: { type: string }) => {
-  const oauth = `https://sleepywoods.kr/api/user/login?social=${type}`;
+  const origin = location.origin;
+  const path =
+    origin === 'http://localhost:3333'
+      ? 'http://localhost:3333'
+      : 'https://sleepywoods.kr/api';
+
+  const oauth = `${path}/user/login?social=${type}`;
 
   return (
     <a href={oauth}>
