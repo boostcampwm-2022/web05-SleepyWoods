@@ -1,0 +1,46 @@
+name: deploy
+
+# action 트리거 조건 (release 브랜치에 푸쉬될 때)
+on:
+  push:
+    branches: [main]
+
+# action 동작
+jobs:
+  # OS 환경
+  build:
+    runs-on: ubuntu-lastest
+    
+    # 경고 무시
+    env: 
+      working-directory: ./frontend
+
+    # Nodejs 런타임 정보 설정
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Install modules
+        run: npm install
+        working-directory: ${{ env. working-directory }}
+      - name: Build project
+        run: npm run build
+        working-directory: ${{ env. working-directory }}
+#       - name: Deploy build outputs
+#         uses: appleboy/scp-action@master
+#         with:
+#           host: ${{ secrets.HOST }}
+#           username: ${{ secrets.USERNAME }}
+#           key: ${{ secrets.SSH_PEM_KEY }}
+#           port: ${{ secrets.PORT }}
+#           source: "build/*"
+#           strip_components: 1
+#           target: "/var/www/html"
