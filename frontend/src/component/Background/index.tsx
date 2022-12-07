@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
 import { childrenType } from '../../types/types';
 import { header, teamBtn, main, video } from './background.styled';
+import background from '../../assets/background.mp4';
 
 const Background = ({ children }: childrenType) => {
   const notion =
@@ -9,7 +9,7 @@ const Background = ({ children }: childrenType) => {
 
   return (
     <>
-      <video css={video} src="src/assets/background.mp4" autoPlay loop muted>
+      <video css={video} src={background} autoPlay loop muted>
         배경 영상
       </video>
       <header css={header}>

@@ -3,6 +3,26 @@ import { MyPlayer } from './Phaser/Player/myPlayer';
 import { OtherPlayer } from './Phaser/Player/otherPlayer';
 import { emitter } from './util';
 
+import background from '../../assets/background.png';
+import christmas from '../../assets/audio/christmas.mp3';
+import dust from '../../assets/character/dust.png';
+import spriteJSON from '../../assets/character/sprite.json';
+
+import waitImg from '../../assets/character/wait/wait.png';
+import walkImg from '../../assets/character/walk/walk.png';
+import runImg from '../../assets/character/run/run.png';
+import rollImg from '../../assets/character/roll/roll.png';
+import jumpImg from '../../assets/character/jump/jump.png';
+import { stringObjectType } from '../../types/types';
+
+const characterImg: stringObjectType = {
+  wait: waitImg,
+  walk: walkImg,
+  run: runImg,
+  roll: rollImg,
+  jump: jumpImg,
+};
+
 export default class Game extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
@@ -47,22 +67,18 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', './src/assets/background.png');
-    this.load.audio('christmas', ['./src/assets/audio/christmas.mp3']);
+    this.load.image('background', background);
+    this.load.audio('christmas', [christmas]);
 
     // 캐릭터 동작
     const actions = ['wait', 'walk', 'run', 'roll', 'jump'];
 
     actions.forEach((action: string) => {
-      this.load.atlas(
-        action,
-        `./src/assets/character/${action}/${action}.png`,
-        `./src/assets/character/sprite.json`
-      );
+      this.load.atlas(action, characterImg[action], spriteJSON);
     });
 
     // 이펙트
-    this.load.spritesheet('dust', './src/assets/character/dust.png', {
+    this.load.spritesheet('dust', dust, {
       frameWidth: 24,
       frameHeight: 9,
     });
