@@ -11,3 +11,5 @@
 */.env
 */node_modules
 */dist
+*/.env.prod
+*/.env.dev

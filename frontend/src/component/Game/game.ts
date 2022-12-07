@@ -67,7 +67,13 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', background);
+    this.load.image(
+      'background',
+      (background => {
+        console.log('preload background');
+        return background;
+      })(background)
+    );
     this.load.audio('christmas', [christmas]);
 
     // 캐릭터 동작
@@ -177,6 +183,8 @@ export default class Game extends Phaser.Scene {
 
     this.socket.on('move', (data: any) => {
       const id = data.id.toString().trim();
+
+      if (!this.otherPlayer[id]) return;
       this.otherPlayer[id].update(data.state, data.x, data.y);
     });
 

@@ -1,7 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig(configEnv => {
   const isDevelopment = configEnv.mode === 'development';
   const env = loadEnv(configEnv.mode, process.cwd());
@@ -25,7 +24,10 @@ export default defineConfig(configEnv => {
           rewrite: path => path.replace(/^\/api/, ''),
         },
       },
-      open: '/',
-    },
-  };
+    open: '/',
+  },
+  base: './',
+  build: {
+    assetsInlineLimit: 0
+  },
 });

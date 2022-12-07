@@ -49,6 +49,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   public handleConnection(client: Socket): void {
+    console.log("connected");
     const key = client.handshake?.headers?.authorization;
     const roomName = client.handshake?.headers?.room;
     const userData = this.authService.verify(key);
