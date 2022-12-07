@@ -35,7 +35,7 @@ export const MainButton = ({ children, type, handleClick }: mainButtonType) => {
 };
 
 export const SignButton = ({ type }: { type: string }) => {
-  const oauth = `http://localhost:3333/user/login?social=${type}`;
+  const oauth = `https://sleepywoods.kr/api/user/login?social=${type}`;
 
   return (
     <a href={oauth}>

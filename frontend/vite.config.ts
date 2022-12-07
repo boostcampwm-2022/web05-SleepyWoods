@@ -14,11 +14,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3333',
+        target: 'https://sleepywoods.kr',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''),
       },
     },
     open: '/',
+  },
+  base: './',
+  build: {
+    assetsInlineLimit: 0
   },
 });

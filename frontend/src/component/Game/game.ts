@@ -67,7 +67,13 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', background);
+    this.load.image(
+      'background',
+      (background => {
+        console.log('preload background');
+        return background;
+      })(background)
+    );
     this.load.audio('christmas', [christmas]);
 
     // 캐릭터 동작
