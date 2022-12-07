@@ -33,7 +33,7 @@ const Chatting = ({
           `/api/chat/content?targetUserId=${chatTarget.id}`
         );
 
-        setLastId(() => data[data.length - 1].id);
+        setLastId(() => data.length && data[data.length - 1].id);
         setChatDatas(data);
       } catch (e) {}
     };
