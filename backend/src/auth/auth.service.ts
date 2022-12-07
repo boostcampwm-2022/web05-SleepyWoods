@@ -21,6 +21,9 @@ export class AuthService {
   verify(accessToken: string) {
     try {
       const userData = this.jwtService.verify(accessToken);
+      if(!userData.nickname){
+        return false;
+      }
       return userData;
     } catch (e) {
       return false;

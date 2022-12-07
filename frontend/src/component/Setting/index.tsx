@@ -26,7 +26,9 @@ const Setting = () => {
         withCredentials: true,
       });
 
-      if (status === 200) navigate('/');
+      if (status === 200) {
+        location.href = "/";
+      }
     } catch (error) {
       const e = error as AxiosError;
       if (!e.response) return;

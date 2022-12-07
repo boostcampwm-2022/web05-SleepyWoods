@@ -26,8 +26,9 @@ export default defineConfig(configEnv => {
       },
     open: '/',
   },
-  base: './',
-  build: {
-    assetsInlineLimit: 0
-  },
+    base: './',
+    build: {
+      assetsInlineLimit: 0
+    },
+  }
 });
