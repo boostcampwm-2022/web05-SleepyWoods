@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import { userState } from '../../store/atom/user';
-import gameConfig from './gameConfig';
 import config from './gameConfig';
 import { emitter } from './util';
 

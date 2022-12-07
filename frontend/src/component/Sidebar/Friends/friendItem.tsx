@@ -21,7 +21,10 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
 
   const sendChatting = () => {
     socket.emit('chatRoomEntered', { targetUserId: id });
-    setChatTarget({ id, nickname });
+    setChatTarget({
+      id: id,
+      nickname: nickname,
+    });
     setCurrentTab('chatting');
   };
 
