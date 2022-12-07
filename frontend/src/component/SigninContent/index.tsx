@@ -1,6 +1,7 @@
 import { SignButton } from '../Button';
 import { buttons } from '../Button/button.styled';
 import { imgWrapper, container, content, title } from './signinContent.styled';
+import preview from '../../assets/preview.gif';
 
 const SigninContent = () => {
   return (
@@ -8,7 +9,7 @@ const SigninContent = () => {
       <h1 css={title}>Sign In</h1>
       <div css={content}>
         <section css={imgWrapper}>
-          <img src="src/assets/preview.gif" />
+          <img src={preview} />
         </section>
         <section css={buttons}>
           <SignButton type={'naver'} />
