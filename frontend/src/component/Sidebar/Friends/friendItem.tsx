@@ -37,7 +37,7 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
 
         const newFriend = { ...friends };
 
-        delete newFriend[nickname];
+        delete newFriend[id];
         setFriends(newFriend);
 
         alert(`${nickname}님을 언팔로우 하였습니다.`);
@@ -50,7 +50,7 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
   return (
     <Content draggable={isOnline}>
       <section id={id} css={friendItemWrapper(isOnline)}>
-        <div css={userName(isOnline)}>{nickname}</div>
+        <div css={userName(status)}>{nickname}</div>
         <div>
           <button onClick={sendChatting}>
             <img src={message} alt="채팅하기 버튼"></img>

@@ -4,6 +4,7 @@ import {
   changePosition,
   changeState,
   calcMoveToPos,
+  changeDirection,
 } from '../../util';
 import { Player } from './player';
 
@@ -70,6 +71,9 @@ export class MyPlayer extends Player {
     if (this.heldDirection.length) {
       const move: any = calcMoveToPos(this, this.heldDirection);
       this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
+
+      const direction = move.x > 0 ? 'right' : 'left';
+      changeDirection(this, direction);
 
       changePosition(this, move.x * this.speed, move.y * this.speed);
     } else {

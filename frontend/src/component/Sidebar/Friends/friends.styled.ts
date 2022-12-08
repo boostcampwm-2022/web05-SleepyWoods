@@ -67,7 +67,7 @@ export const friendItemWrapper = (isOnline: boolean) => css`
   }
 `;
 
-export const userName = (state: boolean) => css`
+export const userName = (state: string) => css`
   font-weight: 700;
 
   ::before {
@@ -76,7 +76,11 @@ export const userName = (state: boolean) => css`
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: ${state ? theme.green : theme.red};
+    background-color: ${state === 'online'
+      ? theme.green
+      : state === 'offline'
+      ? theme.red
+      : theme.yellow};
   }
 `;
 
