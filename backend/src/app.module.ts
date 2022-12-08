@@ -22,7 +22,8 @@ import { ScheduleModule } from '@nestjs/schedule';
   imports: [
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true,
+    envFilePath:process.env.NODE_ENV == 'dev' ? '.env.dev' : '.env.prod' }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',

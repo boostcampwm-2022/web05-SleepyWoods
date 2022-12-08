@@ -5,7 +5,7 @@ import { v1 } from 'uuid';
 
 export const socketState = atom<Socket>({
   key: `socketState/${v1()}`,
-  default: io('localhost:3333', {
+  default: io(location.origin, {
     autoConnect: false,
     extraHeaders: {
       authorization: getCookieValue('accessToken'),

@@ -133,7 +133,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('privateChat')
   handleDirectMessage(client: any, payload: any): void {
-    console.log(payload);
     const targetUserId = payload['targetUserId'];
 
     const msgPayload = {
@@ -142,7 +141,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       timestamp: Date.now(),
       message: payload['message'] || '',
     };
-    console.log({ ...msgPayload, targetUserId });
     this.event.emit('saveChat', { ...msgPayload, targetUserId });
 
     client
