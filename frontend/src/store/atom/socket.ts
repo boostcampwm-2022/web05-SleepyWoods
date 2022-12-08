@@ -4,7 +4,9 @@ import { getCookieValue } from '../../page/Main';
 import { v1 } from 'uuid';
 
 const path =
-  location.origin === 'sleepywoods.kr' ? 'sleepywoods.kr' : 'localhost:3333';
+  location.origin === 'sleepywoods.kr'
+    ? 'https//sleepywoods.kr'
+    : 'http//localhost:3333';
 
 export const socketState = atom<Socket>({
   key: `socketState/${v1()}`,
