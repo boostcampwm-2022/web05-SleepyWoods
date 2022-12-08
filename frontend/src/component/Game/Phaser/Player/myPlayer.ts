@@ -72,8 +72,10 @@ export class MyPlayer extends Player {
       const move: any = calcMoveToPos(this, this.heldDirection);
       this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
 
-      const direction = move.x > 0 ? 'right' : 'left';
-      changeDirection(this, direction);
+      if (move.x !== 0) {
+        const direction = move.x > 0 ? 'right' : 'left';
+        changeDirection(this, direction);
+      }
 
       changePosition(this, move.x * this.speed, move.y * this.speed);
     } else {
