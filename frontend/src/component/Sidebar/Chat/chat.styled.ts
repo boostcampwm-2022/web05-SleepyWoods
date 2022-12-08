@@ -206,3 +206,31 @@ export const chattingInput = css`
   border: none;
   margin-top: 20px;
 `;
+
+export const separateDate = css`
+  ${flexCenter}
+
+  position: relative;
+  width: 100%;
+  height: 20px;
+  text-align: center;
+  margin-bottom: 10px;
+
+  ::after,
+  ::before {
+    content: '';
+    display: block;
+    height: 1px;
+    width: 100%;
+    background-color: ${theme.black03};
+  }
+`;
+
+export const newDate = css`
+  flex-grow: 1;
+  font-size: 10px;
+  white-space: nowrap;
+  padding: 12px;
+  font-weight: 700;
+  color: ${theme.black09};
+`;

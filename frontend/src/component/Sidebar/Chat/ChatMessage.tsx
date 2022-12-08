@@ -10,7 +10,7 @@ const ChatMessage = ({ chat }: { chat: any }) => {
   return (
     <li css={style.chatItem(isSender)}>
       <div css={style.chatText(isSender)}>{chat.message}</div>
-      <div css={style.chatTime}>{calcTimeFromMs(chat.timestamp)}</div>
+      <div css={style.chatTime}>{calcTimeFromMs(chat.timestamp, false)}</div>
     </li>
   );
 };

@@ -79,6 +79,7 @@ export default class Game extends Phaser.Scene {
       const elem = e.target as HTMLElement;
       const checkInput = elem.tagName === 'INPUT';
 
+      if (this.myPlayer) this.myPlayer.isCanMove = !checkInput;
       this.input.keyboard.manager.enabled = !checkInput;
     };
   }
