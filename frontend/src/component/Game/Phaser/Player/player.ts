@@ -57,7 +57,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     );
 
     scene.physics.add.existing(this);
-    this.getBody().setCollideWorldBounds(true).setSize(64, 64);
+    this.getBody().setCollideWorldBounds(true).setSize(30, 50);
 
     changeState(this);
   }
