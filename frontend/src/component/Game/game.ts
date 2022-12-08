@@ -3,7 +3,8 @@ import { MyPlayer } from './Phaser/Player/myPlayer';
 import { OtherPlayer } from './Phaser/Player/otherPlayer';
 import { emitter } from './util';
 
-import background from '../../assets/background.png';
+import townJSON from '../../assets/tilemaps/town.json';
+import town from '../../assets/tilemaps/town.png';
 import christmas from '../../assets/audio/christmas.mp3';
 import dust from '../../assets/character/dust.png';
 import spriteJSON from '../../assets/character/sprite.json';
@@ -28,6 +29,7 @@ export default class Game extends Phaser.Scene {
   otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
   autoPlay: boolean;
+  townLayer: any;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
@@ -44,13 +46,21 @@ export default class Game extends Phaser.Scene {
 
       this.myPlayer = new MyPlayer(
         this,
-        -25,
+        400,
         400,
         data.id,
         data.hair,
         data.nickname,
         data.socket
       );
+
+      const debugGraphics = this.add.graphics().setAlpha(0.7);
+      this.townLayer.renderDebug(debugGraphics, {
+        tileColor: null,
+        collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
+      });
+
+      this.physics.add.collider(this.myPlayer, this.townLayer);
 
       this.socket?.on('connect', () => {
         this.socketInit();
@@ -67,7 +77,10 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', background);
+    // this.load.image('background', background);
+    this.load.tilemapTiledJSON('map', townJSON);
+    this.load.image('tileset', town);
+
     this.load.audio('christmas', [christmas]);
 
     // 캐릭터 동작
@@ -85,7 +98,18 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(0, 0, 'background').setScale(3);
+    const map = this.make.tilemap({ key: 'map' });
+    const tileset = map.addTilesetImage('town', 'tileset');
+    this.townLayer = map.createLayer('town', tileset, 0, 0).setScale(2.5);
+    this.townLayer.setCollisionByProperty({ collides: true });
+
+    this.physics.world.setBounds(
+      0,
+      0,
+      this.townLayer.width * 2.5,
+      this.townLayer.height * 2.5
+    );
+
     this.sound.add('christmas');
 
     const spriteInfo = [

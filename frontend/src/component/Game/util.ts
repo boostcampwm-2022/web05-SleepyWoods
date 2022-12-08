@@ -59,8 +59,10 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   changeDirection(player, x);
 
+  player.body.setVelocity(x, y);
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);
+
   player.nicknameText.x = player.x - player.nickname.length * 3.5;
   player.nicknameText.y = player.y + 25;
 

@@ -1,6 +1,6 @@
 import { changeState } from '../../util';
 
-export class Player extends Phaser.GameObjects.Sprite {
+export class Player extends Phaser.Physics.Arcade.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
   hair: Phaser.GameObjects.Sprite | undefined;
   dust: Phaser.GameObjects.Sprite | undefined;
@@ -42,6 +42,9 @@ export class Player extends Phaser.GameObjects.Sprite {
     this.hair = this.scene.add.sprite(this.x, this.y, `${this.hairName}-wait`);
     this.hair.setScale(3);
 
+    this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
+    this.dust.setScale(3);
+
     this.nicknameText = this.scene.add.text(
       this.x - this.nickname.length * 3.5,
       this.y + 25,
@@ -53,8 +56,8 @@ export class Player extends Phaser.GameObjects.Sprite {
       }
     );
 
-    this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
-    this.dust.setScale(3);
+    scene.physics.add.existing(this);
+    this.getBody().setCollideWorldBounds(true);
 
     changeState(this);
   }
@@ -73,5 +76,9 @@ export class Player extends Phaser.GameObjects.Sprite {
   updateHair(hair: string) {
     this.hairName = hair;
     changeState(this);
+  }
+
+  getBody() {
+    return this.body as Phaser.Physics.Arcade.Body;
   }
 }
