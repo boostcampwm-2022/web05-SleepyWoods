@@ -1,0 +1,43 @@
+name: Frontend CD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Auto-Deploy:
+    name: Frontend Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Node 설정
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: node_modules 폴더 캐싱
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: "**/frontend/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/frontend/package-lock.json') }}
+
+      - name: node_modules 폴더 캐시가 없다면 dependencies 설치
+        working-directory: "./frontend"
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Client 소스 빌드
+        working-directory: "./frontend"
+        run: npm run build
+
+      - name: SCP 프로토콜을 통한 서버로 파일 전송 처리
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "./frontend/dist/*"
+          target: "/root/production/"

@@ -1,0 +1,24 @@
+name: Backend CD
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Auto-Deploy:
+    name: Backend Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH RemoteCommands
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{secrets.SSH_HOST}}
+          port: ${{secrets.SSH_PORT}}
+          username: ${{secrets.SSH_USER}}
+          password: ${{secrets.SSH_PASSWORD}}
+          script: |
+            cd /root/production/web05-SleepyWoods/backend
+            git pull origin main
+            npm install
+            npm run build
+            pm2 reload main
