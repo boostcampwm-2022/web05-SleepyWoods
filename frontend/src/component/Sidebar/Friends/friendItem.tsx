@@ -37,7 +37,7 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
 
         const newFriend = { ...friends };
 
-        delete newFriend[nickname];
+        delete newFriend[id];
         setFriends(newFriend);
 
         alert(`${nickname}님을 언팔로우 하였습니다.`);
