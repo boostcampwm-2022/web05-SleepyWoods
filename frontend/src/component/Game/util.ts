@@ -15,16 +15,15 @@ export const changeState = (player: any) => {
   }
 };
 
-export const changeDirection = (player: any, moveX: number) => {
+export const changeDirection = (player: any, direction: string) => {
   if (!player.character || !player.hair) return;
-  if (player.direction === 'left' && moveX <= 0) return;
-  if (player.direction === 'right' && moveX >= 0) return;
+  if (player.direction === direction) return;
 
   player.character.toggleFlipX();
   player.hair.toggleFlipX();
   player.dust.toggleFlipX();
 
-  player.direction = player.direction === 'left' ? 'right' : 'left';
+  player.direction = direction;
 };
 
 export const calcMoveToPos = (player: any, dir: string[]) => {
@@ -56,8 +55,6 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   player.x += x;
   player.y += y;
-
-  changeDirection(player, x);
 
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);

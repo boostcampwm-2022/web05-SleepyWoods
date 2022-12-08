@@ -203,7 +203,8 @@ export default class Game extends Phaser.Scene {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
-      this.otherPlayer[id].update(data.state, data.x, data.y);
+      const { state, x, y, direction } = data;
+      this.otherPlayer[id].update(state, x, y, direction);
     });
 
     this.socket.on('userLeaved', (data: any) => {
