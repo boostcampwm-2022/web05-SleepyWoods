@@ -10,7 +10,7 @@ export const global = css`
   *::after,
   *::before {
     box-sizing: border-box;
-    font-family: 'NanumSquareRound';
+    font-family: 'NanumSquareRound', 'nanum';
   }
 
   body {

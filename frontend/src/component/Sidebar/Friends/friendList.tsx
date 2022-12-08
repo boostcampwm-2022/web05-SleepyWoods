@@ -1,15 +1,31 @@
 import { MouseEvent } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Content from '../Content';
 import FriendItem from './friendItem';
 import { friendType } from './friends';
 import { friendListWrapper } from './friends.styled';
 import { friendsState } from '../../../store/atom/friends';
 import Search from './search';
+import { socketState } from '../../../store/atom/socket';
 
 const FriendList = () => {
-  const friends = useRecoilValue(friendsState);
+  const [friends, setFriends] = useRecoilState(friendsState);
   const friendList = Object.values(friends).filter(value => !value.isCalling);
+  const socket = useRecoilValue(socketState);
+
+  socket.on('userDataChanged', data => {
+    const { id, nickname } = data;
+
+    if (!friends[id]) return;
+
+    const newFriends = { ...friends };
+    newFriends[id] = {
+      ...newFriends[id],
+      nickname: nickname,
+    };
+
+    setFriends(newFriends);
+  });
 
   const handleDrag = (e: MouseEvent) => {
     const target = e.target as HTMLElement;

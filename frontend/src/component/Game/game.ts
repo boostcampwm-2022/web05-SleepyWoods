@@ -106,6 +106,8 @@ export default class Game extends Phaser.Scene {
   }
 
   create() {
+    this.cameras.main.setBounds(0, 0, 2000, 2000);
+
     const map = this.make.tilemap({ key: 'map' });
     const tileset = map.addTilesetImage('town', 'tileset');
     this.townLayer = map.createLayer('town', tileset, 0, 0).setScale(2.5);

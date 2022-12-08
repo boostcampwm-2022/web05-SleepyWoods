@@ -32,7 +32,7 @@ const Search = () => {
 
         setFriends({
           ...friends,
-          id: {
+          [data.userId]: {
             id: data.userId,
             status: 'offline',
             nickname: data.nickname,
