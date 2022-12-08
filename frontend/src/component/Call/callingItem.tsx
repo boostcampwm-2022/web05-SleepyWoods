@@ -19,7 +19,7 @@ const CallingItem = ({
   const [friends, setFriends] = useRecoilState(friendsState);
 
   const handleRejectCall = () => {
-    friends.id &&
+    friends[id] &&
       setFriends({
         ...friends,
         [id]: {
