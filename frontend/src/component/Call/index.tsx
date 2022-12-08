@@ -28,13 +28,18 @@ const Call = () => {
   return (
     <div css={callingWrapper}>
       {friendList.map(friend => (
-        <CallingItem id={friend.id} nickname={friend.nickname} isSend={false} />
+        <CallingItem
+          key={friend.id}
+          id={friend.id}
+          nickname={friend.nickname}
+          isSend={true}
+        />
       ))}
       {isSend.id && (
         <CallingItem
           id={isSend.id}
           nickname={isSend.nickname}
-          isSend={true}
+          isSend={false}
           setSend={setSend}
         />
       )}

@@ -27,7 +27,7 @@ export const routerGuard = () => {
 
         friendList.forEach(
           ({ userId, nickname }: { userId: string; nickname: string }) => {
-            initialList[nickname] = {
+            initialList[userId] = {
               id: userId,
               status: 'offline',
               nickname: nickname,
@@ -37,6 +37,7 @@ export const routerGuard = () => {
         );
 
         setFriends(initialList);
+        console.log(initialList);
       } catch (e) {
         console.log(e);
       }
