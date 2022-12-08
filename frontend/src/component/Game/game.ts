@@ -46,8 +46,8 @@ export default class Game extends Phaser.Scene {
 
       this.myPlayer = new MyPlayer(
         this,
-        400,
-        400,
+        800,
+        800,
         data.id,
         data.hair,
         data.nickname,
