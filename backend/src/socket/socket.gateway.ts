@@ -52,9 +52,15 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const key = client.handshake?.headers?.authorization;
     const roomName = client.handshake?.headers?.room;
     const userData = this.authService.verify(key);
-    if (!userData || !roomName || this.socketIdByUser.get(userData['id'])) {
+    if (!userData || !roomName) {
       client.disconnect();
       return;
+    }
+
+    if (this.socketIdByUser.get(userData['id'])) {
+      this.server.sockets.sockets
+        .get(this.socketIdByUser.get(userData['id']))
+        .disconnect();
     }
 
     client['userData'] = {
