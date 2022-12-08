@@ -59,8 +59,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client['userData'] = {
       ...userData,
-      x: -25,
-      y: 400,
+      x: 800,
+      y: 800,
       direction: 'right',
       state: 'wait',
       userState: 'on',
