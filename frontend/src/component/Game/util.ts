@@ -59,7 +59,6 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   changeDirection(player, x);
 
-  player.body.setVelocity(x, y);
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);
 

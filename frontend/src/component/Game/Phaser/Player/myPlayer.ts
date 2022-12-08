@@ -69,6 +69,8 @@ export class MyPlayer extends Player {
     sortHeldDirection(this, cursors);
     if (this.heldDirection.length) {
       const move: any = calcMoveToPos(this, this.heldDirection);
+      this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
+
       changePosition(this, move.x * this.speed, move.y * this.speed);
     } else {
       this.checkAndSetState('wait');
