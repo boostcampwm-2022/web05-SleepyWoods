@@ -46,19 +46,19 @@ export default class Game extends Phaser.Scene {
 
       this.myPlayer = new MyPlayer(
         this,
-        400,
-        400,
+        800,
+        800,
         data.id,
         data.hair,
         data.nickname,
         data.socket
       );
 
-      const debugGraphics = this.add.graphics().setAlpha(0.7);
-      this.townLayer.renderDebug(debugGraphics, {
-        tileColor: null,
-        collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
-      });
+      // const debugGraphics = this.add.graphics().setAlpha(0.7);
+      // this.townLayer.renderDebug(debugGraphics, {
+      //   tileColor: null,
+      //   collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
+      // });
 
       this.physics.add.collider(this.myPlayer, this.townLayer);
 
@@ -74,6 +74,13 @@ export default class Game extends Phaser.Scene {
     emitter.on('updateHair', (hair: string) => {
       this.myPlayer?.updateHair(hair);
     });
+
+    window.onclick = (e: MouseEvent) => {
+      const elem = e.target as HTMLElement;
+      const checkInput = elem.tagName === 'INPUT';
+
+      this.input.keyboard.manager.enabled = !checkInput;
+    };
   }
 
   preload() {
@@ -205,7 +212,8 @@ export default class Game extends Phaser.Scene {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
-      this.otherPlayer[id].update(data.state, data.x, data.y);
+      const { state, x, y, direction } = data;
+      this.otherPlayer[id].update(state, x, y, direction);
     });
 
     this.socket.on('userLeaved', (data: any) => {
