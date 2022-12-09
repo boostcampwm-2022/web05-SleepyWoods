@@ -7,6 +7,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   nicknameText: Phaser.GameObjects.Text | undefined;
   direction: string;
   isChangeState: boolean;
+  isCanMove: boolean;
   state: string;
   x: number;
   y: number;
@@ -35,6 +36,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.speed = 1;
     this.heldDirection = [];
     this.id = id;
+    this.isCanMove = true;
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3);

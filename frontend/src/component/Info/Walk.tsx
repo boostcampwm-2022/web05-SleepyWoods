@@ -14,7 +14,7 @@ const Walk = () => {
     socket.on('move', data => {
       if (data.id !== user.id) return;
 
-      setWalkCnt(Math.floor(data.walk / 10));
+      setWalkCnt(data.walk);
     });
 
     return () => {

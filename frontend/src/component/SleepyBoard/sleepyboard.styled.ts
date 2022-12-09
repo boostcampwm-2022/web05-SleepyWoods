@@ -4,6 +4,7 @@ import trophy from '../../assets/trophy.svg';
 import like from '../../assets/icon/like.svg';
 import unlike from '../../assets/icon/unlike.svg';
 import { flexCenter } from '../../styles/mixin.styled';
+import theme from '../../styles/theme';
 
 export const sleepyBoardBtn = css`
   width: 60px;
@@ -297,4 +298,19 @@ export const rankContainer = css`
     align-items: center;
     padding: 10px;
   }
+`;
+
+export const nickname = (str: string) => css`
+  ::before {
+    content: '${str}';
+    display: inline-block;
+    padding-right: 15px;
+  }
+`;
+
+export const infoMsg = css`
+  color: ${theme.red};
+  font-size: 14px;
+  text-align: center;
+  padding: 20px;
 `;

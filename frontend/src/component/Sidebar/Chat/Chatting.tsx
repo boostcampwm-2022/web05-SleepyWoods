@@ -6,6 +6,8 @@ import { userState } from '../../../store/atom/user';
 import * as style from './chat.styled';
 import ChatMessage from './ChatMessage';
 import { socketState } from '../../../store/atom/socket';
+import { calcDate } from './util';
+import SeparateTimeLine from './SeparateTimeLine';
 
 const Chatting = ({
   chatTarget,
@@ -19,8 +21,8 @@ const Chatting = ({
   const [chatDatas, setChatDatas] = useState<any[]>([]);
   const [isClose, setIsClose] = useState(false); // 애니메이션
   const [chatValue, setChatValue] = useState('');
-  const [lastId, setLastId] = useState(0);
   const chatRef = useRef<null | HTMLUListElement>(null);
+  let lastDate = '';
 
   useEffect(() => {
     // chatRoom 생성
@@ -33,7 +35,8 @@ const Chatting = ({
           `/api/chat/content?targetUserId=${chatTarget.id}`
         );
 
-        setLastId(() => data.length && data[data.length - 1].id);
+        if (!data.length) return;
+        lastDate = data[data.length - 1].timestampe;
         setChatDatas(data);
       } catch (e) {}
     };
@@ -41,11 +44,7 @@ const Chatting = ({
     getMessage();
 
     socket.on('privateChat', (data: any) => {
-      setChatDatas(chatDatas => [
-        ...chatDatas,
-        { ...data, id: (() => lastId + 1)() },
-      ]);
-      setLastId(() => lastId + 1);
+      setChatDatas(chatDatas => [...chatDatas, data]);
     });
 
     return () => {
@@ -74,7 +73,6 @@ const Chatting = ({
     if (e.key !== 'Enter' || !chatValue) return;
 
     const chat = {
-      id: lastId + 1,
       fromUserId: user.id,
       timestamp: Date.now(),
       nickname: user.nickname,
@@ -87,8 +85,8 @@ const Chatting = ({
       message: chatValue,
     });
 
+    console.log([...chatDatas, chat]);
     setChatDatas([...chatDatas, chat]);
-    setLastId(() => lastId + 1);
     setChatValue('');
   };
 
@@ -109,9 +107,20 @@ const Chatting = ({
             onClick={handleChatRoom}></button>
         </div>
         <ul css={style.textWrapper} ref={chatRef}>
-          {chatDatas.map((data: any) => (
-            <ChatMessage key={data.id} chat={data} />
-          ))}
+          {chatDatas.map((data: any, idx: number) => {
+            const date = calcDate(data.timestamp);
+            const checkSameDate = date === lastDate;
+            if (!checkSameDate) lastDate = date;
+
+            return (
+              <>
+                {!checkSameDate && (
+                  <SeparateTimeLine key={idx + 'date'} date={date} />
+                )}
+                <ChatMessage key={idx + 'msg'} chat={data} />
+              </>
+            );
+          })}
         </ul>
         <input
           type="text"
