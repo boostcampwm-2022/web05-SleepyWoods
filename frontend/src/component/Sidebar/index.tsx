@@ -29,7 +29,7 @@ const component: componentType = {
 };
 
 const Sidebar = () => {
-  const [isOpen, setOpen] = useState(true);
+  const [isOpen, setOpen] = useState(false);
   const [isMicOn, setMic] = useState(false);
   const [isCamOn, setCam] = useState(true);
 

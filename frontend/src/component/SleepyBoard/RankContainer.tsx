@@ -66,9 +66,7 @@ const RankContainer = () => {
             if (idx >= 3) return;
             return (
               <li key={idx}>
-                <span>
-                  {medals[idx]} {user.nickname}
-                </span>
+                <span css={style.nickname(medals[idx])}>{user.nickname}</span>
                 <span>{formattingWalk(user.walkcount) + ' 보'}</span>
               </li>
             );
@@ -79,14 +77,13 @@ const RankContainer = () => {
             if (idx < 3) return;
             return (
               <li key={idx}>
-                <span>
-                  {idx + 1 + '.'} {user.nickname}
-                </span>
+                <span css={style.nickname(idx + 1 + '.')}>{user.nickname}</span>
                 <span>{formattingWalk(user.walkcount) + ' 보'}</span>
               </li>
             );
           })}
         </ul>
+        <div css={style.infoMsg}>걸음수는 자정에 최신화됩니다!</div>
       </div>
     </>
   );

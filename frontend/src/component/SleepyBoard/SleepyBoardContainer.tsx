@@ -35,8 +35,8 @@ const SleepyBoardContainer = () => {
           css={style.filterBtn(filter === 'like', like)}></button>
         <button
           type="button"
-          onClick={() => setFilter('my')}
-          css={style.filterBtn(filter === 'my', user)}></button>
+          onClick={() => setFilter('me')}
+          css={style.filterBtn(filter === 'me', user)}></button>
       </nav>
       <ul css={style.contentWrapper}>
         {board.map((data: any) => (

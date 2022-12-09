@@ -39,48 +39,54 @@ export class MyPlayer extends Player {
   }
 
   update() {
-    const cursors = this.scene.input.keyboard.createCursorKeys();
-    const keyR = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.R
-    );
-    const keyShift = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SHIFT
-    );
-    const keySpace = this.scene.input.keyboard.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE
-    );
-
     const prevState = this.state;
 
-    // motion
-    if (keyR.isDown) {
-      this.speed = 1.5;
-      this.checkAndSetState('roll', 100);
-    } else if (keyShift.isDown) {
-      this.speed = 1.2;
-      this.checkAndSetState('run');
-    } else if (keySpace.isDown) {
-      this.speed = 1;
-      this.checkAndSetState('jump', 500);
+    if (!this.isCanMove) {
+      this.state = 'wait';
+      this.scene.input.keyboard.removeAllKeys(true);
     } else {
-      this.speed = 1;
-      this.checkAndSetState('walk');
-    }
+      const cursors = this.scene.input.keyboard.createCursorKeys();
+      const keyR = this.scene.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.R
+      );
+      const keyShift = this.scene.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.SHIFT
+      );
+      const keySpace = this.scene.input.keyboard.addKey(
+        Phaser.Input.Keyboard.KeyCodes.SPACE
+      );
 
-    this.getBody().setVelocity(0, 0);
+      // motion
+      if (keyR.isDown) {
+        this.speed = 1.5;
+        this.checkAndSetState('roll', 100);
+      } else if (keyShift.isDown) {
+        this.speed = 1.2;
+        this.checkAndSetState('run');
+      } else if (keySpace.isDown) {
+        this.speed = 1;
+        this.checkAndSetState('jump', 500);
+      } else {
+        this.speed = 1;
+        this.checkAndSetState('walk');
+      }
 
-    sortHeldDirection(this, cursors);
+      this.getBody().setVelocity(0, 0);
 
-    if (this.heldDirection.length) {
-      const move: any = calcMoveToPos(this, this.heldDirection);
-      this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
+      sortHeldDirection(this, cursors);
+      if (this.heldDirection.length) {
+        const move: any = calcMoveToPos(this, this.heldDirection);
+        this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
 
-      const direction = move.x > 0 ? 'right' : 'left';
-      changeDirection(this, direction);
+        if (move.x !== 0) {
+          const direction = move.x > 0 ? 'right' : 'left';
+          changeDirection(this, direction);
+        }
 
-      changePosition(this, move.x * this.speed, move.y * this.speed);
-    } else {
-      this.checkAndSetState('wait');
+        changePosition(this, move.x * this.speed, move.y * this.speed);
+      } else {
+        this.checkAndSetState('wait');
+      }
     }
 
     if (prevState !== this.state) changeState(this);

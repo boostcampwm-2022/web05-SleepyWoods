@@ -1,6 +1,6 @@
 import Content from '../Content';
 import { chatInfo, chatItemWrapper, message } from './chat.styled';
-import { calcTime, calcTimeFromMs } from './util';
+import { calcTimeFromMs } from './util';
 
 const ChatRoom = ({ data }: { data: any }) => {
   const { unReadCount, targetUserNickname, lastMsg } = data;
@@ -14,7 +14,7 @@ const ChatRoom = ({ data }: { data: any }) => {
         <div css={chatInfo(unReadCount)}>
           <span className="user">{targetUserNickname}</span>
           <span className="timestamp">
-            {lastMsg ? calcTimeFromMs(Date.parse(lastMsg.timestamp)) : ''}
+            {lastMsg ? calcTimeFromMs(Date.parse(lastMsg.timestamp), true) : ''}
           </span>
         </div>
         <div css={message}>
