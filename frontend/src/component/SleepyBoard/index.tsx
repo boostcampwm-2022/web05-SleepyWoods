@@ -24,6 +24,10 @@ const SleepyBoard = () => {
       {isShowModal && (
         <>
           <section css={style.modal(animation)}>
+            <button
+              type="button"
+              css={style.closeBtn}
+              onClick={handleModal}></button>
             <Tab selected={tab} setTab={setTab} />
             {tab === 'board' ? <SleepyBoardContainer /> : <RankContainer />}
           </section>
