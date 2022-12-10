@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import help from '../../assets/icon/help.svg';
 import KeyBoardInfo from './HelpDescription/keyBoardInfo';
+import SidebarInfo from './HelpDescription/SidebarInfo';
 
 import * as style from './info.styled';
 
@@ -30,6 +31,7 @@ const Help = () => {
             <h3 css={style.header}>📋 Notice</h3>
             <div css={style.content}>
               <KeyBoardInfo />
+              <SidebarInfo />
             </div>
           </section>
         </>

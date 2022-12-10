@@ -7,7 +7,7 @@ export const infoContainer = css`
   margin-bottom: 10px;
 
   background-color: ${theme.white05};
-  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
 `;
 

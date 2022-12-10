@@ -112,6 +112,7 @@ export const header = css`
 
 export const content = css`
   overflow: auto;
+  padding: 5px;
 
   ::-webkit-scrollbar {
     display: none;
