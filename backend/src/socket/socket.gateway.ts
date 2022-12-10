@@ -15,13 +15,7 @@ import { WsExceptionFilter } from './filter/ws.filter';
 import { movementValidationPipe } from './pipes/movement.pipe';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { signupDataDto } from 'src/auth/dto/user-data.dto';
-import {
-  Cron,
-  CronExpression,
-  Interval,
-  SchedulerRegistry,
-  Timeout,
-} from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway({
@@ -39,6 +33,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     private event: EventEmitter2
   ) {}
 
+  /** room 안의 유저들을 불러옵니다. */
   public getRoomUserData(roomName: string) {
     const roomUser = [];
     this.server.sockets.adapter.rooms.get(roomName).forEach(e => {
@@ -72,6 +67,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       userState: 'on',
       walk: this.walkCountByUser.get(userData['id']) || 0,
       roomName,
+      callingRoom: '',
     };
 
     this.socketIdByUser.set(userData['id'], client.id);
@@ -172,23 +168,39 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('callRequested')
   handleCallRequested(client: any, payload: any) {
-    const { calleeUserId } = payload;
+    //  프론트가 통화중인 상태였다면, 이미 갖고있는 uuid를 보내주고, 아니면 새로 생성해서 보내줌
+    // uuid와 callee 필요!!
+    const { calleeUserId, callingRoom } = payload;
     const callerUserId = client['userData']['id'];
-    // busy 로 상태 변경
-    client['userData']['userState'] = 'busy';
-    this.server.sockets.sockets.get(this.socketIdByUser.get(calleeUserId))[
-      'userData'
-    ]['userState'] = 'busy';
+    const callerSocket = client;
+    const calleeSocket = this.server.sockets.sockets.get(
+      this.socketIdByUser.get(calleeUserId)
+    );
 
-    this.server
-      .to(this.socketIdByUser.get(calleeUserId))
-      .emit('callRequested', {
-        callerUserId: client['userData']['id'],
-      });
+    callerSocket.join(callingRoom);
+    calleeSocket.join(callingRoom);
+    // on, off, busy, callRequesting
 
+    // 두 사람의 상태 변경
+    callerSocket['userData']['userState'] = 'busy';
+    calleeSocket['userData']['userState'] = 'callRequesting';
+    // 두사람의 전화중인 room 변경
+    callerSocket['userData']['callingRoom'] = callingRoom;
+    calleeSocket['userData']['callingRoom'] = callingRoom;
+
+    // 받는 사람한테, 전화오고 있다고 알림
+    callerSocket.to(calleeSocket.id).emit('callRequested', {
+      callerUserId,
+    });
+
+    // 모두에게 두 사람이 전화 중이라고 알리기
     this.server.to(client['userData']['roomName']).emit('userStateChanged', {
       userIdList: [calleeUserId, callerUserId],
       userState: 'busy',
+    });
+    // 해당 방에 callingRoom 변화 감지
+    this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
+      callingRoomUserData: this.getRoomUserData(callingRoom),
     });
   }
 
@@ -197,35 +209,47 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleCallCanceled(client: any, payload: any) {
     const { calleeUserId } = payload;
     const callerUserId = client['userData']['id'];
+    const callerSocket = client;
+    const calleeSocket = this.server.sockets.sockets.get(
+      this.socketIdByUser.get(calleeUserId)
+    );
 
-    this.server.sockets.sockets.get(this.socketIdByUser.get(calleeUserId))[
-      'userData'
-    ]['userState'] = 'on';
-
-    this.server.to(this.socketIdByUser.get(calleeUserId)).emit('callCanceled', {
-      callerUserId: client['userData']['id'],
-    });
-
-    this.server.to(client['userData']['roomName']).emit('userStateChanged', {
-      userIdList: [calleeUserId],
-      userState: 'on',
+    callerSocket.to(calleeSocket.id).emit('callCanceled', {
+      callerUserId,
     });
   }
 
-  @SubscribeMessage('callDenied')
-  handleCallDenied(client: any, payload: any) {
-    const { callerUserId } = payload;
-    const calleeUserId = client['userData']['id'];
+  @SubscribeMessage('callLeaved')
+  handleCallLeaved(client: any) {
+    const leavingUserId = client['userData']['id'];
+    const callingRoom = client['userData']['callingRoom'];
 
-    client['userData']['userState'] = 'on';
+    client.leave(callingRoom);
+    client['userData']['callingRoom'] = '';
 
-    this.server.to(this.socketIdByUser.get(callerUserId)).emit('callDenied', {
-      calleeUserId: client['userData']['id'],
+    // 전 세계 사람들에게 알려주기
+    this.server.to(client['userData']['roomName']).emit('userStateChanged', {
+      userIdList: [leavingUserId],
+      userState: 'on',
     });
 
-    this.server.to(client['userData']['roomName']).emit('userStateChanged', {
-      userIdList: [calleeUserId],
-      userState: 'on',
+    // 해당 방에 callingRoom 변화 감지
+    this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
+      callingRoomUserData: this.getRoomUserData(callingRoom),
+    });
+  }
+
+  @SubscribeMessage('callRejected')
+  handleCallRejected(client: any, payload: any) {
+    const { callerUserId } = payload;
+    const calleeUserId = client['userData']['id'];
+    const calleeSocket = client;
+    const callerSocket = this.server.sockets.sockets.get(
+      this.socketIdByUser.get(callerUserId)
+    );
+
+    calleeSocket.to(callerSocket.id).emit('callRejected', {
+      calleeUserId,
     });
   }
 
@@ -234,40 +258,21 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleCallEntered(client: any, payload: any) {
     const { callerUserId } = payload;
     const calleeUserId = client['userData']['id'];
+    const calleeSocket = client;
+    const callerSocket = this.server.sockets.sockets.get(
+      this.socketIdByUser.get(callerUserId)
+    );
+    const callingRoom = client['userData']['callingRoom'];
 
     client['userData']['userState'] = 'busy';
-    this.server.sockets.sockets.get(this.socketIdByUser.get(calleeUserId))[
-      'userData'
-    ]['userState'] = 'busy';
 
-    this.server.to(this.socketIdByUser.get(callerUserId)).emit('callEntered', {
-      calleeUserId: client['userData']['id'],
+    calleeSocket.to(callerSocket.id).emit('callEntered', {
+      calleeUserId,
     });
 
-    this.server.to(client['userData']['roomName']).emit('userStateChanged', {
-      userIdList: [callerUserId, calleeUserId],
-      userState: 'busy',
-    });
-    // webRTC 연결 맺애주는 과정 필요
-    // 기존에 그룹에 통화하고잇던 리스트를 받아서 userData어딘가에 갖고있어야할듯?
-    // 내가 아무도없는 상태에서 너한테 거는거랑 ( 진짜로 webRTC룸이 첫 생성)
-    // 내가 누군가랑 하다가 너까지 끌어들이는 시점 (룸이 잇는데 너를 끌어드림)
-    // 프론트에서 저장하고잇다가 request할떄 같이 참여자들 리스트?
-  }
-  // 전화 나오기!
-
-  @SubscribeMessage('callLeaved')
-  handleCallLeaved(client: any, payload: any) {
-    const leavingUserId = client['userData']['id'];
-    const { callingUserList } = payload;
-
-    this.server.to(callingUserList).emit('callLeaved', {
-      leavingUserId,
-    });
-
-    this.server.to(client['userData']['roomName']).emit('userStateChanged', {
-      userIdList: [leavingUserId],
-      userState: 'on',
+    // 회색 -> 진한 색
+    this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
+      callingRoomUserData: this.getRoomUserData(callingRoom),
     });
   }
 
