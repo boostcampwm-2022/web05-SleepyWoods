@@ -13,25 +13,25 @@ const keyBoardInfo = () => {
       <div css={style.description}>
         <ul>
           <li>
-            <img src={keyboardArrow} alt="" height={'80px'} />
+            <img src={keyboardArrow} alt="방향키 이미지" height={'80px'} />
             <p>화살표 방향키로 이동할 수 있습니다.</p>
           </li>
           <li>
-            <img src={keyboardSpace} alt="" height={'40px'} />
+            <img src={keyboardSpace} alt="space키 이미지" height={'40px'} />
             <p>space키로 점프할 수 있습니다.</p>
           </li>
         </ul>
         <ul>
           <li>
-            <img src={keyboardA} alt="" height={'40px'} />
+            <img src={keyboardA} alt="A키 이미지" height={'40px'} />
             <p>A키로 공격 모션을 취할 수 있습니다.</p>
           </li>
           <li>
-            <img src={keyboardR} alt="" height={'40px'} />
+            <img src={keyboardR} alt="R키 이미지" height={'40px'} />
             <p>R키로 구르기를 할 수 있습니다.</p>
           </li>
           <li>
-            <img src={keyboardShift} alt="" height={'40px'} />
+            <img src={keyboardShift} alt="shift키 이미지" height={'40px'} />
             <p>shift키로 달리기를 할 수 있습니다.</p>
           </li>
         </ul>
