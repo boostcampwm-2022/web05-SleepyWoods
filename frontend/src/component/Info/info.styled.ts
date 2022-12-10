@@ -54,6 +54,11 @@ export const modal = (animation: string) => css`
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.9);
 
+  overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
   animation: ${animation} 0.3s ease-in-out;
 
   @keyframes show {
@@ -102,37 +107,13 @@ export const header = css`
   line-height: 30px;
   padding: 20px;
   margin-bottom: 10px;
+  text-align: center;
 `;
 
-export const description = css`
-  display: flex;
-  flex-grow: 1;
+export const content = css`
+  overflow: auto;
 
-  width: 100%;
-`;
-
-export const keyboard = css`
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  height: 250px;
-
-  ul {
-    display: flex;
-    height: 100%;
-    flex-flow: column;
-    justify-content: space-between;
-    height: 100%;
-    padding: 0 20px;
-
-    img {
-      justify-items: center;
-      margin-top: 5px;
-    }
-
-    p {
-      font-size: 14px;
-      padding: 10px 0;
-    }
+  ::-webkit-scrollbar {
+    display: none;
   }
 `;

@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import help from '../../assets/icon/help.svg';
-import keyboardArrow from '../../assets/icon/keyboardArrow.svg';
-import keyboardSpace from '../../assets/icon/keyboardSpace.svg';
-import keyboardShift from '../../assets/icon/keyboardShift.svg';
-import keyboardA from '../../assets/icon/keyboardA.svg';
-import keyboardR from '../../assets/icon/keyboardR.svg';
+import KeyBoardInfo from './HelpDescription/keyBoardInfo';
+
 import * as style from './info.styled';
 
 const Help = () => {
@@ -31,6 +28,9 @@ const Help = () => {
               css={style.closeBtn}
               onClick={handleModal}></button>
             <h3 css={style.header}>📋 Notice</h3>
+            <div css={style.content}>
+              <KeyBoardInfo />
+            </div>
           </section>
         </>
       )}
