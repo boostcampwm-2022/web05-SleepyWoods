@@ -191,6 +191,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // 받는 사람한테, 전화오고 있다고 알림
     callerSocket.to(calleeSocket.id).emit('callRequested', {
       callerUserId,
+      callerNickname: callerSocket['userData']['nickname'],
     });
 
     // 모두에게 두 사람이 전화 중이라고 알리기
@@ -216,6 +217,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     callerSocket.to(calleeSocket.id).emit('callCanceled', {
       callerUserId,
+      callerNickname: callerSocket['userData']['nickname'],
     });
   }
 
@@ -250,6 +252,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     calleeSocket.to(callerSocket.id).emit('callRejected', {
       calleeUserId,
+      calleeNickname: calleeSocket['userData']['nickname'],
     });
   }
 
