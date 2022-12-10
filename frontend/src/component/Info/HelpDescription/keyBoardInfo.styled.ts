@@ -2,13 +2,6 @@ import { css } from '@emotion/react';
 
 export const description = css`
   display: flex;
-  flex-grow: 1;
-
-  width: 100%;
-`;
-
-export const keyboard = css`
-  display: flex;
   justify-content: space-around;
   width: 100%;
   height: 250px;
