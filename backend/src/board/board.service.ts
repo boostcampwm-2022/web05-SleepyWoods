@@ -29,6 +29,7 @@ export class BoardService {
           'board.content as content',
           'board.category as category',
           'board.created_at as created_at',
+          'CASE WHEN boardLike.articleId is null THEN false ELSE true END AS liked',
         ])
         .innerJoin('board.likes', 'boardLike')
         .where('boardLike.userId = :userId AND board.deleted = false', {
