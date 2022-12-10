@@ -9,6 +9,16 @@ export const infoContainer = css`
   background-color: ${theme.white05};
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
   border-radius: 20px;
+
+  strong {
+    color: ${theme.deepGreen};
+    font-weight: 700;
+  }
+
+  span {
+    color: ${theme.red};
+    font-weight: 700;
+  }
 `;
 
 export const header = css`

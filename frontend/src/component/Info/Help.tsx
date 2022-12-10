@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import help from '../../assets/icon/help.svg';
+import BoardAndRankInfo from './HelpDescription/BoardAndRankInfo';
 import KeyBoardInfo from './HelpDescription/keyBoardInfo';
 import SidebarInfo from './HelpDescription/SidebarInfo';
 
@@ -32,6 +33,7 @@ const Help = () => {
             <div css={style.content}>
               <KeyBoardInfo />
               <SidebarInfo />
+              <BoardAndRankInfo />
             </div>
           </section>
         </>
