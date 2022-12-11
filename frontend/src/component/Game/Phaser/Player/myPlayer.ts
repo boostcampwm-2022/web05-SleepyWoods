@@ -71,6 +71,8 @@ export class MyPlayer extends Player {
         this.checkAndSetState('walk');
       }
 
+      this.getBody().setVelocity(0, 0);
+
       sortHeldDirection(this, cursors);
       if (this.heldDirection.length) {
         const move: any = calcMoveToPos(this, this.heldDirection);
