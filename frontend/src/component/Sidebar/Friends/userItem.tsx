@@ -10,7 +10,7 @@ const UserItem = ({
   children?: JSX.Element;
 }) => {
   const { id, status, nickname } = friend;
-  const isOnline = status === 'online';
+  const isOnline = status === 'on';
 
   return (
     <Content draggable={isOnline}>

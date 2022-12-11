@@ -1,9 +1,10 @@
 import axios from 'axios';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from './store/atom/user';
 import { friendsProps, friendsState } from './store/atom/friends';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { socketState } from './store/atom/socket';
 
 type friendList = {
   userId: string;
@@ -12,8 +13,12 @@ type friendList = {
 };
 
 // 새로고침 될 때마다 해줄 로직 작성
-export const routerGuard = () => {
+export const useRouterGuard = () => {
   const setFriends = useSetRecoilState(friendsState);
+  const socket = useRecoilValue(socketState);
+  const [ready, setReady] = useState(false);
+
+  const initialList: friendsProps = {};
 
   useEffect(() => {
     (async () => {
@@ -23,26 +28,37 @@ export const routerGuard = () => {
         if (!data.length) return;
 
         const friendList: friendList[] = data;
-        const initialList: friendsProps = {};
 
         friendList.forEach(
           ({ userId, nickname }: { userId: string; nickname: string }) => {
             initialList[userId] = {
               id: userId,
-              status: 'offline',
+              status: 'off',
               nickname: nickname,
               isCalling: false,
             };
           }
         );
-
-        setFriends(initialList);
-        console.log(initialList);
       } catch (e) {
         console.log(e);
+      } finally {
+        socket.on('userInitiated', allUser => {
+          allUser.forEach((user: any) => {
+            const { id, userState } = user;
+
+            if (!initialList[id]) return;
+
+            initialList[id].status = userState;
+          });
+        });
+
+        setFriends(initialList);
+        setReady(true);
       }
     })();
   }, []);
+
+  return ready;
 };
 
 // 페이지 이동할 때마다 해줄 로직 작성
