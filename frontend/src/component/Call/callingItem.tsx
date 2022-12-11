@@ -57,15 +57,11 @@ const CallingItem = ({
   };
 
   const handleAcceptCall = () => {
-    // 해당 webRTC 연결 및 연결 중은 false로 변경
-    friends[id] &&
-      setFriends({
-        ...friends,
-        [id]: {
-          ...friends[id],
-          isCalling: false,
-        },
-      });
+    socket.emit('callEntered', {
+      callerUserId: id,
+    });
+
+    // webRTC 연결
   };
 
   return (

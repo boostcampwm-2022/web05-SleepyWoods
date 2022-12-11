@@ -75,6 +75,12 @@ const Call = () => {
 
       alert(`${nickname}님이 통화를 거절하셨습니다.`);
     });
+
+    socket.on('callEntered', data => {
+      const { calleeUserId: id } = data;
+
+      console.log(`${id}님이 통화를 수락하셨습니다.`);
+    });
   }, []);
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
