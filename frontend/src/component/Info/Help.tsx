@@ -10,7 +10,7 @@ import * as style from './info.styled';
 const Help = () => {
   const [isShowModal, setIsShowModal] = useState(false);
   const [animation, setAnimation] = useState('show');
-  const [setOpen, isSetOpen] = useState(true);
+  const [setOpen, isSetOpen] = useState(false);
 
   const setOpenModal = () => {
     isSetOpen(!setOpen);
@@ -31,7 +31,10 @@ const Help = () => {
 
   useEffect(() => {
     const openHelp = localStorage.getItem('openHelp');
-    if (openHelp === 'open') setIsShowModal(true);
+    if (openHelp === 'open') {
+      setIsShowModal(true);
+      isSetOpen(true);
+    }
   }, []);
 
   return (
