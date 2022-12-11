@@ -4,10 +4,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   character: Phaser.GameObjects.Sprite | undefined;
   hair: Phaser.GameObjects.Sprite | undefined;
   dust: Phaser.GameObjects.Sprite | undefined;
+  tool: Phaser.GameObjects.Sprite | undefined;
   nicknameText: Phaser.GameObjects.Text | undefined;
   direction: string;
   isChangeState: boolean;
   isCanMove: boolean;
+  isAttack: boolean;
   state: string;
   x: number;
   y: number;
@@ -37,12 +39,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.heldDirection = [];
     this.id = id;
     this.isCanMove = true;
+    this.isAttack = false;
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3);
 
     this.hair = this.scene.add.sprite(this.x, this.y, `${this.hairName}-wait`);
     this.hair.setScale(3);
+
+    this.tool = this.scene.add.sprite(this.x, this.y, 'attackTool');
+    this.tool.setScale(3);
 
     this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
     this.dust.setScale(3);
@@ -67,6 +73,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   delete() {
     this.character?.destroy();
     this.hair?.destroy();
+    this.tool?.destroy();
     this.nicknameText?.destroy();
     this.dust?.destroy();
   }

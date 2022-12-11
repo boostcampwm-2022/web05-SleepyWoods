@@ -14,6 +14,8 @@ import walkImg from '../../assets/character/walk/walk.png';
 import runImg from '../../assets/character/run/run.png';
 import rollImg from '../../assets/character/roll/roll.png';
 import jumpImg from '../../assets/character/jump/jump.png';
+import attackImg from '../../assets/character/attack/attack.png';
+import attackTool from '../../assets/character/tool/attack.png';
 import { stringObjectType } from '../../types/types';
 
 const characterImg: stringObjectType = {
@@ -22,6 +24,7 @@ const characterImg: stringObjectType = {
   run: runImg,
   roll: rollImg,
   jump: jumpImg,
+  attack: attackImg,
 };
 
 export default class Game extends Phaser.Scene {
@@ -92,7 +95,7 @@ export default class Game extends Phaser.Scene {
     this.load.audio('christmas', [christmas]);
 
     // 캐릭터 동작
-    const actions = ['wait', 'walk', 'run', 'roll', 'jump'];
+    const actions = ['wait', 'walk', 'run', 'roll', 'jump', 'attack'];
 
     actions.forEach((action: string) => {
       this.load.atlas(action, characterImg[action], spriteJSON);
@@ -102,6 +105,11 @@ export default class Game extends Phaser.Scene {
     this.load.spritesheet('dust', dust, {
       frameWidth: 24,
       frameHeight: 9,
+    });
+
+    this.load.spritesheet('attackTool', attackTool, {
+      frameWidth: 96,
+      frameHeight: 64,
     });
   }
 
@@ -128,6 +136,7 @@ export default class Game extends Phaser.Scene {
       { action: 'run', start: 1, end: 8 },
       { action: 'roll', start: 2, end: 5 },
       { action: 'jump', start: 1, end: 9 },
+      { action: 'attack', start: 1, end: 10 },
     ];
 
     const hairInfo = [
@@ -175,6 +184,16 @@ export default class Game extends Phaser.Scene {
       frames: this.anims.generateFrameNames('dust', {
         start: 0,
         end: 7,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.anims.create({
+      key: 'attackTool',
+      frames: this.anims.generateFrameNames('attackTool', {
+        start: 0,
+        end: 9,
       }),
       frameRate: 10,
       repeat: -1,
