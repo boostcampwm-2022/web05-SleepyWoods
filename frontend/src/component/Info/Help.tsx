@@ -3,6 +3,7 @@ import help from '../../assets/icon/help.svg';
 import BoardAndRankInfo from './HelpDescription/BoardAndRankInfo';
 import KeyBoardInfo from './HelpDescription/keyBoardInfo';
 import SidebarInfo from './HelpDescription/SidebarInfo';
+import WalkAndUserInfo from './HelpDescription/WalkAndUserInfo';
 
 import * as style from './info.styled';
 
@@ -34,6 +35,7 @@ const Help = () => {
               <KeyBoardInfo />
               <SidebarInfo />
               <BoardAndRankInfo />
+              <WalkAndUserInfo />
             </div>
           </section>
         </>
