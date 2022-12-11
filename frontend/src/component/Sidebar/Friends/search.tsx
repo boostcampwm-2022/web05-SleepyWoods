@@ -34,7 +34,7 @@ const Search = () => {
           ...friends,
           [data.userId]: {
             id: data.userId,
-            status: 'offline',
+            status: 'off',
             nickname: data.nickname,
             isCalling: false,
           },
