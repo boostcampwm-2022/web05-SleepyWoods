@@ -85,6 +85,8 @@ export default class Game extends Phaser.Scene {
       if (this.myPlayer) this.myPlayer.isCanMove = !checkInput;
       this.input.keyboard.manager.enabled = !checkInput;
     };
+
+    emitter.emit('game-start');
   }
 
   preload() {
