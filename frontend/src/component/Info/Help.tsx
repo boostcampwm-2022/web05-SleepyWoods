@@ -31,7 +31,8 @@ const Help = () => {
 
   useEffect(() => {
     const openHelp = localStorage.getItem('openHelp');
-    if (openHelp === 'open') {
+
+    if (openHelp !== 'close') {
       setIsShowModal(true);
       isSetOpen(true);
     }
