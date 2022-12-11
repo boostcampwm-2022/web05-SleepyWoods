@@ -13,6 +13,13 @@ export const changeState = (player: any) => {
     player.dust.visible = false;
     player.dust.stop();
   }
+  if (player.state === 'attack') {
+    player.tool.visible = true;
+    player.tool.play('attackTool');
+  } else {
+    player.tool.visible = false;
+    player.tool.stop();
+  }
 };
 
 export const changeDirection = (player: any, direction: string) => {
@@ -22,6 +29,7 @@ export const changeDirection = (player: any, direction: string) => {
   player.character.toggleFlipX();
   player.hair.toggleFlipX();
   player.dust.toggleFlipX();
+  player.tool.toggleFlipX();
 
   player.direction = direction;
 };
@@ -58,6 +66,7 @@ export const changePosition = (player: any, x: number, y: number) => {
 
   player.character.setPosition(player.x, player.y);
   player.hair.setPosition(player.x, player.y);
+  player.tool.setPosition(player.x, player.y);
 
   player.nicknameText.x = player.x - player.nickname.length * 3.5;
   player.nicknameText.y = player.y + 25;
