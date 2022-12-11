@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { friendsState } from '../../store/atom/friends';
 import { socketState } from '../../store/atom/socket';
 import { callingWrapper } from './call.styled';
 import CallingItem from './callingItem';
 
 const Call = () => {
-  const friends = useRecoilValue(friendsState);
-  const friendList = Object.values(friends).filter(value => value.isCalling);
+  const [friends, setFriends] = useRecoilState(friendsState);
   const socket = useRecoilValue(socketState);
+  let friendList = Object.values(friends).filter(value => value.isCalling);
 
   const [isSend, setSend] = useState({
     id: '',
@@ -21,12 +21,30 @@ const Call = () => {
       const { callerUserId: id, callerNickname: nickname } = data;
 
       setSend({
-        ...isSend,
         id: id,
         nickname: nickname,
       });
     });
   }, [isSend]);
+
+  socket.on('callCanceled', data => {
+    const { callerUserId: id } = data;
+
+    friends[id] &&
+      setFriends({
+        ...friends,
+        [id]: {
+          ...friends[id],
+          status: 'on',
+          isCalling: false,
+        },
+      });
+
+    setSend({
+      id: '',
+      nickname: '',
+    });
+  });
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (

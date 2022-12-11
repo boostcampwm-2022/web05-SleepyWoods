@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { callingListState } from '../../store/atom/callingList';
 import { friendsState } from '../../store/atom/friends';
+import { socketState } from '../../store/atom/socket';
 import { callingItem } from './call.styled';
 
 type callingItemType = {
@@ -17,6 +19,8 @@ const CallingItem = ({
   setSend = undefined,
 }: callingItemType) => {
   const [friends, setFriends] = useRecoilState(friendsState);
+  const [callingList, setCallingList] = useRecoilState(callingListState);
+  const socket = useRecoilValue(socketState);
 
   const handleRejectCall = () => {
     friends[id] &&
@@ -24,17 +28,26 @@ const CallingItem = ({
         ...friends,
         [id]: {
           ...friends[id],
-          status: 'online',
+          status: 'on',
           isCalling: false,
         },
       });
+
+    delete callingList.list[id];
 
     setSend &&
       setSend({
         id: '',
         nickname: '',
       });
-    // socket: 해당 친구 online으로 변경
+
+    if (isSend) {
+      socket.emit('callCanceled', {
+        calleeUserId: id,
+      });
+    }
+
+    socket.emit('callLeaved');
   };
 
   const handleAcceptCall = () => {
