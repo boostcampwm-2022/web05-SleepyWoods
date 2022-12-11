@@ -58,7 +58,7 @@ const CallingItem = ({
 
   const handleAcceptCall = () => {
     // 해당 webRTC 연결 및 연결 중은 false로 변경
-    friends.id &&
+    friends[id] &&
       setFriends({
         ...friends,
         [id]: {

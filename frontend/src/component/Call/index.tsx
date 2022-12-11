@@ -20,6 +20,16 @@ const Call = () => {
     socket.on('callRequested', data => {
       const { callerUserId: id, callerNickname: nickname } = data;
 
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'busy',
+            isCalling: false,
+          },
+        });
+
       setSend({
         id: id,
         nickname: nickname,
