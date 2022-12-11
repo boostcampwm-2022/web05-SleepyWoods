@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import help from '../../assets/icon/help.svg';
 import BoardAndRankInfo from './HelpDescription/BoardAndRankInfo';
-import KeyBoardInfo from './HelpDescription/keyBoardInfo';
+import KeyBoardInfo from './HelpDescription/KeyBoardInfo';
 import SidebarInfo from './HelpDescription/SidebarInfo';
 import WalkAndUserInfo from './HelpDescription/WalkAndUserInfo';
 

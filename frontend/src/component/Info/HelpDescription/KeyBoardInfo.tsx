@@ -6,7 +6,7 @@ import keyboardShift from '../../../assets/icon/keyboardShift.svg';
 import keyboardA from '../../../assets/icon/keyboardA.svg';
 import keyboardR from '../../../assets/icon/keyboardR.svg';
 
-const keyBoardInfo = () => {
+const KeyBoardInfo = () => {
   return (
     <div css={commonStyle.infoContainer}>
       <h4 css={commonStyle.header}>- 기본키 조작법</h4>
@@ -40,4 +40,4 @@ const keyBoardInfo = () => {
   );
 };
 
-export default keyBoardInfo;
+export default KeyBoardInfo;
