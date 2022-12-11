@@ -5,7 +5,7 @@ import Input from './Input';
 import { calcTimeFromMs } from './util';
 
 const Chat = () => {
-  const [isExtend, setIsExtend] = useState(true);
+  const [isExtend, setIsExtend] = useState(false);
   const [chatDatas, setChatDatas] = useState<any[]>([]);
 
   // 채팅 업데이트
