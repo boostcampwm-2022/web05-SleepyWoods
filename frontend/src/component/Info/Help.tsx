@@ -51,11 +51,11 @@ const Help = () => {
               <WalkAndUserInfo />
             </div>
             <div css={style.helpSettingWrapper}>
+              <p>우측 하단의 물음표 버튼을 클릭해서 도움말을 볼 수 있습니다.</p>
               <div css={style.helpSetting(setOpen)}>
                 <p>접속시 도움말 켜기</p>
                 <button type="button" onClick={setOpenModal}></button>
               </div>
-              <p>우측 하단의 물음표 버튼을 클릭해서 도움말을 볼 수 있습니다.</p>
             </div>
           </section>
         </>

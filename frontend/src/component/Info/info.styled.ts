@@ -122,17 +122,18 @@ export const content = css`
 `;
 
 export const helpSettingWrapper = css`
-  font-size: 14px;
+  width: 100%;
+  font-size: 12px;
   padding-top: 20px;
   text-align: center;
 `;
 
 export const helpSetting = (isCheck: boolean) => css`
   ${flexCenter}
-  padding-bottom: 10px;
+  padding-top: 10px;
 
   button {
-    margin-left: 10px;
+    margin-left: 5px;
     width: 14px;
     height: 14px;
     background-image: url(${checkBox});
