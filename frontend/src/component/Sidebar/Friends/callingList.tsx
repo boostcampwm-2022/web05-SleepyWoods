@@ -48,8 +48,6 @@ const CallingList = () => {
       // 아무도 없으면 방 터뜨리기
       socket.emit('callLeaved');
     }
-
-    console.log(data, tempList);
   });
 
   const handleDragOver = (e: MouseEvent) => {

@@ -27,24 +27,45 @@ const Call = () => {
     });
   }, [isSend]);
 
-  socket.on('callCanceled', data => {
-    const { callerUserId: id } = data;
+  useEffect(() => {
+    socket.on('callCanceled', data => {
+      console.log('통화취소당함!!!');
+      const { callerUserId: id } = data;
 
-    friends[id] &&
-      setFriends({
-        ...friends,
-        [id]: {
-          ...friends[id],
-          status: 'on',
-          isCalling: false,
-        },
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'on',
+            isCalling: false,
+          },
+        });
+
+      setSend({
+        id: '',
+        nickname: '',
       });
-
-    setSend({
-      id: '',
-      nickname: '',
     });
-  });
+
+    // 거절이 안 됨
+    socket.on('callDenied', data => {
+      console.log('통화거절당함!!!');
+      const { calleeUserId: id, calleeNickname: nickname } = data;
+
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'on',
+            isCalling: false,
+          },
+        });
+
+      alert(`${nickname}님이 통화를 거절하셨습니다.`);
+    });
+  }, []);
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
