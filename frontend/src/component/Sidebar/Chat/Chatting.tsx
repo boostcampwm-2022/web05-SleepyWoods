@@ -8,12 +8,13 @@ import ChatMessage from './ChatMessage';
 import { socketState } from '../../../store/atom/socket';
 import { calcDate } from './util';
 import SeparateTimeLine from './SeparateTimeLine';
+import { chatTargetType, privateChatType } from '../../../types/types';
 
 const Chatting = ({
   chatTarget,
   setChatTarget,
 }: {
-  chatTarget: any;
+  chatTarget: chatTargetType;
   setChatTarget: Function;
 }) => {
   const socket = useRecoilValue(socketState);
@@ -43,7 +44,7 @@ const Chatting = ({
 
     getMessage();
 
-    socket.on('privateChat', (data: any) => {
+    socket.on('privateChat', (data: privateChatType) => {
       setChatDatas(chatDatas => [...chatDatas, data]);
     });
 
@@ -85,7 +86,6 @@ const Chatting = ({
       message: chatValue,
     });
 
-    console.log([...chatDatas, chat]);
     setChatDatas([...chatDatas, chat]);
     setChatValue('');
   };
@@ -107,7 +107,7 @@ const Chatting = ({
             onClick={handleChatRoom}></button>
         </div>
         <ul css={style.textWrapper} ref={chatRef}>
-          {chatDatas.map((data: any, idx: number) => {
+          {chatDatas.map((data, idx: number) => {
             const date = calcDate(data.timestamp);
             const checkSameDate = date === lastDate;
             if (!checkSameDate) lastDate = date;

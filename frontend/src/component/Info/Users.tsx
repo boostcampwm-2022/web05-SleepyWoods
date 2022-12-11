@@ -3,13 +3,14 @@ import users from '../../assets/icon/users.svg';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
+import { userType } from '../../types/types';
 
 const Users = () => {
   const socket = useRecoilValue(socketState);
   const [userCnt, setUseCnt] = useState(0);
 
   useEffect(() => {
-    socket.on('userInitiated', (data: any) => {
+    socket.on('userInitiated', (data: userType[]) => {
       setUseCnt(data.length);
     });
 

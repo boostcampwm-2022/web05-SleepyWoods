@@ -16,7 +16,7 @@ import rollImg from '../../assets/character/roll/roll.png';
 import jumpImg from '../../assets/character/jump/jump.png';
 import attackImg from '../../assets/character/attack/attack.png';
 import attackTool from '../../assets/character/tool/attack.png';
-import { stringObjectType } from '../../types/types';
+import { gameInitType, stringObjectType, userType } from '../../types/types';
 
 const characterImg: stringObjectType = {
   wait: waitImg,
@@ -32,7 +32,7 @@ export default class Game extends Phaser.Scene {
   otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
   autoPlay: boolean;
-  townLayer: any;
+  townLayer?: Phaser.Tilemaps.TilemapLayer;
 
   constructor(config: Phaser.Types.Core.GameConfig) {
     super(config);
@@ -44,7 +44,7 @@ export default class Game extends Phaser.Scene {
   }
 
   init() {
-    emitter.on('init', (data: any) => {
+    emitter.on('init', (data: gameInitType) => {
       this.socket = data.socket.connect();
 
       this.myPlayer = new MyPlayer(
@@ -63,7 +63,8 @@ export default class Game extends Phaser.Scene {
       //   collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
       // });
 
-      this.physics.add.collider(this.myPlayer, this.townLayer);
+      if (this.townLayer)
+        this.physics.add.collider(this.myPlayer, this.townLayer);
 
       this.socket?.on('connect', () => {
         this.socketInit();
@@ -213,10 +214,10 @@ export default class Game extends Phaser.Scene {
   socketInit() {
     if (!this.socket) return;
 
-    this.socket.on('userInitiated', (data: any) => {
+    this.socket.on('userInitiated', (data: userType[]) => {
       if (!Array.isArray(data)) data = [data];
 
-      data.forEach((user: any) => {
+      data.forEach((user: userType) => {
         const id = user.id.toString().trim();
         if (this.myPlayer?.id === id) return;
         if (this.otherPlayer[id]) return;
@@ -225,12 +226,12 @@ export default class Game extends Phaser.Scene {
       });
     });
 
-    this.socket.on('userCreated', (user: any) => {
+    this.socket.on('userCreated', (user: userType) => {
       const id = user.id.toString().trim();
       this.otherPlayer[id] = new OtherPlayer(this, user);
     });
 
-    this.socket.on('move', (data: any) => {
+    this.socket.on('move', (data: userType) => {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
@@ -238,13 +239,13 @@ export default class Game extends Phaser.Scene {
       this.otherPlayer[id].update(state, x, y, direction);
     });
 
-    this.socket.on('userLeaved', (data: any) => {
+    this.socket.on('userLeaved', (data: userType) => {
       const id = data.id.toString().trim();
       this.otherPlayer[id].delete();
       delete this.otherPlayer[id];
     });
 
-    this.socket.on('userDataChanged', (data: any) => {
+    this.socket.on('userDataChanged', (data: userType) => {
       const { id, nickname, characterName } = data;
       this.otherPlayer[id].updateNickname(nickname);
       this.otherPlayer[id].updateHair(characterName);

@@ -1,6 +1,7 @@
+import { chatType } from '../../types/types';
 import { chat, chatTime, chatUser, info } from './chat.styled';
 
-const ChatContent = ({ data }: { data: any }) => {
+const ChatContent = ({ data }: { data: chatType }) => {
   const { type, timestamp, nickname, message } = data;
 
   return (

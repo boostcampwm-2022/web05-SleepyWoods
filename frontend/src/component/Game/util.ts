@@ -1,7 +1,10 @@
+import { MyPlayer } from './Phaser/Player/myPlayer';
+import { OtherPlayer } from './Phaser/Player/otherPlayer';
+
 const responsiveness = 5;
 
-export const changeState = (player: any) => {
-  if (!player.character || !player.hair) return;
+export const changeState = (player: MyPlayer | OtherPlayer) => {
+  if (!player.character || !player.hair || !player.dust || !player.tool) return;
 
   player.character.play(`character-${player.state}`);
   player.hair.play(`${player.hairName}-${player.state}`);
@@ -22,8 +25,11 @@ export const changeState = (player: any) => {
   }
 };
 
-export const changeDirection = (player: any, direction: string) => {
-  if (!player.character || !player.hair) return;
+export const changeDirection = (
+  player: MyPlayer | OtherPlayer,
+  direction: string
+) => {
+  if (!player.character || !player.hair || !player.dust || !player.tool) return;
   if (player.direction === direction) return;
 
   player.character.toggleFlipX();
@@ -34,8 +40,11 @@ export const changeDirection = (player: any, direction: string) => {
   player.direction = direction;
 };
 
-export const calcMoveToPos = (player: any, dir: string[]) => {
-  if (!player.character || !player.hair) return;
+export const calcMoveToPos = (
+  player: MyPlayer | OtherPlayer,
+  dir: string[]
+) => {
+  if (!player.character || !player.hair || !player.dust || !player.tool) return;
 
   const move = { x: 0, y: 0 };
   const leftIdx = dir.indexOf('left');
@@ -58,8 +67,19 @@ export const calcMoveToPos = (player: any, dir: string[]) => {
   return move;
 };
 
-export const changePosition = (player: any, x: number, y: number) => {
-  if (!player.character || !player.hair) return;
+export const changePosition = (
+  player: MyPlayer | OtherPlayer,
+  x: number,
+  y: number
+) => {
+  if (
+    !player.character ||
+    !player.hair ||
+    !player.dust ||
+    !player.tool ||
+    !player.nicknameText
+  )
+    return;
 
   player.x += x;
   player.y += y;
@@ -75,16 +95,16 @@ export const changePosition = (player: any, x: number, y: number) => {
   player.dust.setPosition(player.x + editPosNum, player.y + 5);
 };
 
-export const sortHeldDirection = (scene: any, cursors: any) => {
+export const sortHeldDirection = (player: MyPlayer, cursors: any) => {
   const directions = ['left', 'right', 'up', 'down'];
 
   directions.forEach((dir: string) => {
-    const idx = scene.heldDirection.indexOf(dir);
+    const idx = player.heldDirection.indexOf(dir);
 
     if (cursors[dir].isDown && idx === -1) {
-      scene.heldDirection.push(dir);
+      player.heldDirection.push(dir);
     } else if (cursors[dir].isUp && idx > -1) {
-      scene.heldDirection.splice(idx, 1);
+      player.heldDirection.splice(idx, 1);
     }
   });
 };

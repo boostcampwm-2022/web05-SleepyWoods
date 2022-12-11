@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { chatType } from '../../types/types';
 import * as style from './chat.styled';
 import ChatMessage from './ChatMessage';
 import Input from './Input';
@@ -6,14 +7,14 @@ import { calcTimeFromMs } from './util';
 
 const Chat = () => {
   const [isExtend, setIsExtend] = useState(false);
-  const [chatDatas, setChatDatas] = useState<any[]>([]);
+  const [chatDatas, setChatDatas] = useState<chatType[]>([]);
 
   // 채팅 업데이트
-  const updateChat = (chat: any) => {
+  const updateChat = (chat: chatType) => {
     chat.timestamp = calcTimeFromMs(chat.timestamp);
 
     sessionStorage.setItem('chat', JSON.stringify([...chatDatas, chat]));
-    setChatDatas((chatDatas: any) => [...chatDatas, chat]);
+    setChatDatas(chatDatas => [...chatDatas, chat]);
   };
 
   // 채팅창 크기 변경
