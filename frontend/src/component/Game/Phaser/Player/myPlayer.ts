@@ -48,54 +48,55 @@ export class MyPlayer extends Player {
       this.state = 'wait';
       this.scene.input.keyboard.removeAllKeys(true);
     } else {
-      if (this.isAttack) return;
-      const cursors = this.scene.input.keyboard.createCursorKeys();
-      const keyR = this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.R
-      );
-      const keyA = this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.A
-      );
-      const keyShift = this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.SHIFT
-      );
-      const keySpace = this.scene.input.keyboard.addKey(
-        Phaser.Input.Keyboard.KeyCodes.SPACE
-      );
+      if (!this.isAttack) {
+        const cursors = this.scene.input.keyboard.createCursorKeys();
+        const keyR = this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.R
+        );
+        const keyA = this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.A
+        );
+        const keyShift = this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.SHIFT
+        );
+        const keySpace = this.scene.input.keyboard.addKey(
+          Phaser.Input.Keyboard.KeyCodes.SPACE
+        );
 
-      // motion
-      if (keyR.isDown) {
-        this.speed = 1.5;
-        this.checkAndSetState('roll', 100, false);
-      } else if (keyA.isDown) {
-        this.speed = 1;
-        this.checkAndSetState('attack', 800, true);
-      } else if (keyShift.isDown) {
-        this.speed = 1.2;
-        this.checkAndSetState('run', 0, false);
-      } else if (keySpace.isDown) {
-        this.speed = 1;
-        this.checkAndSetState('jump', 500, false);
-      } else {
-        this.speed = 1;
-        this.checkAndSetState('walk', 0, false);
-      }
-
-      this.getBody().setVelocity(0, 0);
-
-      sortHeldDirection(this, cursors);
-      if (this.heldDirection.length) {
-        const move: any = calcMoveToPos(this, this.heldDirection);
-        this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
-
-        if (move.x !== 0) {
-          const direction = move.x > 0 ? 'right' : 'left';
-          changeDirection(this, direction);
+        // motion
+        if (keyR.isDown) {
+          this.speed = 1.5;
+          this.checkAndSetState('roll', 100, false);
+        } else if (keyA.isDown) {
+          this.speed = 1;
+          this.checkAndSetState('attack', 800, true);
+        } else if (keyShift.isDown) {
+          this.speed = 1.2;
+          this.checkAndSetState('run', 0, false);
+        } else if (keySpace.isDown) {
+          this.speed = 1;
+          this.checkAndSetState('jump', 500, false);
+        } else {
+          this.speed = 1;
+          this.checkAndSetState('walk', 0, false);
         }
 
-        changePosition(this, move.x * this.speed, move.y * this.speed);
-      } else {
-        this.checkAndSetState('wait', 0, false);
+        this.getBody().setVelocity(0, 0);
+
+        sortHeldDirection(this, cursors);
+        if (this.heldDirection.length) {
+          const move: any = calcMoveToPos(this, this.heldDirection);
+          this.getBody().setVelocity(move.x * this.speed, move.y * this.speed);
+
+          if (move.x !== 0) {
+            const direction = move.x > 0 ? 'right' : 'left';
+            changeDirection(this, direction);
+          }
+
+          changePosition(this, move.x * this.speed, move.y * this.speed);
+        } else {
+          this.checkAndSetState('wait', 0, false);
+        }
       }
     }
 

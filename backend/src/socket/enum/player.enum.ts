@@ -9,4 +9,5 @@ export enum stateOptions {
   WALK = 'walk',
   ROLL = 'roll',
   JUMP = 'jump',
+  ATTACK = 'attack',
 }
