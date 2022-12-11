@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import theme from '../../styles/theme';
 import close from '../../assets/icon/close.svg';
+import checkBox from '../../assets/icon/checkBox.svg';
+import { flexCenter } from '../../styles/mixin.styled';
 
 export const infoBox = css`
   display: flex;
@@ -116,5 +118,27 @@ export const content = css`
 
   ::-webkit-scrollbar {
     display: none;
+  }
+`;
+
+export const helpSettingWrapper = css`
+  font-size: 14px;
+  padding-top: 20px;
+  text-align: center;
+`;
+
+export const helpSetting = (isCheck: boolean) => css`
+  ${flexCenter}
+  padding-bottom: 10px;
+
+  button {
+    margin-left: 10px;
+    width: 14px;
+    height: 14px;
+    background-image: url(${checkBox});
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: ${isCheck ? 1 : 0.3};
   }
 `;

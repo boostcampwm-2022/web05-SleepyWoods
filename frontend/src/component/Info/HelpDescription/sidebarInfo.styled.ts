@@ -52,9 +52,5 @@ export const subDescription = css`
     width: 100%;
     padding-bottom: 15px;
     font-size: 14px;
-
-    /* span {
-      color: ${theme.red};
-    } */
   }
 `;
