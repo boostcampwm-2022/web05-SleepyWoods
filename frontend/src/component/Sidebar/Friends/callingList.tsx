@@ -7,10 +7,13 @@ import { callingList } from './friends.styled';
 import UserItem from './userItem';
 import { v1 } from 'uuid';
 import { socketState } from '../../../store/atom/socket';
+import { userState } from '../../../store/atom/user';
 
 const CallingList = () => {
   const [callingfriendList, setCallingList] = useRecoilState(callingListState);
   const [friends, setFriends] = useRecoilState(friendsState);
+  const myValue = useRecoilValue(userState);
+
   const socket = useRecoilValue(socketState);
 
   const friendList = Object.values(callingfriendList.list);
@@ -21,6 +24,8 @@ const CallingList = () => {
 
     const tempList: any = {};
     callingRoomUserData.forEach((user: { [key: string]: string }) => {
+      if (user.id === myValue.id) return;
+
       tempList[user.id] = {
         id: user.id,
         nickname: user.nickname,
@@ -29,16 +34,20 @@ const CallingList = () => {
     });
 
     const len = Object.values(tempList).length;
-    if (len === 1)
-      setCallingList({
-        id: '',
-        list: {},
-      });
-    else
+    if (len) {
       setCallingList({
         ...callingfriendList,
         list: tempList,
       });
+    } else {
+      setCallingList({
+        id: '',
+        list: {},
+      });
+
+      // 아무도 없으면 방 터뜨리기
+      socket.emit('callLeaved');
+    }
 
     console.log(data, tempList);
   });
