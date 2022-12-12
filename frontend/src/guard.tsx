@@ -48,7 +48,6 @@ export const routerGuard = () => {
             if (!initialList[id]) return;
 
             initialList[id].status = userState;
-            console.log(userState);
           });
 
           setFriends(initialList);
