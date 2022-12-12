@@ -10,6 +10,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   isChangeState: boolean;
   isCanMove: boolean;
   isAttack: boolean;
+  isFixed: boolean;
   state: string;
   x: number;
   y: number;
@@ -40,6 +41,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.id = id;
     this.isCanMove = true;
     this.isAttack = false;
+    this.isFixed = false;
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
     this.character.setScale(3).setDepth(10);
@@ -89,5 +91,18 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
   getBody() {
     return this.body as Phaser.Physics.Arcade.Body;
+  }
+
+  speedChange(speed: number) {
+    if (this.isFixed) return;
+    this.speed = speed;
+  }
+
+  fixState(isFixed: boolean, state: string, speed: number) {
+    if (isFixed) this.state = state;
+    changeState(this);
+    this.speedChange(speed);
+
+    this.isFixed = isFixed;
   }
 }
