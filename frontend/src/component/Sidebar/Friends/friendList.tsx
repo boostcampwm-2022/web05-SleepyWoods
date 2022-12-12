@@ -13,6 +13,18 @@ const FriendList = () => {
   const friendList = Object.values(friends).filter(value => true);
   const socket = useRecoilValue(socketState);
 
+  socket.on('userCreated', data => {
+    const { id, userState } = data;
+
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        status: userState,
+      },
+    });
+  });
+
   socket.on('userDataChanged', data => {
     const { id, nickname } = data;
 
