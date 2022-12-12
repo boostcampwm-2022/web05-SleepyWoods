@@ -3,6 +3,36 @@ import { OtherPlayer } from './Phaser/Player/otherPlayer';
 
 const responsiveness = 5;
 
+export const actions = [
+  'wait',
+  'walk',
+  'run',
+  'roll',
+  'jump',
+  'attack',
+  'swimming',
+];
+
+export const spriteInfo = [
+  { action: 'wait', start: 1, end: 9 },
+  { action: 'walk', start: 1, end: 8 },
+  { action: 'run', start: 1, end: 8 },
+  { action: 'roll', start: 2, end: 5 },
+  { action: 'jump', start: 1, end: 9 },
+  { action: 'attack', start: 1, end: 10 },
+  { action: 'swimming', start: 1, end: 10 },
+];
+
+export const hairInfo = [
+  'nohair',
+  'longhair',
+  'mophair',
+  'shorthair',
+  'spikeyhair',
+  'bowlhair',
+  'curlyhair',
+];
+
 export const changeState = (player: MyPlayer | OtherPlayer) => {
   if (!player.character || !player.hair || !player.dust || !player.tool) return;
 
@@ -16,12 +46,12 @@ export const changeState = (player: MyPlayer | OtherPlayer) => {
     player.dust.visible = false;
     player.dust.stop();
   }
-  if (player.state === 'attack') {
-    player.tool.visible = true;
-    player.tool.play('attackTool');
-  } else {
+  if (player.state === 'wait') {
     player.tool.visible = false;
     player.tool.stop();
+  } else {
+    player.tool.visible = true;
+    player.tool.play(`tool-${player.state}`);
   }
 };
 
