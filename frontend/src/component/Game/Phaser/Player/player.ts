@@ -42,16 +42,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.isAttack = false;
 
     this.character = this.scene.add.sprite(this.x, this.y, 'character-wait');
-    this.character.setScale(3);
+    this.character.setScale(3).setDepth(10);
 
     this.hair = this.scene.add.sprite(this.x, this.y, `${this.hairName}-wait`);
-    this.hair.setScale(3);
+    this.hair.setScale(3).setDepth(10);
 
     this.tool = this.scene.add.sprite(this.x, this.y, 'attackTool');
-    this.tool.setScale(3);
+    this.tool.setScale(3).setDepth(10);
 
     this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
-    this.dust.setScale(3);
+    this.dust.setScale(3).setDepth(10);
 
     this.nicknameText = this.scene.add.text(
       this.x - this.nickname.length * 3.5,
