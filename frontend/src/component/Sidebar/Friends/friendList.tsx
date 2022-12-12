@@ -25,6 +25,18 @@ const FriendList = () => {
     });
   });
 
+  socket.on('userLeaved', data => {
+    const { id } = data;
+
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        status: 'off',
+      },
+    });
+  });
+
   socket.on('userDataChanged', data => {
     const { id, nickname } = data;
 
