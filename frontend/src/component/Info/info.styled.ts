@@ -117,7 +117,14 @@ export const content = css`
   padding: 5px;
 
   ::-webkit-scrollbar {
-    display: none;
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 10px;
   }
 `;
 

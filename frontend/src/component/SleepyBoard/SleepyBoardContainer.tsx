@@ -4,10 +4,11 @@ import Content from './content';
 import like from '../../assets/icon/like.svg';
 import user from '../../assets/icon/user.svg';
 import axios from 'axios';
+import { boardType } from '../../types/types';
 
 const SleepyBoardContainer = () => {
   const [filter, setFilter] = useState('all');
-  const [board, setBoard] = useState<any>([]);
+  const [board, setBoard] = useState<boardType[]>([]);
 
   useEffect(() => {
     getPost(filter);
@@ -16,6 +17,7 @@ const SleepyBoardContainer = () => {
   const getPost = async (key: string) => {
     try {
       const { data, status } = await axios(`/api/board/${key}`);
+
       if (status === 200) setBoard(data);
     } catch (e) {}
   };
@@ -39,7 +41,7 @@ const SleepyBoardContainer = () => {
           css={style.filterBtn(filter === 'me', user)}></button>
       </nav>
       <ul css={style.contentWrapper}>
-        {board.map((data: any) => (
+        {board.map(data => (
           <Content key={data.id} data={data} />
         ))}
       </ul>

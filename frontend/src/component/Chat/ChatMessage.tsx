@@ -3,6 +3,7 @@ import * as style from './chat.styled';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import ChatContent from './ChatContent';
+import { chatType, userType } from '../../types/types';
 
 const ChatMessage = ({
   updateChat,
@@ -12,7 +13,7 @@ const ChatMessage = ({
 }: {
   updateChat: Function;
   isExtend: boolean;
-  chatDatas: any;
+  chatDatas: chatType[];
   setChatDatas: Function;
 }) => {
   const socket = useRecoilValue(socketState);
@@ -26,11 +27,11 @@ const ChatMessage = ({
     }
 
     // 다른 사람의 채팅받기
-    socket.on('publicChat', (chat: any) => {
+    socket.on('publicChat', (chat: chatType) => {
       updateChat(chat);
     });
 
-    socket.on('userCreated', (data: any) => {
+    socket.on('userCreated', (data: userType) => {
       const chat = {
         type: 'info',
         nickname: data.nickname,
@@ -40,7 +41,7 @@ const ChatMessage = ({
       updateChat(chat);
     });
 
-    socket.on('userLeaved', (data: any) => {
+    socket.on('userLeaved', (data: userType) => {
       const chat = {
         type: 'info',
         nickname: data.nickname,
@@ -66,7 +67,7 @@ const ChatMessage = ({
   return (
     <div css={style.chatTextWrapper(isExtend)} ref={chatRef}>
       <ul css={style.chatText}>
-        {chatDatas.map((data: any, idx: any) => (
+        {chatDatas.map((data, idx: number) => (
           <ChatContent data={data} key={idx} />
         ))}
       </ul>

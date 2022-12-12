@@ -153,7 +153,7 @@ export const time = css`
   font-weight: 700;
 `;
 
-export const likeBtn = (isLike: boolean) => css`
+export const likeBtn = (isLiked: boolean) => css`
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -164,7 +164,7 @@ export const likeBtn = (isLike: boolean) => css`
     display: block;
     width: 25px;
     height: 20px;
-    background-image: url(${isLike ? like : unlike});
+    background-image: url(${isLiked ? like : unlike});
     background-repeat: no-repeat;
     background-size: contain;
   }

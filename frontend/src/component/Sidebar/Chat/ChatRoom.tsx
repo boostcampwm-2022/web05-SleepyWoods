@@ -1,8 +1,9 @@
+import { chatRoomType } from '../../../types/types';
 import Content from '../Content';
 import { chatInfo, chatItemWrapper, message } from './chat.styled';
 import { calcTimeFromMs } from './util';
 
-const ChatRoom = ({ data }: { data: any }) => {
+const ChatRoom = ({ data }: { data: chatRoomType }) => {
   const { unReadCount, targetUserNickname, lastMsg } = data;
 
   return (

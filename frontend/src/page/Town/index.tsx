@@ -3,6 +3,7 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import Call from '../../component/Call';
 import Chat from '../../component/Chat';
 import Game from '../../component/Game';
+import { emitter } from '../../component/Game/util';
 import Info from '../../component/Info';
 import Loading from '../../component/Loading';
 import Sidebar from '../../component/Sidebar';
@@ -22,6 +23,15 @@ const Town = () => {
   const isSnowing = useRecoilValue(snowState);
 
   useEffect(() => {
+    emitter.on('game-start', () => {
+      setTimeout(() => {
+        setIsClose(true);
+        setTimeout(() => {
+          setIsLoadingComplete(true);
+        }, 800);
+      }, 500);
+    });
+
     const getDevicePermission = async () => {
       const constraints = { audio: true, video: true };
       const permission = await navigator.mediaDevices.getUserMedia(constraints);
@@ -29,13 +39,6 @@ const Town = () => {
     };
 
     getDevicePermission();
-
-    setTimeout(() => {
-      setIsClose(true);
-      setTimeout(() => {
-        setIsLoadingComplete(true);
-      }, 800);
-    }, 1500);
   }, []);
 
   return (

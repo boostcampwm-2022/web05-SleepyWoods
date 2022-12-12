@@ -1,8 +1,9 @@
+import { userType } from '../../../../types/types';
 import { changeDirection, changePosition, changeState } from '../../util';
 import { Player } from './player';
 
 export class OtherPlayer extends Player {
-  constructor(scene: Phaser.Scene, data: any) {
+  constructor(scene: Phaser.Scene, data: userType) {
     super(scene, data.x, data.y, data.id, data.characterName, data.nickname);
   }
   update(state: string, x: number, y: number, direction: string) {

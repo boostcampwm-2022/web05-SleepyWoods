@@ -1,4 +1,5 @@
-export const calcTimeFromMs = (ms: number, option: boolean) => {
+export const calcTimeFromMs = (ms: number | string, option: boolean) => {
+  if (typeof ms === 'string') return;
   const date = new Date(ms);
 
   if (option) {
