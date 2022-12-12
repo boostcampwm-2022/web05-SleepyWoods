@@ -1,22 +1,22 @@
 import { Socket } from 'socket.io-client';
-import { MyPlayer } from './Phaser/Player/myPlayer';
-import { OtherPlayer } from './Phaser/Player/otherPlayer';
-import { emitter } from './util';
+import { MyPlayer } from '../Phaser/Player/myPlayer';
+import { OtherPlayer } from '../Phaser/Player/otherPlayer';
+import { emitter } from '../util';
 
-import townJSON from '../../assets/tilemaps/town.json';
-import town from '../../assets/tilemaps/town.png';
-import christmas from '../../assets/audio/christmas.mp3';
-import dust from '../../assets/character/dust.png';
-import spriteJSON from '../../assets/character/sprite.json';
+import townJSON from '../../../assets/tilemaps/town.json';
+import town from '../../../assets/tilemaps/town.png';
+import christmas from '../../../assets/audio/christmas.mp3';
+import dust from '../../../assets/character/dust.png';
+import spriteJSON from '../../../assets/character/sprite.json';
 
-import waitImg from '../../assets/character/wait/wait.png';
-import walkImg from '../../assets/character/walk/walk.png';
-import runImg from '../../assets/character/run/run.png';
-import rollImg from '../../assets/character/roll/roll.png';
-import jumpImg from '../../assets/character/jump/jump.png';
-import attackImg from '../../assets/character/attack/attack.png';
-import attackTool from '../../assets/character/tool/attack.png';
-import { gameInitType, stringObjectType, userType } from '../../types/types';
+import waitImg from '../../../assets/character/wait/wait.png';
+import walkImg from '../../../assets/character/walk/walk.png';
+import runImg from '../../../assets/character/run/run.png';
+import rollImg from '../../../assets/character/roll/roll.png';
+import jumpImg from '../../../assets/character/jump/jump.png';
+import attackImg from '../../../assets/character/attack/attack.png';
+import attackTool from '../../../assets/character/tool/attack.png';
+import { gameInitType, stringObjectType, userType } from '../../../types/types';
 
 const characterImg: stringObjectType = {
   wait: waitImg,
@@ -33,9 +33,11 @@ export default class Game extends Phaser.Scene {
   socket?: Socket;
   autoPlay: boolean;
   townLayer?: Phaser.Tilemaps.TilemapLayer;
+  mazeEntry?: any;
+  // mazeEntry?: Phaser.Physics.Arcade.StaticGroup;
 
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config);
+  constructor() {
+    super('Game');
 
     this.socket;
     this.myPlayer;
@@ -69,6 +71,17 @@ export default class Game extends Phaser.Scene {
       this.socket?.on('connect', () => {
         this.socketInit();
       });
+
+      this.mazeEntry = this.physics.add.staticGroup({
+        key: 'mazeEntry',
+        frameQuantity: 3,
+      });
+
+      this.mazeEntry.getChildren()[0].setPosition(540, 810);
+
+      this.mazeEntry.refresh();
+
+      this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
     });
 
     emitter.on('updateNickname', (nickname: string) => {
@@ -89,6 +102,14 @@ export default class Game extends Phaser.Scene {
 
     emitter.emit('game-start');
   }
+
+  changeScene = (player: any, item: any) => {
+    this.scene.start('Maze', {
+      socket: this.socket,
+      myPlayer: this.myPlayer,
+      autoPlay: this.autoPlay,
+    });
+  };
 
   preload() {
     // this.load.image('background', background);

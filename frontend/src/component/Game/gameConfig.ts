@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import Game from './game';
+import Game from './Scene/game';
+import Maze from './Scene/maze';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -22,7 +23,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     forceSetTimeOut: true,
   },
   autoFocus: true,
-  scene: Game,
+  scene: [Game, Maze],
 };
 
 export default gameConfig;
