@@ -4,6 +4,7 @@ import { friendsState } from '../../store/atom/friends';
 import { socketState } from '../../store/atom/socket';
 import { callingWrapper } from './call.styled';
 import CallingItem from './callingItem';
+import Video from './video';
 
 const Call = () => {
   const [friends, setFriends] = useRecoilState(friendsState);
@@ -76,24 +77,27 @@ const Call = () => {
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
-    <div css={callingWrapper}>
-      {friendList.map(friend => (
-        <CallingItem
-          key={friend.id}
-          id={friend.id}
-          nickname={friend.nickname}
-          isSend={true}
-        />
-      ))}
-      {isSend.id && (
-        <CallingItem
-          id={isSend.id}
-          nickname={isSend.nickname}
-          isSend={false}
-          setSend={setSend}
-        />
-      )}
-    </div>
+    <>
+      <Video />
+      <div css={callingWrapper}>
+        {friendList.map(friend => (
+          <CallingItem
+            key={friend.id}
+            id={friend.id}
+            nickname={friend.nickname}
+            isSend={true}
+          />
+        ))}
+        {isSend.id && (
+          <CallingItem
+            id={isSend.id}
+            nickname={isSend.nickname}
+            isSend={false}
+            setSend={setSend}
+          />
+        )}
+      </div>
+    </>
   );
 };
 
