@@ -83,8 +83,6 @@ const CallingList = () => {
       },
     });
 
-    console.log(callingfriendList);
-
     // 해당 id의 유저에게 통화 요청
     socket.emit('callRequested', {
       calleeUserId: id,

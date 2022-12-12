@@ -42,12 +42,10 @@ const CallingItem = ({
       });
 
     if (isSend) {
-      console.log('통화 취소하기!!!!');
       socket.emit('callCanceled', {
         calleeUserId: id,
       });
     } else {
-      console.log('통화 거절하기!!!!');
       socket.emit('callRejected', {
         callerUserId: id,
       });

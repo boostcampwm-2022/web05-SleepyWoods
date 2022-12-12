@@ -13,10 +13,9 @@ type friendList = {
 };
 
 // 새로고침 될 때마다 해줄 로직 작성
-export const useRouterGuard = () => {
+export const routerGuard = () => {
   const setFriends = useSetRecoilState(friendsState);
   const socket = useRecoilValue(socketState);
-  const [ready, setReady] = useState(false);
 
   const initialList: friendsProps = {};
 
@@ -50,15 +49,12 @@ export const useRouterGuard = () => {
 
             initialList[id].status = userState;
           });
-        });
 
-        setFriends(initialList);
-        setReady(true);
+          setFriends(initialList);
+        });
       }
     })();
   }, []);
-
-  return ready;
 };
 
 // 페이지 이동할 때마다 해줄 로직 작성
