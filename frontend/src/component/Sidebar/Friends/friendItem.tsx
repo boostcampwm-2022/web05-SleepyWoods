@@ -9,6 +9,7 @@ import { friendsState } from '../../../store/atom/friends';
 import { sidebarState } from '../../../store/atom/sidebar';
 import { chattingState } from '../../../store/atom/chatting';
 import { socketState } from '../../../store/atom/socket';
+import UserItem from './userItem';
 
 const FriendItem = ({ friend }: { friend: friendType }) => {
   const socket = useRecoilValue(socketState);
@@ -16,8 +17,7 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
   const setChatTarget = useSetRecoilState(chattingState);
   const setCurrentTab = useSetRecoilState(sidebarState);
 
-  const { id, status, isCalling, nickname } = friend;
-  const isOnline = status === 'online';
+  const { id, nickname } = friend;
 
   const sendChatting = () => {
     socket.emit('chatRoomEntered', { targetUserId: id });
@@ -48,20 +48,16 @@ const FriendItem = ({ friend }: { friend: friendType }) => {
   };
 
   return (
-    <Content draggable={isOnline}>
-      <section id={id} css={friendItemWrapper(isOnline)}>
-        <div css={userName(status)}>{nickname}</div>
-        <div>
-          <button onClick={sendChatting}>
-            <img src={message} alt="채팅하기 버튼"></img>
-          </button>
-          <button onClick={unfollowing}>
-            <img src={unfollow} alt="친구 끊기 버튼"></img>
-          </button>
-          {isCalling && <div></div>}
-        </div>
-      </section>
-    </Content>
+    <UserItem friend={friend}>
+      <div>
+        <button onClick={sendChatting}>
+          <img src={message} alt="채팅하기 버튼"></img>
+        </button>
+        <button onClick={unfollowing}>
+          <img src={unfollow} alt="친구 끊기 버튼"></img>
+        </button>
+      </div>
+    </UserItem>
   );
 };
 

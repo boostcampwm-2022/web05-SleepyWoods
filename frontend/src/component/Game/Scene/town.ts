@@ -1,41 +1,19 @@
 import { Socket } from 'socket.io-client';
-import { MyPlayer } from './Phaser/Player/myPlayer';
-import { OtherPlayer } from './Phaser/Player/otherPlayer';
-import { emitter } from './util';
+import { MyPlayer } from '../Phaser/Player/myPlayer';
+import { OtherPlayer } from '../Phaser/Player/otherPlayer';
+import { emitter, hairInfo, spriteInfo } from '../util';
+import { gameInitType, userType } from '../../../types/types';
 
-import townJSON from '../../assets/tilemaps/town.json';
-import town from '../../assets/tilemaps/town.png';
-import christmas from '../../assets/audio/christmas.mp3';
-import dust from '../../assets/character/dust.png';
-import spriteJSON from '../../assets/character/sprite.json';
-
-import waitImg from '../../assets/character/wait/wait.png';
-import walkImg from '../../assets/character/walk/walk.png';
-import runImg from '../../assets/character/run/run.png';
-import rollImg from '../../assets/character/roll/roll.png';
-import jumpImg from '../../assets/character/jump/jump.png';
-import attackImg from '../../assets/character/attack/attack.png';
-import attackTool from '../../assets/character/tool/attack.png';
-import { gameInitType, stringObjectType, userType } from '../../types/types';
-
-const characterImg: stringObjectType = {
-  wait: waitImg,
-  walk: walkImg,
-  run: runImg,
-  roll: rollImg,
-  jump: jumpImg,
-  attack: attackImg,
-};
-
-export default class Game extends Phaser.Scene {
+export default class Town extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   socket?: Socket;
   autoPlay: boolean;
   townLayer?: Phaser.Tilemaps.TilemapLayer;
+  mazeEntry?: any;
 
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config);
+  constructor() {
+    super('Town');
 
     this.socket;
     this.myPlayer;
@@ -49,7 +27,7 @@ export default class Game extends Phaser.Scene {
 
       this.myPlayer = new MyPlayer(
         this,
-        800,
+        1000,
         800,
         data.id,
         data.hair,
@@ -57,18 +35,23 @@ export default class Game extends Phaser.Scene {
         data.socket
       );
 
-      // const debugGraphics = this.add.graphics().setAlpha(0.7);
-      // this.townLayer.renderDebug(debugGraphics, {
-      //   tileColor: null,
-      //   collidingTileColor: new Phaser.Display.Color(243, 234, 48, 255),
-      // });
-
       if (this.townLayer)
         this.physics.add.collider(this.myPlayer, this.townLayer);
 
       this.socket?.on('connect', () => {
         this.socketInit();
       });
+
+      this.mazeEntry = this.physics.add.staticGroup({
+        key: 'mazeEntry',
+        frameQuantity: 3,
+      });
+
+      this.mazeEntry.getChildren()[0].setPosition(540, 810);
+
+      this.mazeEntry.refresh();
+
+      this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
     });
 
     emitter.on('updateNickname', (nickname: string) => {
@@ -90,36 +73,19 @@ export default class Game extends Phaser.Scene {
     emitter.emit('game-start');
   }
 
-  preload() {
-    // this.load.image('background', background);
-    this.load.tilemapTiledJSON('map', townJSON);
-    this.load.image('tileset', town);
-
-    this.load.audio('christmas', [christmas]);
-
-    // 캐릭터 동작
-    const actions = ['wait', 'walk', 'run', 'roll', 'jump', 'attack'];
-
-    actions.forEach((action: string) => {
-      this.load.atlas(action, characterImg[action], spriteJSON);
+  changeScene = (player: any, item: any) => {
+    this.scene.pause();
+    this.scene.start('Maze', {
+      socket: this.socket,
+      myPlayer: this.myPlayer,
+      autoPlay: this.autoPlay,
     });
-
-    // 이펙트
-    this.load.spritesheet('dust', dust, {
-      frameWidth: 24,
-      frameHeight: 9,
-    });
-
-    this.load.spritesheet('attackTool', attackTool, {
-      frameWidth: 96,
-      frameHeight: 64,
-    });
-  }
+  };
 
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
-    const map = this.make.tilemap({ key: 'map' });
+    const map = this.make.tilemap({ key: 'town' });
     const tileset = map.addTilesetImage('town', 'tileset');
     this.townLayer = map.createLayer('town', tileset, 0, 0).setScale(2.5);
     this.townLayer.setCollisionByProperty({ collides: true });
@@ -133,25 +99,6 @@ export default class Game extends Phaser.Scene {
 
     this.sound.add('christmas');
 
-    const spriteInfo = [
-      { action: 'wait', start: 1, end: 9 },
-      { action: 'walk', start: 1, end: 8 },
-      { action: 'run', start: 1, end: 8 },
-      { action: 'roll', start: 2, end: 5 },
-      { action: 'jump', start: 1, end: 9 },
-      { action: 'attack', start: 1, end: 10 },
-    ];
-
-    const hairInfo = [
-      'nohair',
-      'longhair',
-      'mophair',
-      'shorthair',
-      'spikeyhair',
-      'bowlhair',
-      'curlyhair',
-    ];
-
     spriteInfo.forEach(
       (info: { action: string; start: number; end: number }) => {
         const { action, start, end } = info;
@@ -160,6 +107,17 @@ export default class Game extends Phaser.Scene {
           key: `character-${action}`,
           frames: this.anims.generateFrameNames(action, {
             prefix: 'base',
+            start,
+            end,
+          }),
+          frameRate: 10,
+          repeat: -1,
+        });
+
+        this.anims.create({
+          key: `tool-${action}`,
+          frames: this.anims.generateFrameNames(action, {
+            prefix: 'tool',
             start,
             end,
           }),
@@ -187,16 +145,6 @@ export default class Game extends Phaser.Scene {
       frames: this.anims.generateFrameNames('dust', {
         start: 0,
         end: 7,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
-
-    this.anims.create({
-      key: 'attackTool',
-      frames: this.anims.generateFrameNames('attackTool', {
-        start: 0,
-        end: 9,
       }),
       frameRate: 10,
       repeat: -1,

@@ -76,9 +76,9 @@ export const userName = (state: string) => css`
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: ${state === 'online'
+    background-color: ${state === 'on'
       ? theme.green
-      : state === 'offline'
+      : state === 'off'
       ? theme.red
       : theme.yellow};
   }

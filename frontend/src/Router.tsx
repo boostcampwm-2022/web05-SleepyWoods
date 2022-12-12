@@ -3,18 +3,20 @@ import Town from './page/Town';
 import Main from './page/Main';
 import Signin from './page/Signin';
 import Signup from './page/Signup';
-import { routerGuard } from './guard';
+import { useRouterGuard } from './guard';
 
 const Router = () => {
-  routerGuard();
+  const ready = useRouterGuard();
 
   return (
-    <Routes>
-      <Route index element={<Main />} />
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/town" element={<Town />} />
-    </Routes>
+    ready && (
+      <Routes>
+        <Route index element={<Main />} />
+        <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/town" element={<Town />} />
+      </Routes>
+    )
   );
 };
 
