@@ -27,7 +27,7 @@ export default class Town extends Phaser.Scene {
 
       this.myPlayer = new MyPlayer(
         this,
-        1000,
+        800,
         800,
         data.id,
         data.hair,
@@ -51,7 +51,13 @@ export default class Town extends Phaser.Scene {
 
       this.mazeEntry.refresh();
 
-      this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
+      // this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
+      const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
+      this.physics.add.overlap(this.myPlayer, this.mazeEntry, () => {
+        if (Phaser.Input.Keyboard.JustDown(keyG)) {
+          emitter.emit('game', { gameName: 'zombie' });
+        }
+      });
     });
 
     emitter.on('updateNickname', (nickname: string) => {

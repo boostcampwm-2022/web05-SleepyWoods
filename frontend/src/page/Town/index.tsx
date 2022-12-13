@@ -6,6 +6,7 @@ import Game from '../../component/Game';
 import { emitter } from '../../component/Game/util';
 import Info from '../../component/Info';
 import Loading from '../../component/Loading';
+import MiniGame from '../../component/MiniGame';
 import Sidebar from '../../component/Sidebar';
 import SleepyBoard from '../../component/SleepyBoard';
 import Snow from '../../component/Snow';
@@ -48,6 +49,7 @@ const Town = () => {
       <Game />
       {isSnowing && <Snow />}
       <SleepyBoard />
+      <MiniGame />
       <Chat />
       <Info />
 
