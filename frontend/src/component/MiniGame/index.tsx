@@ -7,15 +7,15 @@ import GameCode from './GameCode';
 import GameWait from './GameWait';
 
 const games: { [key: string]: string } = {
-  zombie: '술래를 피해 끝까지 살아남으세요!',
-  sprint: '장애물을 피해서 결승점에 먼저 도달해보세요!',
-  maze: '보이지 않는 길을 찾아 모래사장에 도달하세요!',
+  Zombie: '술래를 피해 끝까지 살아남으세요!',
+  Sprint: '장애물을 피해서 결승점에 먼저 도달해보세요!',
+  Maze: '보이지 않는 길을 찾아 모래사장에 도달하세요!',
 };
 
 const gamesName: { [key: string]: string } = {
-  zombie: '살아남기',
-  sprint: '달리기경주',
-  maze: '미로탈출',
+  Zombie: '살아남기',
+  Sprint: '달리기경주',
+  Maze: '미로탈출',
 };
 
 const MiniGame = () => {
@@ -65,12 +65,14 @@ const MiniGame = () => {
                     <GameWait
                       selectModeFriend={selectModeFriend}
                       initGame={initGame}
+                      gameName={selectGame}
                     />
                   </>
                 ) : isReady ? (
                   <GameWait
                     selectModeFriend={selectModeFriend}
                     initGame={initGame}
+                    gameName={selectGame}
                   />
                 ) : !selectModeFriend ? (
                   <ModeBox
