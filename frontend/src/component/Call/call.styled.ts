@@ -57,4 +57,20 @@ export const callingItem = css`
   }
 `;
 
-export const callingButtons = css``;
+export const VideoStyle = css`
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 20px;
+
+  width: 1000px;
+
+  video {
+    width: 180px;
+    height: 100%;
+    background: ${theme.white};
+  }
+`;
