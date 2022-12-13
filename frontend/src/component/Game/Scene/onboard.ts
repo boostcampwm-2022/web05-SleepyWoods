@@ -5,6 +5,7 @@ import town from '../../../assets/tilemaps/town.png';
 import christmas from '../../../assets/audio/christmas.mp3';
 import dust from '../../../assets/character/dust.png';
 import spriteJSON from '../../../assets/character/sprite.json';
+import portal from '../../../assets/portal.png';
 
 import waitImg from '../../../assets/character/wait/wait.png';
 import walkImg from '../../../assets/character/walk/walk.png';
@@ -53,6 +54,9 @@ export default class OnBoard extends Phaser.Scene {
       frameWidth: 24,
       frameHeight: 9,
     });
+
+    // 게임 이동 포탈
+    this.load.image('portal', portal);
   }
 
   update() {
