@@ -16,6 +16,8 @@ const FriendList = () => {
   socket.on('userCreated', data => {
     const { id, userState } = data;
 
+    if (!friends[id]) return;
+
     setFriends({
       ...friends,
       [id]: {
@@ -27,6 +29,8 @@ const FriendList = () => {
 
   socket.on('userLeaved', data => {
     const { id } = data;
+
+    if (!friends[id]) return;
 
     setFriends({
       ...friends,
@@ -42,13 +46,13 @@ const FriendList = () => {
 
     if (!friends[id]) return;
 
-    const newFriends = { ...friends };
-    newFriends[id] = {
-      ...newFriends[id],
-      nickname: nickname,
-    };
-
-    setFriends(newFriends);
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        nickname: nickname,
+      },
+    });
   });
 
   const handleDrag = (e: MouseEvent) => {

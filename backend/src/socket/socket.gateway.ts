@@ -27,6 +27,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
   socketIdByUser = new Map();
   walkCountByUser = new Map();
+  offerMap = new Map();
 
   constructor(
     private readonly authService: AuthService,
@@ -36,6 +37,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   /** room 안의 유저들을 불러옵니다. */
   public getRoomUserData(roomName: string) {
     const roomUser = [];
+    console.log(roomName);
+    console.log(this.server.sockets.adapter.rooms.get(roomName));
     this.server.sockets.adapter.rooms.get(roomName).forEach(e => {
       roomUser.push(this.server.sockets.sockets.get(e)['userData']);
     });
@@ -170,13 +173,16 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleCallRequested(client: any, payload: any) {
     //  프론트가 통화중인 상태였다면, 이미 갖고있는 uuid를 보내주고, 아니면 새로 생성해서 보내줌
     // uuid와 callee 필요!!
-    const { calleeUserId, callingRoom } = payload;
+    const { calleeUserId, callingRoom, callerOffer } = payload;
     const callerUserId = client['userData']['id'];
     const callerSocket = client;
     const calleeSocket = this.server.sockets.sockets.get(
       this.socketIdByUser.get(calleeUserId)
     );
 
+    this.server
+      .to(this.socketIdByUser.get(callerUserId))
+      .emit('remoteOffer', { offers: [] });
     callerSocket.join(callingRoom);
     calleeSocket.join(callingRoom);
     // on, off, busy, callRequesting
@@ -268,11 +274,18 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const callingRoom = client['userData']['callingRoom'];
 
     client['userData']['userState'] = 'busy';
+    this.server.to(callerUserId).emit('callCreated');
 
     calleeSocket.to(callerSocket.id).emit('callEntered', {
       calleeUserId,
     });
 
+    this.server.to(this.socketIdByUser.get(calleeUserId)).emit('remoteOffer', {
+      offers: [...this.offerMap.get(callingRoom)],
+    });
+    // this.server.to(this.socketIdByUser.get(calleeUserId)).emit('callCreated');
+
+    // this.offerMap.get(callingRoom).set(callerUserId, callerOffer);
     // 회색 -> 진한 색
     this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
       callingRoomUserData: this.getRoomUserData(callingRoom),
@@ -283,4 +296,52 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleDisconnecting(client: any) {
     client.disconnect();
   }
+
+  @SubscribeMessage('newOffer')
+  handleNewOffer(client: any, payload: any) {
+    const callingRoom = client['userData']['callingRoom'];
+    const offer = payload['offer'];
+    if (!this.offerMap.get(callingRoom)) {
+      this.offerMap.set(callingRoom, new Map());
+      this.offerMap.get(callingRoom).set(client['userData']['id'], offer);
+    }
+  }
+  @SubscribeMessage('newAnswer')
+  handleNewAnswer(client: any, payload: any) {
+    const { answer, userId } = payload;
+    this.server
+      .to(this.socketIdByUser.get(userId))
+      .emit('remoteAnswer', { answer });
+  }
+
+  @SubscribeMessage('newIce')
+  handleNewIce(client: any, payload: any) {
+    const callingRoom = client['userData']['callingRoom'];
+
+    const { iceCandidates } = payload;
+
+    this.server.to(callingRoom).emit('remoteIce', { iceCandidates });
+  }
 }
+
+// io.on('connection', (socket) => {
+//     console.log("socket connected: ", socket.id);
+//     socket.on('join', ({roomId}) => {
+//         socket.join(roomId);
+//         const prevOffer = offerMap.get(roomId);
+//         socket.emit('remote-offer', {offer: prevOffer});
+//     })
+
+//     socket.on('new-offer', ({offer, roomId}) => {
+//         offerMap.set(roomId, offer);
+//     })
+
+//     socket.on('new-answer', ({answer, roomId}) => {
+//         socket.to(roomId).emit('remote-answer', {answer})
+//     })
+
+//     socket.on('new-ice', ({iceCandidates, roomId}) => {
+//         socket.to(roomId).emit('remote-ice', {iceCandidates})
+//     })
+
+// })
