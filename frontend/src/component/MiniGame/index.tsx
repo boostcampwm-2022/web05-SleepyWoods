@@ -1,26 +1,29 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as style from './miniGame.styled';
-import { v1 } from 'uuid';
 import { emitter } from '../Game/util';
+import FriendMode from './FriendMode';
+import ModeBox from './ModeBox';
+import GameCode from './GameCode';
+import GameWait from './GameWait';
+
+const games: { [key: string]: string } = {
+  zombie: '술래를 피해 끝까지 살아남으세요!',
+  sprint: '장애물을 피해서 결승점에 먼저 도달해보세요!',
+  maze: '보이지 않는 길을 찾아 모래사장에 도달하세요!',
+};
+
+const gamesName: { [key: string]: string } = {
+  zombie: '살아남기',
+  sprint: '달리기경주',
+  maze: '미로탈출',
+};
 
 const MiniGame = () => {
-  const games: { [key: string]: string } = {
-    zombie: '술래를 피해 끝까지 살아남으세요!',
-    sprint: '장애물을 피해서 결승점에 먼저 도달해보세요!',
-    maze: '보이지 않는 길을 찾아 모래사장에 도달하세요!',
-  };
-
-  const gamesName: { [key: string]: string } = {
-    zombie: '살아남기',
-    sprint: '달리기경주',
-    maze: '미로탈출',
-  };
-
   const [isShowModal, setIsShowModal] = useState(false);
   const [selectGame, setSelectGame] = useState('');
   const [selectModeFriend, setSelectModeFriend] = useState(false);
-  const [inputRoom, setInputRoom] = useState('');
   const [roomId, setRoomId] = useState('');
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     emitter.on('game', ({ gameName }: { gameName: string }) => {
@@ -37,40 +40,10 @@ const MiniGame = () => {
     setIsShowModal(!isShowModal);
   };
 
-  const initValue = () => {
-    setInputRoom('');
+  const initGame = () => {
+    setIsReady(false);
     setRoomId('');
     setSelectModeFriend(false);
-  };
-
-  const selectFriend = () => {
-    setSelectModeFriend(true);
-  };
-
-  const joinRoom = () => {
-    console.log('랜덤 방 입장!');
-  };
-
-  const createRoom = () => {
-    const id = v1();
-    setRoomId(id);
-
-    console.log('방생성!', id);
-  };
-
-  const enterRoom = () => {
-    if (!inputRoom) alert('방 id를 확인해주세요');
-
-    console.log('방 아이디: ', inputRoom);
-    console.log('친구방 입장!');
-  };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputRoom(e.target.value);
-  };
-
-  const copyRoomId = () => {
-    navigator.clipboard.writeText(roomId);
   };
 
   return (
@@ -88,53 +61,28 @@ const MiniGame = () => {
               <div css={style.selectModes}>
                 {roomId ? (
                   <>
-                    <p css={style.enterCode}>{roomId}</p>
-                    <div css={style.enterCodeInfo}>
-                      <p>친구에게 위 입장코드를 전해주세요!</p>
-                      <p>현재 화면에서 기다려주세요!</p>
-                    </div>
-                    <button css={style.copyBtn} onClick={copyRoomId}>
-                      복사하기
-                    </button>
+                    <GameCode roomId={roomId} />
+                    <GameWait
+                      selectModeFriend={selectModeFriend}
+                      initGame={initGame}
+                    />
                   </>
+                ) : isReady ? (
+                  <GameWait
+                    selectModeFriend={selectModeFriend}
+                    initGame={initGame}
+                  />
                 ) : !selectModeFriend ? (
-                  <>
-                    <button
-                      css={style.ModeBtn}
-                      type="button"
-                      onClick={joinRoom}>
-                      랜덤 유저랑 게임하기
-                    </button>
-                    <button
-                      css={style.ModeBtn}
-                      type="button"
-                      onClick={selectFriend}>
-                      친구랑 게임하기
-                    </button>
-                  </>
+                  <ModeBox
+                    setSelectModeFriend={setSelectModeFriend}
+                    setIsReady={setIsReady}
+                  />
                 ) : (
-                  <>
-                    <button
-                      css={style.ModeBtn}
-                      type="button"
-                      onClick={createRoom}>
-                      방만들기
-                    </button>
-                    <div css={style.friendMode}>
-                      <input
-                        type="text"
-                        css={style.roomInput}
-                        value={inputRoom}
-                        onChange={handleChange}
-                      />
-                      <button
-                        css={style.enterBtn}
-                        type="button"
-                        onClick={enterRoom}>
-                        입장
-                      </button>
-                    </div>
-                  </>
+                  <FriendMode
+                    setRoomId={setRoomId}
+                    setIsReady={setIsReady}
+                    initGame={initGame}
+                  />
                 )}
               </div>
             </div>
