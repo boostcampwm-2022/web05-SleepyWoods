@@ -1,6 +1,8 @@
 import { css } from '@emotion/react';
 import close from '../../assets/icon/close.svg';
-import { flexCenter } from '../../styles/mixin.styled';
+import copy from '../../assets/icon/copy.svg';
+import check from '../../assets/icon/check.svg';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 
 export const modal = (animation: string) => css`
@@ -136,7 +138,7 @@ export const ModeBtn = css`
 export const roomInput = css`
   flex-grow: 1;
 
-  height: 60px;
+  height: 50px;
   width: 50%;
   margin-right: 10px;
   border-radius: 10px;
@@ -150,7 +152,7 @@ export const enterBtn = css`
   ${flexCenter}
 
   width: 80px;
-  height: 60px;
+  height: 50px;
   border-radius: 10px;
   background-color: ${theme.deepGreen};
 
@@ -159,13 +161,39 @@ export const enterBtn = css`
   }
 `;
 
+export const enterCodeBox = css`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const enterCode = css`
   font-weight: 700;
   border-radius: 10px;
-  padding: 20px;
+  line-height: 40px;
+  padding: 0 10px;
+  height: 40px;
   background-color: ${theme.white09};
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.4);
   margin: 10px;
+`;
+
+export const copyBtn = (isCopy: boolean) => css`
+  ${flexCenter}
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  background-color: ${theme.green};
+
+  ::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    ${backgroundImage(isCopy ? check : copy)}
+    background-size: contain;
+    opacity: 0.9;
+  }
 `;
 
 export const enterCodeInfo = css`
@@ -182,12 +210,6 @@ export const enterCodeInfo = css`
   }
 `;
 
-export const copyBtn = css`
-  border-radius: 10px;
-  padding: 10px 20px;
-  background-color: ${theme.green};
-`;
-
 export const closeBtn = css`
   position: absolute;
   top: 20px;
@@ -202,9 +224,81 @@ export const closeBtn = css`
     display: block;
     width: 20px;
     height: 20px;
-    background-image: url(${close});
-    background-position: center;
-    background-repeat: no-repeat;
+
+    ${backgroundImage(close)}
     background-size: contain;
   }
+`;
+
+export const waitBox = css`
+  ${flexCenter}
+
+  flex-grow: 1;
+  flex-flow: column;
+  width: 100%;
+`;
+
+export const waitInfo = css`
+  font-size: 20px;
+  color: ${theme.deepGreen};
+  padding-bottom: 20px;
+`;
+
+export const waitWrapper = css`
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+  width: 60%;
+`;
+
+export const waitHeader = css`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px 10px 20px;
+`;
+
+export const waitcnt = css`
+  font-size: 16px;
+  color: ${theme.red};
+`;
+
+export const waitUserBox = css`
+  flex-grow: 1;
+  width: 100%;
+  padding: 20px;
+  font-size: 14px;
+  border-radius: 20px;
+  background-color: ${theme.white05};
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+`;
+
+export const waitUser = css`
+  padding-bottom: 10px;
+  text-align: center;
+`;
+
+export const gameBtnBox = css`
+  display: flex;
+  gap: 10px;
+`;
+
+export const startBtn = css`
+  ${flexCenter}
+
+  margin-top: 20px;
+  width: 100px;
+  height: 30px;
+  background-color: ${theme.green};
+  border-radius: 10px;
+`;
+
+export const backBtn = css`
+  ${flexCenter}
+
+  margin-top: 20px;
+  width: 100px;
+  height: 30px;
+  background-color: ${theme.red};
+  border-radius: 10px;
 `;

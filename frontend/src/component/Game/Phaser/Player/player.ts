@@ -81,7 +81,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateNickname(nickname: string) {
-    this.nicknameText?.setText(nickname);
+    if (!this.nicknameText) return;
+    this.nicknameText.setText(nickname);
+    this.nicknameText.x = this.x - nickname.length * 3.5;
+    this.nicknameText.y = this.y + 25;
   }
 
   updateHair(hair: string) {
