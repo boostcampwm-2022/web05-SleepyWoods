@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { friendsState } from '../../store/atom/friends';
 import { socketState } from '../../store/atom/socket';
@@ -16,64 +16,74 @@ const Call = () => {
     nickname: '',
   });
 
-  // 해당 id의 유저로부터 전화 걸려옴
-  socket.on('callRequested', data => {
-    const { callerUserId: id, callerNickname: nickname } = data;
+  useEffect(() => {
+    // 해당 id의 유저로부터 전화 걸려옴
+    socket.on('callRequested', data => {
+      const { callerUserId: id, callerNickname: nickname } = data;
 
-    friends[id] &&
-      setFriends({
-        ...friends,
-        [id]: {
-          ...friends[id],
-          status: 'busy',
-          isCalling: false,
-        },
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'busy',
+            isCalling: false,
+          },
+        });
+
+      setSend({
+        id: id,
+        nickname: nickname,
       });
-
-    setSend({
-      id: id,
-      nickname: nickname,
     });
-  });
 
-  socket.on('callCanceled', data => {
-    const { callerUserId: id } = data;
+    socket.on('callCanceled', data => {
+      const { callerUserId: id } = data;
 
-    friends[id] &&
-      setFriends({
-        ...friends,
-        [id]: {
-          ...friends[id],
-          status: 'on',
-          isCalling: false,
-        },
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'on',
+            isCalling: false,
+          },
+        });
+
+      setSend({
+        id: '',
+        nickname: '',
       });
-
-    setSend({
-      id: '',
-      nickname: '',
     });
-  });
 
-  socket.on('callRejected', data => {
-    const { calleeUserId: id } = data;
+    socket.on('callRejected', data => {
+      const { calleeUserId: id } = data;
 
-    friends[id] &&
-      setFriends({
-        ...friends,
-        [id]: {
-          ...friends[id],
-          status: 'on',
-          isCalling: false,
-        },
-      });
-  });
+      friends[id] &&
+        setFriends({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'on',
+            isCalling: false,
+          },
+        });
+    });
 
-  socket.on('callEntered', data => {
-    const { calleeUserId: id } = data;
+    socket.on('callEntered', data => {
+      const { calleeUserId: id } = data;
 
-    console.log(`${id}님이 통화를 수락하셨습니다.`);
-  });
+      console.log(`${id}님이 통화를 수락하셨습니다.`);
+    });
+
+    return () => {
+      console.log('clean up');
+      socket.removeListener('callRequested');
+      socket.removeListener('callCanceled');
+      socket.removeListener('callRejected');
+      socket.removeListener('callEntered');
+    };
+  }, []);
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
