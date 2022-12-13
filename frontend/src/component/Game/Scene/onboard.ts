@@ -1,5 +1,7 @@
 import mazeJSON from '../../../assets/tilemaps/maze/maze.json';
-import tileset3 from '../../../assets/tilemaps/maze/tileset3.png';
+import zombieJSON from '../../../assets/tilemaps/zombie/zombie.json';
+import sprintJSON from '../../../assets/tilemaps/sprint/sprint.json';
+import tileset3 from '../../../assets/tilemaps/tile/tileset3.png';
 import townJSON from '../../../assets/tilemaps/town.json';
 import town from '../../../assets/tilemaps/town.png';
 import christmas from '../../../assets/audio/christmas.mp3';
@@ -40,6 +42,12 @@ export default class OnBoard extends Phaser.Scene {
     // 미로(maze)
     this.load.tilemapTiledJSON('maze', mazeJSON);
     this.load.image('tileset3', tileset3);
+
+    // 술래잡기(zombie)
+    this.load.tilemapTiledJSON('zombie', zombieJSON);
+
+    // 달리기경주(sprint)
+    this.load.tilemapTiledJSON('sprint', sprintJSON);
 
     // 배경음악
     this.load.audio('christmas', [christmas]);
