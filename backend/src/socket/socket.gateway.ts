@@ -173,16 +173,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleCallRequested(client: any, payload: any) {
     //  프론트가 통화중인 상태였다면, 이미 갖고있는 uuid를 보내주고, 아니면 새로 생성해서 보내줌
     // uuid와 callee 필요!!
-    const { calleeUserId, callingRoom, callerOffer } = payload;
+    const { calleeUserId, callingRoom } = payload;
     const callerUserId = client['userData']['id'];
     const callerSocket = client;
     const calleeSocket = this.server.sockets.sockets.get(
       this.socketIdByUser.get(calleeUserId)
     );
-
-    this.server
-      .to(this.socketIdByUser.get(callerUserId))
-      .emit('remoteOffer', { offers: [] });
     callerSocket.join(callingRoom);
     calleeSocket.join(callingRoom);
     // on, off, busy, callRequesting
@@ -193,6 +189,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // 두사람의 전화중인 room 변경
     callerSocket['userData']['callingRoom'] = callingRoom;
     calleeSocket['userData']['callingRoom'] = callingRoom;
+
+    // 나한테 통화 준비하라고 알려주는 거.
+    this.server
+      .to(this.socketIdByUser.get(callerUserId))
+      .emit('remoteOffer', { offers: [] });
 
     // 받는 사람한테, 전화오고 있다고 알림
     callerSocket.to(calleeSocket.id).emit('callRequested', {
@@ -234,6 +235,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client.leave(callingRoom);
     client['userData']['callingRoom'] = '';
+    // ooferMap 에서 offer 삭제
+    this.offerMap.get(callingRoom).delete(leavingUserId);
 
     // 전 세계 사람들에게 알려주기
     this.server.to(client['userData']['roomName']).emit('userStateChanged', {
@@ -274,13 +277,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const callingRoom = client['userData']['callingRoom'];
 
     client['userData']['userState'] = 'busy';
-    this.server.to(callerUserId).emit('callCreated');
 
     calleeSocket.to(callerSocket.id).emit('callEntered', {
       calleeUserId,
     });
 
-    this.server.to(this.socketIdByUser.get(calleeUserId)).emit('remoteOffer', {
+    this.server.to(calleeSocket.id).emit('remoteOffer', {
       offers: [...this.offerMap.get(callingRoom)],
     });
     // this.server.to(this.socketIdByUser.get(calleeUserId)).emit('callCreated');
@@ -319,11 +321,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const callingRoom = client['userData']['callingRoom'];
 
     const { iceCandidates } = payload;
-
-    this.server.to(callingRoom).emit('remoteIce', { iceCandidates });
+    console.log('newIce');
+    client.to(callingRoom).emit('remoteIce', { iceCandidates });
   }
 }
-
 // io.on('connection', (socket) => {
 //     console.log("socket connected: ", socket.id);
 //     socket.on('join', ({roomId}) => {

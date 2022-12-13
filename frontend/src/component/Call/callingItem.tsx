@@ -34,6 +34,11 @@ const CallingItem = ({
       });
 
     delete callingList.list[id];
+    // delete videoRef.get("성준이").close()
+    // delete videoRef.delete("성준이")
+    // pcRef COnnect -> 각 사람마다 new Connection
+    // 전역 map으로 관리
+    // socketon -> videoRef.geT("성준이") -> ice ...
 
     setSend &&
       setSend({
