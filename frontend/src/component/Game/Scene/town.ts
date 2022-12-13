@@ -10,7 +10,9 @@ export default class Town extends Phaser.Scene {
   socket?: Socket;
   autoPlay: boolean;
   townLayer?: Phaser.Tilemaps.TilemapLayer;
-  mazeEntry?: any;
+  gameEntry?: any;
+  gameText: any[];
+  isEnterGameZone: boolean;
 
   constructor() {
     super('Town');
@@ -19,6 +21,8 @@ export default class Town extends Phaser.Scene {
     this.myPlayer;
     this.otherPlayer = {};
     this.autoPlay = false;
+    this.gameText = [];
+    this.isEnterGameZone = false;
   }
 
   init() {
@@ -42,22 +46,69 @@ export default class Town extends Phaser.Scene {
         this.socketInit();
       });
 
-      this.mazeEntry = this.physics.add.staticGroup({
-        key: 'mazeEntry',
+      this.gameEntry = this.physics.add.staticGroup({
+        key: 'portal',
         frameQuantity: 3,
       });
 
-      this.mazeEntry.getChildren()[0].setPosition(540, 810);
+      const gameZonePosition = [
+        { name: 'zombie', x: 540, y: 810 },
+        { name: 'maze', x: 980, y: 1270 },
+        { name: 'sprint', x: 1480, y: 680 },
+      ];
 
-      this.mazeEntry.refresh();
+      this.gameEntry
+        .getChildren()[0]
+        .setPosition(gameZonePosition[0].x, gameZonePosition[0].y);
+      this.gameEntry
+        .getChildren()[1]
+        .setPosition(gameZonePosition[1].x, gameZonePosition[1].y);
+      this.gameEntry
+        .getChildren()[2]
+        .setPosition(gameZonePosition[2].x, gameZonePosition[2].y);
 
-      // this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
+      this.gameEntry.refresh();
+
       const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
-      this.physics.add.overlap(this.myPlayer, this.mazeEntry, () => {
-        if (Phaser.Input.Keyboard.JustDown(keyG)) {
-          emitter.emit('game', { gameName: 'zombie' });
+
+      this.physics.add.overlap(
+        this.myPlayer,
+        this.gameEntry,
+        (player, entry: any) => {
+          const game = gameZonePosition.filter(({ x }) => x === entry.x)[0];
+          const { name, x, y } = game;
+          const text: (
+            | Phaser.GameObjects.Graphics
+            | Phaser.GameObjects.Text
+            | undefined
+          )[] = [];
+
+          if (!this.isEnterGameZone) {
+            text.push(
+              this.add
+                .graphics()
+                .fillStyle(0xffffff, 50)
+                .fillRoundedRect(x - 60, y - 70, 125, 40, 20),
+              this.add.text(x - 50, y - 60, 'push G key!', {
+                color: '#000',
+                font: '700 18px Arial',
+              })
+            );
+
+            this.isEnterGameZone = true;
+
+            setTimeout(() => {
+              text[0]?.destroy();
+              text[1]?.destroy();
+              this.isEnterGameZone = false;
+            }, 500);
+          }
+
+          if (Phaser.Input.Keyboard.JustDown(keyG)) {
+            emitter.emit('game', { gameName: name });
+          }
         }
-      });
+      );
     });
 
     emitter.on('updateNickname', (nickname: string) => {
@@ -79,7 +130,7 @@ export default class Town extends Phaser.Scene {
     emitter.emit('game-start');
   }
 
-  changeScene = (player: any, item: any) => {
+  changeScene = () => {
     this.scene.pause();
     this.scene.start('Maze', {
       socket: this.socket,
