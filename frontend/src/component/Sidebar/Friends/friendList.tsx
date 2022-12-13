@@ -10,8 +10,32 @@ import { socketState } from '../../../store/atom/socket';
 
 const FriendList = () => {
   const [friends, setFriends] = useRecoilState(friendsState);
-  const friendList = Object.values(friends).filter(value => !value.isCalling);
+  const friendList = Object.values(friends).filter(value => true);
   const socket = useRecoilValue(socketState);
+
+  socket.on('userCreated', data => {
+    const { id, userState } = data;
+
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        status: userState,
+      },
+    });
+  });
+
+  socket.on('userLeaved', data => {
+    const { id } = data;
+
+    setFriends({
+      ...friends,
+      [id]: {
+        ...friends[id],
+        status: 'off',
+      },
+    });
+  });
 
   socket.on('userDataChanged', data => {
     const { id, nickname } = data;

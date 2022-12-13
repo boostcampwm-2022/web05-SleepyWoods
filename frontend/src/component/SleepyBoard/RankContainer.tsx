@@ -3,6 +3,7 @@ import * as style from './sleepyboard.styled';
 
 import axios from 'axios';
 import { formattingWalk } from './util';
+import { walkType } from '../../types/types';
 
 const RankContainer = () => {
   const date = new Date();
@@ -16,11 +17,11 @@ const RankContainer = () => {
 
   const [monthIdx, setMonthIdx] = useState(2);
   const [filter, setFilter] = useState('all');
-  const [rank, setRank] = useState<any>([]);
+  const [rank, setRank] = useState<walkType[]>([]);
   const medals = ['🥇', '🥈', '🥉'];
 
   useEffect(() => {
-    const getRank = async (key: string) => {
+    const getRank = async () => {
       try {
         const { data, status } = await axios(
           `/api/achievement/walk?year=${dateList[monthIdx].year}&month=${dateList[monthIdx].month}&range=${filter}`
@@ -30,7 +31,7 @@ const RankContainer = () => {
       } catch (e) {}
     };
 
-    getRank(filter);
+    getRank();
   }, [filter, monthIdx]);
 
   return (
@@ -52,7 +53,7 @@ const RankContainer = () => {
 
       <div css={style.contentWrapper}>
         <div css={style.selectMonthBox}>
-          {dateList.map((date: any, idx: number) => (
+          {dateList.map((date, idx: number) => (
             <button
               key={date.month}
               css={style.selectMonth(monthIdx === idx)}
@@ -62,7 +63,7 @@ const RankContainer = () => {
           ))}
         </div>
         <ul css={style.topRankContainer}>
-          {rank.map((user: any, idx: number) => {
+          {rank.map((user, idx: number) => {
             if (idx >= 3) return;
             return (
               <li key={idx}>
@@ -73,7 +74,7 @@ const RankContainer = () => {
           })}
         </ul>
         <ul css={style.rankContainer}>
-          {rank.map((user: any, idx: number) => {
+          {rank.map((user, idx: number) => {
             if (idx < 3) return;
             return (
               <li key={idx}>

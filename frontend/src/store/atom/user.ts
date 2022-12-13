@@ -1,11 +1,11 @@
 import { atom } from 'recoil';
 import { v1 } from 'uuid';
 
-export interface userProps {
+export type userProps = {
   id: string;
   nickname: string;
   hair: string;
-}
+};
 
 export const userState = atom<userProps>({
   key: `userState/${v1()}`,

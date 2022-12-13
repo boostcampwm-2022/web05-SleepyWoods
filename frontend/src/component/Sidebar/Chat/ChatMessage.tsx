@@ -1,9 +1,10 @@
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../../store/atom/user';
+import { privateChatType } from '../../../types/types';
 import * as style from './chat.styled';
 import { calcTimeFromMs } from './util';
 
-const ChatMessage = ({ chat }: { chat: any }) => {
+const ChatMessage = ({ chat }: { chat: privateChatType }) => {
   const user = useRecoilValue(userState);
   const isSender = user.id === chat.senderId;
 

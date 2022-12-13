@@ -5,10 +5,11 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../../store/atom/socket';
 import axios from 'axios';
+import { chatRoomType } from '../../../types/types';
 
 const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
   const socket = useRecoilValue(socketState);
-  const [roomList, setRoomList] = useState<any[]>([]);
+  const [roomList, setRoomList] = useState<chatRoomType[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isClose, setIsClose] = useState(false); // 애니메이션
 
@@ -18,6 +19,7 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
       try {
         const { data } = await axios('/api/chat/roomList');
 
+        console.log(data);
         setRoomList(() => data);
         setIsLoaded(true);
       } catch (e) {}
@@ -53,7 +55,7 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
       <ul css={chatWrapper(isClose)} onClick={selectChatRoom}>
         {isLoaded &&
           (roomList.length ? (
-            roomList.map((data: any) => (
+            roomList.map(data => (
               <ChatRoom key={data.targetUserId} data={data} />
             ))
           ) : (

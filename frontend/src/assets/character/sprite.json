@@ -3,190 +3,421 @@
     {
       "filename": "base1",
       "frame": {
-        "x": 33,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base2",
       "frame": {
-        "x": 129,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base3",
       "frame": {
-        "x": 225,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base4",
       "frame": {
-        "x": 321,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base5",
       "frame": {
-        "x": 417,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base6",
       "frame": {
-        "x": 513,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base7",
       "frame": {
-        "x": 609,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base8",
       "frame": {
-        "x": 705,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "base9",
       "frame": {
-        "x": 801,
-        "y": 17,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 0,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "base10",
+      "frame": {
+        "x": 864,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool1",
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool2",
+      "frame": {
+        "x": 96,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool3",
+      "frame": {
+        "x": 192,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool4",
+      "frame": {
+        "x": 288,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool5",
+      "frame": {
+        "x": 384,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool6",
+      "frame": {
+        "x": 480,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool7",
+      "frame": {
+        "x": 576,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool8",
+      "frame": {
+        "x": 672,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool9",
+      "frame": {
+        "x": 768,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "tool10",
+      "frame": {
+        "x": 864,
+        "y": 448,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
@@ -379,1137 +610,1284 @@
       }
     },
     {
-      "filename": "longhair1",
+      "filename": "nohair10",
       "frame": {
-        "x": 33,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 0,
+        "w": 0,
+        "h": 0
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 0,
+        "h": 0
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 0,
+        "h": 0
+      }
+    },
+    {
+      "filename": "longhair1",
+      "frame": {
+        "x": 0,
+        "y": 64,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair2",
       "frame": {
-        "x": 129,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair3",
       "frame": {
-        "x": 225,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair4",
       "frame": {
-        "x": 321,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair5",
       "frame": {
-        "x": 417,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair6",
       "frame": {
-        "x": 513,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair7",
       "frame": {
-        "x": 609,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair8",
       "frame": {
-        "x": 705,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "longhair9",
       "frame": {
-        "x": 801,
-        "y": 81,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 64,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "longhair10",
+      "frame": {
+        "x": 864,
+        "y": 64,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair1",
       "frame": {
-        "x": 33,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair2",
       "frame": {
-        "x": 129,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair3",
       "frame": {
-        "x": 225,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair4",
       "frame": {
-        "x": 321,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair5",
       "frame": {
-        "x": 417,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair6",
       "frame": {
-        "x": 513,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair7",
       "frame": {
-        "x": 609,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair8",
       "frame": {
-        "x": 705,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "mophair9",
       "frame": {
-        "x": 801,
-        "y": 145,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 128,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "mophair10",
+      "frame": {
+        "x": 864,
+        "y": 128,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair1",
       "frame": {
-        "x": 33,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair2",
       "frame": {
-        "x": 129,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair3",
       "frame": {
-        "x": 225,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair4",
       "frame": {
-        "x": 321,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair5",
       "frame": {
-        "x": 417,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair6",
       "frame": {
-        "x": 513,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair7",
       "frame": {
-        "x": 609,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair8",
       "frame": {
-        "x": 705,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "shorthair9",
       "frame": {
-        "x": 801,
-        "y": 209,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 192,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "shorthair10",
+      "frame": {
+        "x": 864,
+        "y": 192,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair1",
       "frame": {
-        "x": 33,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair2",
       "frame": {
-        "x": 129,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair3",
       "frame": {
-        "x": 225,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair4",
       "frame": {
-        "x": 321,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair5",
       "frame": {
-        "x": 417,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair6",
       "frame": {
-        "x": 513,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair7",
       "frame": {
-        "x": 609,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair8",
       "frame": {
-        "x": 705,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "spikeyhair9",
       "frame": {
-        "x": 801,
-        "y": 273,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 256,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "spikeyhair10",
+      "frame": {
+        "x": 864,
+        "y": 256,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair1",
       "frame": {
-        "x": 33,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair2",
       "frame": {
-        "x": 129,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair3",
       "frame": {
-        "x": 225,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair4",
       "frame": {
-        "x": 321,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair5",
       "frame": {
-        "x": 417,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair6",
       "frame": {
-        "x": 513,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair7",
       "frame": {
-        "x": 609,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair8",
       "frame": {
-        "x": 705,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "bowlhair9",
       "frame": {
-        "x": 801,
-        "y": 337,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 320,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "bowlhair10",
+      "frame": {
+        "x": 864,
+        "y": 320,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair1",
       "frame": {
-        "x": 33,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 0,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair2",
       "frame": {
-        "x": 129,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 96,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair3",
       "frame": {
-        "x": 225,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 192,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair4",
       "frame": {
-        "x": 321,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 288,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair5",
       "frame": {
-        "x": 417,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 384,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair6",
       "frame": {
-        "x": 513,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 480,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair7",
       "frame": {
-        "x": 609,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 576,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair8",
       "frame": {
-        "x": 705,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 672,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       }
     },
     {
       "filename": "curlyhair9",
       "frame": {
-        "x": 801,
-        "y": 401,
-        "w": 30,
-        "h": 30
+        "x": 768,
+        "y": 384,
+        "w": 96,
+        "h": 64
       },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": {
         "x": 0,
         "y": 0,
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
       },
       "sourceSize": {
-        "w": 30,
-        "h": 30
+        "w": 96,
+        "h": 64
+      }
+    },
+    {
+      "filename": "curlyhair10",
+      "frame": {
+        "x": 864,
+        "y": 384,
+        "w": 96,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 64
       }
     }
   ],

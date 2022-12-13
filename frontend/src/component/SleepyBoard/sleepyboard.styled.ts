@@ -3,6 +3,7 @@ import tree from '../../assets/tree.svg';
 import trophy from '../../assets/trophy.svg';
 import like from '../../assets/icon/like.svg';
 import unlike from '../../assets/icon/unlike.svg';
+import close from '../../assets/icon/close.svg';
 import { flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 
@@ -152,7 +153,7 @@ export const time = css`
   font-weight: 700;
 `;
 
-export const likeBtn = (isLike: boolean) => css`
+export const likeBtn = (isLiked: boolean) => css`
   position: absolute;
   bottom: 20px;
   right: 20px;
@@ -163,7 +164,7 @@ export const likeBtn = (isLike: boolean) => css`
     display: block;
     width: 25px;
     height: 20px;
-    background-image: url(${isLike ? like : unlike});
+    background-image: url(${isLiked ? like : unlike});
     background-repeat: no-repeat;
     background-size: contain;
   }
@@ -313,4 +314,25 @@ export const infoMsg = css`
   font-size: 14px;
   text-align: center;
   padding: 20px;
+`;
+
+export const closeBtn = css`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 20px;
+  height: 20px;
+  opacity: 0.7;
+  padding: 5px;
+
+  ::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-image: url(${close});
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
 `;
