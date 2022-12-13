@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
+import { emitter } from '../Game/util';
 import * as style from './miniGame.styled';
 
 const GameWait = ({
   selectModeFriend,
   initGame,
+  gameName,
 }: {
   selectModeFriend: boolean;
   initGame: Function;
+  gameName: string;
 }) => {
   const [waitUser, setWaitUser] = useState<{ nickname: string; id: string }[]>(
     []
@@ -29,6 +32,8 @@ const GameWait = ({
   const gameStart = () => {
     console.log(waitUser);
     console.log('gameStart!');
+
+    emitter.emit('gameStart', { gameName, userList: waitUser });
 
     // game으로 emit scene 전환 이후 게임 시작
   };

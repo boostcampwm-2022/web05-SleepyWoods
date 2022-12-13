@@ -26,6 +26,11 @@ export default class Town extends Phaser.Scene {
   }
 
   init() {
+    emitter.on('gameStart', (data: any) => {
+      console.log(data.userList);
+      this.changeScene(data.gameName);
+    });
+
     emitter.on('init', (data: gameInitType) => {
       this.socket = data.socket.connect();
 
@@ -52,9 +57,9 @@ export default class Town extends Phaser.Scene {
       });
 
       const gameZonePosition = [
-        { name: 'zombie', x: 540, y: 810 },
-        { name: 'maze', x: 980, y: 1270 },
-        { name: 'sprint', x: 1480, y: 680 },
+        { name: 'Zombie', x: 540, y: 810 },
+        { name: 'Maze', x: 980, y: 1270 },
+        { name: 'Sprint', x: 1480, y: 680 },
       ];
 
       this.gameEntry
@@ -130,9 +135,10 @@ export default class Town extends Phaser.Scene {
     emitter.emit('game-start');
   }
 
-  changeScene = () => {
+  changeScene = (gameName: string) => {
+    console.log(gameName);
     this.scene.pause();
-    this.scene.start('Maze', {
+    this.scene.start(gameName, {
       socket: this.socket,
       myPlayer: this.myPlayer,
       autoPlay: this.autoPlay,
