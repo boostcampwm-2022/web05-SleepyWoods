@@ -1,44 +1,146 @@
-import { useRef, useEffect } from 'react';
+import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
+import {
+  callingItemType,
+  callingListState,
+} from '../../store/atom/callingList';
 import { VideoStyle } from './call.styled';
-
-// https://github.com/jasonkang14/webrtc-web-client/blob/main/src/App.js
-// 저는 이만... 안녕히계세용...
+import RemoteVideo from './remoteVideo';
+import { userState } from '../../store/atom/user';
 
 const Video = () => {
   const socket = useRecoilValue(socketState);
+  const callingList = useRecoilValue(callingListState);
+  const callingUser = callingList.list;
+  const callingUserList = Object.values(callingList.list);
   const localVideoRef = useRef<HTMLVideoElement>(null);
-  const remoteVideoRef = useRef<HTMLVideoElement>(null);
-  const videoRef3 = useRef<HTMLVideoElement>(null);
-  const iceCandidateRef = useRef<any>([]);
+  const user = useRecoilValue(userState);
 
-  const configuration = {
-    iceServers: [
-      {
-        urls: [
-          'stun:stun.l.google.com:19302',
-          'stun:stun1.l.google.com:19302',
-          'stun:stun2.l.google.com:19302',
-          'stun:stun3.l.google.com:19302',
-          'stun:stun4.l.google.com:19302',
-        ],
-      },
-    ],
+  // sender useEffect
+  useEffect(() => {
+    // 새 사람이 들어오면 이는 서버에서 알려주고, 기존 사람들은 이를 감지하여 각자 offer를 생성해 줍시다~~~~
+    socket.on('newbieEntered', async payload => {
+      console.log('newbie가 들어왔어요~ offer를 보내줄 시간~');
+      //RTCPeerConnection: new (configuration?: RTCConfiguration | undefined) => RTCPeerConnection
+      const { newbieId }: { newbieId: string } = payload;
+      console.log(callingList);
+      console.log('@@@newbie@@@', newbieId);
+      console.log(callingUser[newbieId]);
+      const peerConnection: RTCPeerConnection =
+        callingUser[newbieId].peerConnection;
+
+      callingUser[newbieId].peerConnection = await createNewOffer(
+        peerConnection,
+        newbieId
+      );
+    });
+
+    socket.on('remoteAnswer', async function (payload) {
+      console.log('리모트앤서라고~~');
+      const { answer, newbieId } = payload;
+      console.log('@@@newbie in remote Answer@@@', newbieId);
+      console.log(callingList);
+      console.log(
+        '************************',
+        newbieId,
+        callingUser[newbieId].peerConnection
+      );
+      const peerConnection: RTCPeerConnection =
+        callingUser[newbieId].peerConnection;
+
+      // 4
+      await handleRemoteAnswer(answer, newbieId);
+    });
+
+    socket.on('newOffer', async payload => {
+      // 기존 사람들로 부터 offer 들이 왔다....
+      console.log('뉴오퍼오퍼오퍼~~ 받아왔어요~~ 내꺼랑 섞지요~~');
+
+      const { offer, senderUserId } = payload;
+      console.log('@@@newbie@@@', senderUserId);
+      const peerConnection: RTCPeerConnection =
+        callingUser[senderUserId].peerConnection;
+      await handleRemoteOffer(senderUserId, offer, peerConnection);
+    });
+
+    const interval = setInterval(() => {
+      console.log(callingList);
+    }, 250);
+
+    return () => {
+      clearInterval(interval);
+      // 원종빈은...지우개....
+      // 나는 다 지워.....
+      socket.removeListener('newOffer');
+      socket.removeListener('newbieEntered');
+      socket.removeListener('remoteAnswer');
+    };
+  }, [user, callingList]);
+
+  // receiver useEffect
+  // useEffect(() => {
+  // }, [user]);
+
+  const handleRemoteAnswer = async (answer: any, newbieId: string) => {
+    const remoteAnswer = new RTCSessionDescription(answer);
+
+    console.log('4. 기존의 유저들은 뉴비로부터 앤서를 받고 있어요~~');
+    console.log(callingList);
+
+    console.log('원래 로컬 떠있어줘 제발제발');
+    console.log('remoteAns : ', remoteAnswer);
+    console.log('peerConnection : ', callingUser[newbieId].peerConnection);
+    await callingUser[newbieId].peerConnection.setRemoteDescription(
+      remoteAnswer
+    );
   };
-  const pcRef = useRef(new RTCPeerConnection(configuration));
 
-  const creatNewOffer = async () => {
+  const handleRemoteOffer = async (
+    senderUserId: string,
+    offer: RTCSessionDescriptionInit,
+    peerConnection: RTCPeerConnection
+  ) => {
+    console.log(
+      '2. 서버에서 제공해준 기 참가자들의 offer를 내꺼랑 섞어서 나한테 등록 '
+    );
+    await getLocalVideo(peerConnection);
+    const remoteOffer = new RTCSessionDescription(offer);
+    await peerConnection.setRemoteDescription(remoteOffer);
+    const answer = await peerConnection.createAnswer(remoteOffer);
+    await peerConnection.setLocalDescription(answer);
+    console.log(
+      '=======handleRemoteOffer() => setLocalDescription=====',
+      peerConnection
+    );
+
+    console.log(`3. ${senderUserId}에게 앤서를 만들어서 돌려보내주고 있어요~`);
+    socket.emit('newAnswer', { answer, senderUserId });
+  };
+
+  const createNewOffer = async (
+    peerConnection: RTCPeerConnection,
+    newbieId: string
+  ) => {
     console.log('2. createNewOffer : 내 오퍼를 만들어서 서버에 등록!');
-    await getLocalVideo();
-    const newOffer = await pcRef.current.createOffer();
-    await pcRef.current.setLocalDescription(newOffer);
+    await getLocalVideo(callingUser[newbieId].peerConnection);
+    const offer = await callingUser[newbieId].peerConnection.createOffer();
+    await callingUser[newbieId].peerConnection.setLocalDescription(offer);
+    console.log(
+      '=======createNewOffer() => setLocalDescription=====',
+      peerConnection
+    );
+    console.log(callingList);
     console.log(
       '3. createOffer & setLocalDescription : 내 오퍼를 만들어서 setLocalDescription!'
     );
-    socket.emit('newOffer', { offer: newOffer });
+    socket.emit('newOffer', { offer, senderUserId: user.id, newbieId });
+
+    return peerConnection;
   };
-  const getLocalVideo = async () => {
+
+  const getLocalVideo = async (peerConnection: RTCPeerConnection) => {
     const localStream = await navigator.mediaDevices.getUserMedia({
       audio: true,
       video: true,
@@ -48,29 +150,8 @@ const Video = () => {
     localVideoRef.current.srcObject = localStream;
     const localTracks = localStream.getTracks();
     localTracks.forEach(localTrack => {
-      pcRef.current.addTrack(localTrack, localStream);
+      peerConnection.addTrack(localTrack, localStream);
     });
-  };
-
-  const handleRemoteOffer = async (userId: string, userOffer: any) => {
-    console.log(
-      '2. 서버에서 제공해준 기 참가자들의 offer를 내꺼랑 섞어서 나한테 등록 '
-    );
-    console.log('userId :', userId);
-    console.log('userOffer :', userOffer);
-    await getLocalVideo();
-    const remoteOffer = new RTCSessionDescription(userOffer);
-    await pcRef.current.setRemoteDescription(remoteOffer);
-    const newAnswer = await pcRef.current.createAnswer(remoteOffer);
-    await pcRef.current.setLocalDescription(newAnswer);
-    console.log(`3. ${userId}에게 앤서를 만들어서 돌려보내주고 있어요~`);
-    socket.emit('newAnswer', { answer: newAnswer, userId });
-  };
-
-  const handleRemoteAnswer = async (answer: any) => {
-    const remoteAnswer = new RTCSessionDescription(answer);
-    console.log('4. 기존의 유저들은 리모트 앤서를 받고 있어요~~');
-    await pcRef.current.setRemoteDescription(remoteAnswer);
   };
 
   useEffect(() => {
@@ -82,86 +163,15 @@ const Video = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!remoteVideoRef.current) return;
-
-    remoteVideoRef.current.onloadedmetadata = () => {
-      const current = remoteVideoRef.current as HTMLVideoElement;
-      current.play();
-    };
-  }, []);
-
-  useEffect(() => {
-    // const socket = useR
-    socket.on('remoteOffer', async payload => {
-      console.log('1. remoteOffer 시작');
-      const { offers } = payload;
-      await creatNewOffer();
-      offers.forEach(async ([userId, userOffer]: any) => {
-        await handleRemoteOffer(userId, userOffer);
-      });
-    });
-
-    socket.on('remoteAnswer', async payload => {
-      const { answer } = payload;
-      await handleRemoteAnswer(answer);
-    });
-
-    socket.on('remoteIce', ({ iceCandidates }) => {
-      if (!pcRef.current.remoteDescription) {
-        return;
-      }
-      iceCandidates.forEach((iceCandidate: any) => {
-        pcRef.current.addIceCandidate(iceCandidate);
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    pcRef.current.addEventListener('signalingstatechange', () => {
-      console.log('1. signalingstatechange 가 변경 감자되었어요.');
-      // if (
-      //   pcRef.current.signalingState === 'stable' &&
-      //   pcRef.current.iceGatheringState === 'complete'
-      // ) {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // }
-      socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-    });
-
-    pcRef.current.addEventListener('icegatheringstatechange', () => {
-      console.log('2. icegatheringstatechange 가 변경 감자되었어요.');
-      // if (
-      //   pcRef.current.signalingState === 'stable' &&
-      //   pcRef.current.iceGatheringState === 'complete'
-      // ) {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // }
-      socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-    });
-
-    pcRef.current.addEventListener('icecandidate', event => {
-      console.log('3. icecandidate 가 변경 감지되었어요.');
-      iceCandidateRef.current = [...iceCandidateRef.current, event.candidate];
-
-      socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-    });
-
-    pcRef.current.addEventListener('track', event => {
-      console.log('4. track 감지');
-      const [remoteStream] = event.streams;
-      const current = remoteVideoRef.current as HTMLVideoElement;
-      current.srcObject = remoteStream;
-    });
-  }, []);
-
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
     <div css={VideoStyle}>
-      <video ref={localVideoRef} />
-      <video ref={remoteVideoRef} />
+      <video ref={localVideoRef} muted />
+      {callingUserList.map((user: callingItemType) => (
+        <RemoteVideo key={user.id} user={user} localVideoRef={localVideoRef} />
+      ))}
     </div>
   );
 };
 
-export default Video;
+export default React.memo(Video);
