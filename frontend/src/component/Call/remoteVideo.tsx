@@ -40,22 +40,10 @@ const RemoteVideo = ({ localVideoRef, user }: remoteVideoType) => {
 
   useEffect(() => {
     peerConnection.addEventListener('signalingstatechange', () => {
-      // if (
-      //   peerConnection.signalingState === 'stable' &&
-      //   peerConnection.iceGatheringState === 'complete'
-      // ) {
-      // }
       socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
     });
 
     peerConnection.addEventListener('icegatheringstatechange', () => {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // if (
-      //   peerConnection.signalingState === 'stable' &&
-      //   peerConnection.iceGatheringState === 'complete'
-      // ) {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // }
       socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
     });
 

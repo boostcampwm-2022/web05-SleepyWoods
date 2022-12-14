@@ -197,6 +197,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     callerSocket.to(calleeSocket.id).emit('callRequested', {
       callerUserId,
       callerNickname: callerSocket['userData']['nickname'],
+      callingRoom,
     });
 
     // 모두에게 두 사람이 전화 중이라고 알리기
@@ -233,15 +234,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client.leave(callingRoom);
     client['userData']['callingRoom'] = '';
-    // ooferMap 에서 offer 삭제
-    // this.offerMap.get(callingRoom).delete(leavingUserId);
 
     // 전 세계 사람들에게 알려주기
     this.server.to(client['userData']['roomName']).emit('userStateChanged', {
       userIdList: [leavingUserId],
       userState: 'on',
     });
-
     // 해당 방에 callingRoom 변화 감지
     this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
       callingRoomUserData: this.getRoomUserData(callingRoom),
@@ -281,18 +279,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       calleeUserId,
     });
 
-    // requesting인 사람에게도 해줘야 할지?
     client.to(callingRoom).emit('newbieEntered', {
       newbieId: calleeUserId,
     });
 
-    // this.server.to(calleeSocket.id).emit('remoteOffer', {
-    //   offers: [...this.offerMap.get(callingRoom)],
-    // });
-    // this.server.to(this.socketIdByUser.get(calleeUserId)).emit('callCreated');
-
-    // this.offerMap.get(callingRoom).set(callerUserId, callerOffer);
-    // 회색 -> 진한 색
     this.server.to(callingRoom).emit('callingRoomUserStateChanged', {
       callingRoomUserData: this.getRoomUserData(callingRoom),
     });
@@ -334,24 +324,3 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.to(callingRoom).emit('remoteIce', { iceCandidates });
   }
 }
-// io.on('connection', (socket) => {
-//     console.log("socket connected: ", socket.id);
-//     socket.on('join', ({roomId}) => {
-//         socket.join(roomId);
-//         const prevOffer = offerMap.get(roomId);
-//         socket.emit('remote-offer', {offer: prevOffer});
-//     })
-
-//     socket.on('new-offer', ({offer, roomId}) => {
-//         offerMap.set(roomId, offer);
-//     })
-
-//     socket.on('new-answer', ({answer, roomId}) => {
-//         socket.to(roomId).emit('remote-answer', {answer})
-//     })
-
-//     socket.on('new-ice', ({iceCandidates, roomId}) => {
-//         socket.to(roomId).emit('remote-ice', {iceCandidates})
-//     })
-
-// })

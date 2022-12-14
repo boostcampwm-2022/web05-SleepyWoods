@@ -41,6 +41,7 @@ const CallingList = () => {
       });
 
       const len = Object.values(tempList).length;
+      console.log('현재 calling room 인원: ', len);
       if (len) {
         setCallingRoom({
           ...callingRoom,

@@ -76,7 +76,7 @@ const CallingItem = ({
         nickname: '',
       });
 
-    setConnectVideo(() => true);
+    setConnectVideo(true);
     console.log('callEntered emit:', id);
   };
 
