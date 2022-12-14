@@ -21,7 +21,7 @@ const CallingList = () => {
 
   useEffect(() => {
     // callingRoom의 멤버가 바뀔 때마다 갱신
-    socket.on('callingRoomUserStateChanged', data => {
+    const callingRoomUserStateChanged = (data: any) => {
       const { callingRoomUserData } = data;
       console.log('callingroom 상태가 변경되었습니다.', callingRoomUserData);
       const tempList: any = {};
@@ -55,10 +55,15 @@ const CallingList = () => {
         // 아무도 없으면 방 터뜨리기
         socket.emit('callLeaved');
       }
-    });
+    };
+
+    socket.on('callingRoomUserStateChanged', callingRoomUserStateChanged);
 
     return () => {
-      socket.removeListener('callingRoomUserStateChanged');
+      socket.removeListener(
+        'callingRoomUserStateChanged',
+        callingRoomUserStateChanged
+      );
     };
   }, [myValue, callingRoom]);
 
@@ -99,7 +104,6 @@ const CallingList = () => {
       calleeUserId: id,
       callingRoom: callingRoomId,
     });
-
   };
 
   return (
