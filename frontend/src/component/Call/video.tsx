@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import React, { Dispatch, SetStateAction } from 'react';
+import { useRef, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import {
   callingItemType,
@@ -13,7 +13,13 @@ import run from '../../assets/run.gif';
 import camOn from '../../assets/icon/cam-on.svg';
 import micOn from '../../assets/icon/mic-on.svg';
 
-const Video = () => {
+const Video = ({
+  connectVideo,
+  setConnectVideo,
+}: {
+  connectVideo: boolean;
+  setConnectVideo: Dispatch<SetStateAction<boolean>>;
+}) => {
   const socket = useRecoilValue(socketState);
   const callingList = useRecoilValue(callingListState);
   const callingUser = callingList.list;
@@ -68,12 +74,7 @@ const Video = () => {
       await handleRemoteOffer(senderUserId, offer, peerConnection);
     });
 
-    const interval = setInterval(() => {
-      console.log(callingList);
-    }, 250);
-
     return () => {
-      clearInterval(interval);
       // 원종빈은...지우개....
       // 나는 다 지워.....
       socket.removeListener('newOffer');
@@ -166,9 +167,14 @@ const Video = () => {
     };
   }, []);
 
+  const handleDisconnect = () => {
+    setConnectVideo(() => false);
+    // 연결 끊기
+  };
+
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
-    <div css={style.videoStyle}>
+    <div css={style.videoStyle(connectVideo)}>
       <div css={style.videoBox}>
         <video ref={localVideoRef} muted poster={run} />
         <div css={style.videoController}>
@@ -182,6 +188,7 @@ const Video = () => {
       {callingUserList.map((user: callingItemType) => (
         <RemoteVideo key={user.id} user={user} localVideoRef={localVideoRef} />
       ))}
+      <button onClick={handleDisconnect}>나가기</button>
     </div>
   );
 };

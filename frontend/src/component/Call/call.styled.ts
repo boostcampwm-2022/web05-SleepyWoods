@@ -57,7 +57,7 @@ export const callingItem = css`
   }
 `;
 
-export const videoStyle = css`
+export const videoStyle = (connectVideo: boolean) => css`
   position: absolute;
   top: 20px;
   left: 50%;
@@ -68,13 +68,28 @@ export const videoStyle = css`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  width: 1000px;
+
+  width: 80%;
+  max-width: 1000px;
+  background-color: ${theme.black};
+
+  ${connectVideo || 'display: none;'};
 
   video {
     width: 200px;
     height: 100px;
     background: ${theme.white};
     border-radius: 10px 10px 0 0;
+  }
+
+  > button {
+    width: 50px;
+    height: 20px;
+    border-radius: 5px;
+    background-color: ${theme.red};
+    color: ${theme.white};
+
+    ${connectVideo || 'display: none;'};
   }
 `;
 

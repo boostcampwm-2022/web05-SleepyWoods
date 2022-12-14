@@ -11,25 +11,25 @@ import { userState } from '../../../store/atom/user';
 import { configuration } from '../../Call/config';
 
 const CallingList = () => {
-  const [callingfriendList, setCallingList] = useRecoilState(callingListState);
+  const [callingRoom, setCallingRoom] = useRecoilState(callingListState);
   const [friends, setFriends] = useRecoilState(friendsState);
   const myValue = useRecoilValue(userState);
 
   const socket = useRecoilValue(socketState);
 
-  const friendList = Object.values(callingfriendList.list);
+  const callingFriendList = Object.values(callingRoom.list);
 
   useEffect(() => {
     // callingRoom의 멤버가 바뀔 때마다 갱신
     socket.on('callingRoomUserStateChanged', data => {
       const { callingRoomUserData } = data;
-
+      console.log('callingroom 상태가 변경되었습니다.', callingRoomUserData);
       const tempList: any = {};
       callingRoomUserData.forEach((user: { [key: string]: string }) => {
         if (user.id === myValue.id) return;
 
-        const connection = callingfriendList.list[user.id]?.peerConnection
-          ? callingfriendList.list[user.id]?.peerConnection
+        const connection = callingRoom.list[user.id]?.peerConnection
+          ? callingRoom.list[user.id]?.peerConnection
           : new RTCPeerConnection(configuration);
 
         tempList[user.id] = {
@@ -42,12 +42,12 @@ const CallingList = () => {
 
       const len = Object.values(tempList).length;
       if (len) {
-        setCallingList({
-          ...callingfriendList,
+        setCallingRoom({
+          ...callingRoom,
           list: tempList,
         });
       } else {
-        setCallingList({
+        setCallingRoom({
           id: '',
           list: {},
         });
@@ -60,17 +60,15 @@ const CallingList = () => {
     return () => {
       socket.removeListener('callingRoomUserStateChanged');
     };
-  }, [myValue, callingfriendList]);
+  }, [myValue, callingRoom]);
 
-  const handleDragOver = (e: MouseEvent) => {
-    // dragenter 이벤트와 동작이 겹칠수 있기 때문에 e.preventDefault() 로 제한하며 둘이 결합하여 사용함
-    // e.preventDefault();
-
+  const handleDrag = (e: MouseEvent) => {
     const target = e.target as HTMLElement;
     const draggingElement = document.querySelector('.dragging');
 
     if (target.tagName !== 'UL' || !draggingElement) return;
 
+    // dragging 중인 user의 id
     const id = draggingElement.children[0].id;
 
     setFriends({
@@ -82,11 +80,11 @@ const CallingList = () => {
       },
     });
 
-    const callingRoomId = callingfriendList.id || v1();
-    setCallingList({
+    const callingRoomId = callingRoom.id || v1();
+    setCallingRoom({
       id: callingRoomId,
       list: {
-        ...callingfriendList.list,
+        ...callingRoom.list,
         [id]: {
           id: id,
           nickname: friends[id].nickname,
@@ -101,6 +99,7 @@ const CallingList = () => {
       calleeUserId: id,
       callingRoom: callingRoomId,
     });
+
   };
 
   return (
@@ -109,8 +108,8 @@ const CallingList = () => {
       <ul
         css={callingList}
         onDragOver={e => e.preventDefault()}
-        onDrop={handleDragOver}>
-        {friendList.map(friend => (
+        onDrop={handleDrag}>
+        {callingFriendList.map(friend => (
           <UserItem friend={friend} key={friend.id} />
         ))}
       </ul>
