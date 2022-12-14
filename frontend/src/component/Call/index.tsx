@@ -58,17 +58,21 @@ const Call = () => {
           ...friends,
           [id]: {
             ...friends[id],
-            status: 'on',
             isCalling: false,
           },
         }));
 
-      setSend({
+      setSend(() => ({
         id: '',
         nickname: '',
-      });
+      }));
 
-      setConnectVideo(false);
+      setCallingList(() => ({
+        id: '',
+        list: {},
+      }));
+
+      socket.emit('callLeaved');
     });
 
     socket.on('callRejected', data => {
@@ -79,12 +83,9 @@ const Call = () => {
           ...friends,
           [id]: {
             ...friends[id],
-            status: 'on',
             isCalling: false,
           },
         }));
-
-      setConnectVideo(false);
     });
 
     socket.on('callEntered', data => {

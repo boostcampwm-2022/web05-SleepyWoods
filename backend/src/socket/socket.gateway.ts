@@ -251,11 +251,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { callerUserId } = payload;
     const calleeUserId = client['userData']['id'];
     const calleeSocket = client;
-    const callerSocket = this.server.sockets.sockets.get(
-      this.socketIdByUser.get(callerUserId)
-    );
+    const callerSocketId = this.socketIdByUser.get(callerUserId);
 
-    calleeSocket.to(callerSocket.id).emit('callRejected', {
+    calleeSocket.to(callerSocketId).emit('callRejected', {
       calleeUserId,
       calleeNickname: calleeSocket['userData']['nickname'],
     });

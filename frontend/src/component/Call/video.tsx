@@ -117,8 +117,6 @@ const Video = ({
   }, []);
 
   const handleDisconnect = () => {
-    // 연결 끊기
-
     callingUserList.forEach(({ peerConnection }) => peerConnection.close());
 
     setCallingList({
@@ -129,6 +127,10 @@ const Video = ({
     socket.emit('callLeaved');
     setConnectVideo(false);
   };
+
+  useEffect(() => {
+    if (!callingUserList.length) setConnectVideo(false);
+  }, [callingUserList]);
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
