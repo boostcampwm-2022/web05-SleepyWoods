@@ -48,8 +48,8 @@ const Town = () => {
       <Sidebar />
       <Game />
       {isSnowing && <Snow />}
-      <SleepyBoard />
       <MiniGame />
+      <SleepyBoard />
       <Chat />
       <Info />
 
