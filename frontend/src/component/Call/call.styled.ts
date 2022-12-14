@@ -57,7 +57,7 @@ export const callingItem = css`
   }
 `;
 
-export const VideoStyle = css`
+export const VideoStyle = (connectVideo: boolean) => css`
   position: absolute;
   top: 20px;
   left: 50%;
@@ -69,11 +69,25 @@ export const VideoStyle = css`
   align-items: center;
   gap: 20px;
 
-  width: 1000px;
+  width: 80%;
+  max-width: 1000px;
+  background-color: ${theme.black};
+
+  ${connectVideo || 'display: none;'};
 
   video {
     width: 180px;
     height: 100%;
     background: ${theme.white};
+  }
+
+  button {
+    width: 50px;
+    height: 20px;
+    border-radius: 5px;
+    background-color: ${theme.red};
+    color: ${theme.white};
+
+    ${connectVideo || 'display: none;'};
   }
 `;

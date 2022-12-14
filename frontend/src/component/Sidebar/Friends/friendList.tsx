@@ -1,4 +1,4 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Content from '../Content';
 import FriendItem from './friendItem';
@@ -13,47 +13,74 @@ const FriendList = () => {
   const friendList = Object.values(friends).filter(value => true);
   const socket = useRecoilValue(socketState);
 
-  socket.on('userCreated', data => {
-    const { id, userState } = data;
+  useEffect(() => {
+    socket.on('userCreated', (data: any) => {
+      const { id, userState } = data;
 
-    if (!friends[id]) return;
+      if (!friends[id]) return;
 
-    setFriends({
-      ...friends,
-      [id]: {
-        ...friends[id],
-        status: userState,
-      },
+      setFriends(friends => ({
+        ...friends,
+        [id]: {
+          ...friends[id],
+          status: userState,
+        },
+      }));
     });
-  });
 
-  socket.on('userLeaved', data => {
-    const { id } = data;
+    socket.on('userLeaved', (data: any) => {
+      const { id } = data;
 
-    if (!friends[id]) return;
+      if (!friends[id]) return;
 
-    setFriends({
-      ...friends,
-      [id]: {
-        ...friends[id],
-        status: 'off',
-      },
+      setFriends(friends => ({
+        ...friends,
+        [id]: {
+          ...friends[id],
+          status: 'off',
+        },
+      }));
     });
-  });
 
-  socket.on('userDataChanged', data => {
-    const { id, nickname } = data;
+    socket.on('userDataChanged', (data: any) => {
+      const { id, nickname } = data;
 
-    if (!friends[id]) return;
+      if (!friends[id]) return;
 
-    setFriends({
-      ...friends,
-      [id]: {
-        ...friends[id],
-        nickname: nickname,
-      },
+      setFriends(friends => ({
+        ...friends,
+        [id]: {
+          ...friends[id],
+          nickname: nickname,
+        },
+      }));
     });
-  });
+
+    socket.on('userStateChanged', (data: any) => {
+      const { userIdList, userState } = data;
+
+      console.log('상태변화::::', userIdList, userState);
+      userIdList.forEach((userId: any) => {
+        if (!friends[userId]) return;
+
+        console.log(friends[userId].nickname);
+        setFriends(friends => ({
+          ...friends,
+          [userId]: {
+            ...friends[userId],
+            status: userState,
+          },
+        }));
+      });
+    });
+
+    return () => {
+      socket.removeListener('userCreated');
+      socket.removeListener('userLeaved');
+      socket.removeListener('userDataChanged');
+      socket.removeListener('userStateChanged');
+    };
+  }, [friends]);
 
   const handleDrag = (e: MouseEvent) => {
     const target = e.target as HTMLElement;

@@ -47,6 +47,7 @@ export class MyPlayer extends Player {
 
   update() {
     const prevState = this.state;
+    const prevPos = { x: this.x, y: this.y };
 
     if (!this.isCanMove) {
       this.state = 'wait';
@@ -112,12 +113,15 @@ export class MyPlayer extends Player {
     if (prevState !== this.state) changeState(this);
 
     if (prevState !== this.state || this.heldDirection.length) {
-      this.socket.emit('move', {
-        state: this.state,
-        direction: this.direction,
-        x: this.x,
-        y: this.y,
-      });
+      this.socket.emit(
+        prevPos.x !== this.x || prevPos.y !== this.y ? 'move' : 'motion',
+        {
+          state: this.state,
+          direction: this.direction,
+          x: this.x,
+          y: this.y,
+        }
+      );
     }
   }
 }
