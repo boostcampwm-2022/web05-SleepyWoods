@@ -70,8 +70,8 @@ const RemoteVideo = ({ localVideoRef, user }: remoteVideoType) => {
       <div css={style.videoController}>
         <span>{user.nickname}</span>
         <div css={style.controllerBox}>
-          <button type="button" css={style.controllerBtn(camOn)}></button>
-          <button type="button" css={style.controllerBtn(micOn)}></button>
+          <div css={style.controllerBtn(camOn)}></div>
+          <div css={style.controllerBtn(micOn)}></div>
         </div>
       </div>
     </div>

@@ -21,8 +21,6 @@ const FriendMode = ({
   const createRoom = () => {
     const id = v1();
     setRoomId(id);
-
-    console.log('방생성!', id);
   };
 
   const enterRoom = () => {
@@ -30,9 +28,6 @@ const FriendMode = ({
       alert('방 id를 확인해주세요');
       return;
     }
-
-    console.log('방 아이디: ', inputRoom);
-    console.log('친구방 입장!');
     setIsReady(false);
   };
 

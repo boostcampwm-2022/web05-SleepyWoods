@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { stringObjectType } from '../../types/types';
+import { stringObjectType, booleanObjectType } from '../../types/types';
 import { v1 } from 'uuid';
 
 export const devicePermissionState = atom<boolean>({
@@ -14,5 +14,13 @@ export const devicesState = atom<stringObjectType>({
     speaker: 'default',
     audio: 'default',
     video: 'default',
+  },
+});
+
+export const webRTCState = atom<booleanObjectType>({
+  key: `webRTCState/${v1()}`,
+  default: {
+    cam: true,
+    mic: true,
   },
 });

@@ -59,11 +59,9 @@ const FriendList = () => {
     const userStateChanged = (data: any) => {
       const { userIdList, userState } = data;
 
-      console.log('상태변화::::', userIdList, userState);
       userIdList.forEach((userId: any) => {
         if (!friends[userId]) return;
 
-        console.log(friends[userId].nickname);
         setFriends(friends => ({
           ...friends,
           [userId]: {
