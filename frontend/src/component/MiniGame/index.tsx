@@ -31,7 +31,13 @@ const MiniGame = () => {
       setSelectGame(gameName);
     });
 
+    emitter.on('closeContent', () => {
+      setIsShowModal(false);
+      initGame();
+    });
+
     return () => {
+      emitter.removeListener('closeContent');
       emitter.removeListener('game');
     };
   }, []);

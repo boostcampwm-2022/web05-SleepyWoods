@@ -137,6 +137,8 @@ export default class Town extends Phaser.Scene {
 
   changeScene = (gameName: string) => {
     console.log(gameName);
+    emitter.emit('closeContent');
+
     this.scene.pause();
     this.scene.start(gameName, {
       socket: this.socket,
