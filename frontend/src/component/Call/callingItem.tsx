@@ -9,6 +9,7 @@ type callingItemType = {
   id: string;
   nickname: string;
   isSend: boolean;
+  setConnectVideo: Dispatch<SetStateAction<boolean>>;
   setSend?: Dispatch<SetStateAction<{ id: string; nickname: string }>>;
 };
 
@@ -16,6 +17,7 @@ const CallingItem = ({
   id,
   nickname,
   isSend,
+  setConnectVideo,
   setSend = undefined,
 }: callingItemType) => {
   const [friends, setFriends] = useRecoilState(friendsState);
@@ -24,14 +26,14 @@ const CallingItem = ({
 
   const handleRejectCall = () => {
     friends[id] &&
-      setFriends({
+      setFriends(friends => ({
         ...friends,
         [id]: {
           ...friends[id],
           status: 'on',
           isCalling: false,
         },
-      });
+      }));
     delete callingList.list[id];
 
     // 내가 나가기 버튼 누르면!!
@@ -49,10 +51,12 @@ const CallingItem = ({
       });
 
     if (isSend) {
+      console.log('취소함');
       socket.emit('callCanceled', {
         calleeUserId: id,
       });
     } else {
+      console.log('거절함');
       socket.emit('callRejected', {
         callerUserId: id,
       });
@@ -65,8 +69,15 @@ const CallingItem = ({
     socket.emit('callEntered', {
       callerUserId: id,
     });
+
+    setSend &&
+      setSend({
+        id: '',
+        nickname: '',
+      });
+
+    setConnectVideo(() => true);
     console.log('callEntered emit:', id);
-    // webRTC 연결
   };
 
   return (

@@ -11,6 +11,8 @@ const Call = () => {
   const socket = useRecoilValue(socketState);
   let friendList = Object.values(friends).filter(value => value.isCalling);
 
+  const [connectVideo, setConnectVideo] = useState(false);
+
   const [isSend, setSend] = useState({
     id: '',
     nickname: '',
@@ -22,14 +24,14 @@ const Call = () => {
       const { callerUserId: id, callerNickname: nickname } = data;
 
       friends[id] &&
-        setFriends({
+        setFriends(friends => ({
           ...friends,
           [id]: {
             ...friends[id],
             status: 'busy',
             isCalling: false,
           },
-        });
+        }));
 
       setSend({
         id: id,
@@ -41,54 +43,69 @@ const Call = () => {
       const { callerUserId: id } = data;
 
       friends[id] &&
-        setFriends({
+        setFriends(friends => ({
           ...friends,
           [id]: {
             ...friends[id],
             status: 'on',
             isCalling: false,
           },
-        });
+        }));
 
       setSend({
         id: '',
         nickname: '',
       });
+
+      setConnectVideo(false);
     });
 
     socket.on('callRejected', data => {
       const { calleeUserId: id } = data;
 
       friends[id] &&
-        setFriends({
+        setFriends(friends => ({
           ...friends,
           [id]: {
             ...friends[id],
             status: 'on',
             isCalling: false,
           },
-        });
+        }));
+
+      setConnectVideo(false);
     });
 
     socket.on('callEntered', data => {
       const { calleeUserId: id } = data;
 
+      friends[id] &&
+        setFriends(friends => ({
+          ...friends,
+          [id]: {
+            ...friends[id],
+            status: 'busy',
+            isCalling: false,
+          },
+        }));
+
+      connectVideo || setConnectVideo(() => true);
+
       console.log(`${id}님이 통화를 수락하셨습니다.`);
     });
 
     return () => {
-      console.log('clean up');
       socket.removeListener('callRequested');
       socket.removeListener('callCanceled');
       socket.removeListener('callRejected');
       socket.removeListener('callEntered');
     };
-  }, []);
+  }, [isSend, friends]);
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
     <>
-      <Video />
+      <Video connectVideo={connectVideo} setConnectVideo={setConnectVideo} />
       <div css={callingWrapper}>
         {friendList.map(friend => (
           <CallingItem
@@ -96,6 +113,7 @@ const Call = () => {
             id={friend.id}
             nickname={friend.nickname}
             isSend={true}
+            setConnectVideo={setConnectVideo}
           />
         ))}
         {isSend.id && (
@@ -103,6 +121,7 @@ const Call = () => {
             id={isSend.id}
             nickname={isSend.nickname}
             isSend={false}
+            setConnectVideo={setConnectVideo}
             setSend={setSend}
           />
         )}

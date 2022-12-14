@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
@@ -10,7 +10,13 @@ import { VideoStyle } from './call.styled';
 import RemoteVideo from './remoteVideo';
 import { userState } from '../../store/atom/user';
 
-const Video = () => {
+const Video = ({
+  connectVideo,
+  setConnectVideo,
+}: {
+  connectVideo: boolean;
+  setConnectVideo: Dispatch<SetStateAction<boolean>>;
+}) => {
   const socket = useRecoilValue(socketState);
   const callingList = useRecoilValue(callingListState);
   const callingUser = callingList.list;
@@ -65,12 +71,7 @@ const Video = () => {
       await handleRemoteOffer(senderUserId, offer, peerConnection);
     });
 
-    const interval = setInterval(() => {
-      console.log(callingList);
-    }, 250);
-
     return () => {
-      clearInterval(interval);
       // 원종빈은...지우개....
       // 나는 다 지워.....
       socket.removeListener('newOffer');
@@ -163,13 +164,19 @@ const Video = () => {
     };
   }, []);
 
+  const handleDisconnect = () => {
+    setConnectVideo(() => false);
+    // 연결 끊기
+  };
+
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
-    <div css={VideoStyle}>
+    <div css={VideoStyle(connectVideo)}>
       <video ref={localVideoRef} muted />
       {callingUserList.map((user: callingItemType) => (
         <RemoteVideo key={user.id} user={user} localVideoRef={localVideoRef} />
       ))}
+      <button onClick={handleDisconnect}>나가기</button>
     </div>
   );
 };
