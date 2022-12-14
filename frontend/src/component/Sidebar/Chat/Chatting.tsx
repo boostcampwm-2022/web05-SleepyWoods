@@ -44,13 +44,15 @@ const Chatting = ({
 
     getMessage();
 
-    socket.on('privateChat', (data: privateChatType) => {
+    const privateChat = (data: privateChatType) => {
       setChatDatas(chatDatas => [...chatDatas, data]);
-    });
+    };
+
+    socket.on('privateChat', privateChat);
 
     return () => {
       socket.emit('chatRoomLeaved', { targetUserId: chatTarget.id });
-      socket.removeListener('privateChat');
+      socket.removeListener('privateChat', privateChat);
     };
   }, []);
 

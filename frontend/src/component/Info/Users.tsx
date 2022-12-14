@@ -10,22 +10,18 @@ const Users = () => {
   const [userCnt, setUseCnt] = useState(0);
 
   useEffect(() => {
-    socket.on('userInitiated', (data: userType[]) => {
-      setUseCnt(data.length);
-    });
+    const initUserCnt = (data: userType[]) => setUseCnt(data.length);
+    const plusUserCnt = () => setUseCnt(userCnt => userCnt + 1);
+    const minusUserCnt = () => setUseCnt(userCnt => userCnt - 1);
 
-    socket.on('userCreated', () => {
-      setUseCnt(userCnt => userCnt + 1);
-    });
-
-    socket.on('userLeaved', () => {
-      setUseCnt(userCnt => userCnt - 1);
-    });
+    socket.on('userInitiated', initUserCnt);
+    socket.on('userCreated', plusUserCnt);
+    socket.on('userLeaved', minusUserCnt);
 
     return () => {
-      socket.removeListener('userInitiated');
-      socket.removeListener('userCreated');
-      socket.removeListener('userLeaved');
+      socket.removeListener('userInitiated', initUserCnt);
+      socket.removeListener('userCreated', plusUserCnt);
+      socket.removeListener('userLeaved', minusUserCnt);
     };
   }, []);
 

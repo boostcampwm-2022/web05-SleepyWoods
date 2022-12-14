@@ -2,6 +2,10 @@ import { useRef, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import { callingItemType } from '../../store/atom/callingList';
+import * as style from './call.styled';
+import run from '../../assets/run.gif';
+import camOn from '../../assets/icon/cam-on.svg';
+import micOn from '../../assets/icon/mic-on.svg';
 
 type remoteVideoType = {
   localVideoRef: React.RefObject<HTMLVideoElement>;
@@ -60,7 +64,18 @@ const RemoteVideo = ({ localVideoRef, user }: remoteVideoType) => {
     });
   }, [peerConnection]);
 
-  return <video ref={remoteVideoRef} />;
+  return (
+    <div css={style.videoBox}>
+      <video ref={remoteVideoRef} poster={run} />
+      <div css={style.videoController}>
+        <span>{user.nickname}</span>
+        <div css={style.controllerBox}>
+          <button type="button" css={style.controllerBtn(camOn)}></button>
+          <button type="button" css={style.controllerBtn(micOn)}></button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default RemoteVideo;
