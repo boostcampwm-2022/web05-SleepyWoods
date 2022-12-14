@@ -125,6 +125,7 @@ export const ModeBtn = css`
   height: 60px;
   border-radius: 20px;
   background-color: ${theme.deepGreen};
+  color: ${theme.white};
 
   :nth-of-type(1) {
     margin-bottom: 50px;
@@ -155,6 +156,7 @@ export const enterBtn = css`
   height: 50px;
   border-radius: 10px;
   background-color: ${theme.deepGreen};
+  color: ${theme.white};
 
   :hover {
     background-color: ${theme.green};
@@ -300,5 +302,6 @@ export const backBtn = css`
   width: 100px;
   height: 30px;
   background-color: ${theme.red};
+  color: ${theme.white};
   border-radius: 10px;
 `;
