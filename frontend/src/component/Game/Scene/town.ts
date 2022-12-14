@@ -27,7 +27,6 @@ export default class Town extends Phaser.Scene {
 
   init() {
     emitter.on('gameStart', (data: any) => {
-      console.log(data.userList);
       this.changeScene(data.gameName);
     });
 
@@ -136,7 +135,6 @@ export default class Town extends Phaser.Scene {
   }
 
   changeScene = (gameName: string) => {
-    console.log(gameName);
     emitter.emit('closeContent');
 
     this.scene.pause();
@@ -145,6 +143,16 @@ export default class Town extends Phaser.Scene {
       myPlayer: this.myPlayer,
       autoPlay: this.autoPlay,
     });
+
+    // 자신의 캐릭터 지워주기
+    this.myPlayer?.delete();
+    delete this.myPlayer;
+
+    // emitter 이벤트 지워주기
+    emitter.removeListener('init');
+    emitter.removeListener('updateNickname');
+    emitter.removeListener('updateHair');
+    emitter.removeListener('gameStart');
   };
 
   create() {
@@ -245,6 +253,14 @@ export default class Town extends Phaser.Scene {
     });
 
     this.socket.on('move', (data: userType) => {
+      const id = data.id.toString().trim();
+
+      if (!this.otherPlayer[id]) return;
+      const { state, x, y, direction } = data;
+      this.otherPlayer[id].update(state, x, y, direction);
+    });
+
+    this.socket.on('motion', (data: userType) => {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
