@@ -31,8 +31,8 @@ export default class Sprint extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'sprint' });
     const tileset3 = map.addTilesetImage('tileset3', 'tileset3');
 
-    map.createLayer('object', tileset3, 0, 0).setScale(2.5);
     map.createLayer('background', tileset3, 0, 0).setScale(2.5);
+    map.createLayer('object', tileset3, 0, 0).setScale(2.5);
     this.otherLayer = map.createLayer('other', tileset3, 0, 0).setScale(2.5);
 
     this.otherLayer.setCollisionByProperty({ collides: true });

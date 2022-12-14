@@ -32,8 +32,10 @@ const CallingItem = ({
           isCalling: false,
         },
       });
-
     delete callingList.list[id];
+
+    // 내가 나가기 버튼 누르면!!
+    // 안에 남아잇는 사람들이 close ->
     // delete videoRef.get("성준이").close()
     // delete videoRef.delete("성준이")
     // pcRef COnnect -> 각 사람마다 new Connection
@@ -63,7 +65,7 @@ const CallingItem = ({
     socket.emit('callEntered', {
       callerUserId: id,
     });
-
+    console.log('callEntered emit:', id);
     // webRTC 연결
   };
 
