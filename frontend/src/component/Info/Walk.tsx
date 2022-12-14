@@ -11,14 +11,13 @@ const Walk = () => {
   const [walkCnt, setWalkCnt] = useState(0);
 
   useEffect(() => {
-    socket.on('move', data => {
-      if (data.id !== user.id) return;
-
-      setWalkCnt(data.walk);
-    });
+    const handleWalkCnt = (data: any) => {
+      if (data.id === user.id) setWalkCnt(data.walk);
+    };
+    socket.on('move', handleWalkCnt);
 
     return () => {
-      socket.removeListener('move');
+      socket.removeListener('move', handleWalkCnt);
     };
   }, [user]);
 

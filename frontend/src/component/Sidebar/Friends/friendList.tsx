@@ -14,7 +14,7 @@ const FriendList = () => {
   const socket = useRecoilValue(socketState);
 
   useEffect(() => {
-    socket.on('userCreated', (data: any) => {
+    const userCreated = (data: any) => {
       const { id, userState } = data;
 
       if (!friends[id]) return;
@@ -26,9 +26,9 @@ const FriendList = () => {
           status: userState,
         },
       }));
-    });
+    };
 
-    socket.on('userLeaved', (data: any) => {
+    const userLeaved = (data: any) => {
       const { id } = data;
 
       if (!friends[id]) return;
@@ -40,9 +40,9 @@ const FriendList = () => {
           status: 'off',
         },
       }));
-    });
+    };
 
-    socket.on('userDataChanged', (data: any) => {
+    const userDataChanged = (data: any) => {
       const { id, nickname } = data;
 
       if (!friends[id]) return;
@@ -54,9 +54,9 @@ const FriendList = () => {
           nickname: nickname,
         },
       }));
-    });
+    };
 
-    socket.on('userStateChanged', (data: any) => {
+    const userStateChanged = (data: any) => {
       const { userIdList, userState } = data;
 
       console.log('상태변화::::', userIdList, userState);
@@ -72,13 +72,18 @@ const FriendList = () => {
           },
         }));
       });
-    });
+    };
+
+    socket.on('userCreated', userCreated);
+    socket.on('userLeaved', userLeaved);
+    socket.on('userDataChanged', userDataChanged);
+    socket.on('userStateChanged', userStateChanged);
 
     return () => {
-      socket.removeListener('userCreated');
-      socket.removeListener('userLeaved');
-      socket.removeListener('userDataChanged');
-      socket.removeListener('userStateChanged');
+      socket.removeListener('userCreated', userCreated);
+      socket.removeListener('userLeaved', userLeaved);
+      socket.removeListener('userDataChanged', userDataChanged);
+      socket.removeListener('userStateChanged', userStateChanged);
     };
   }, [friends]);
 

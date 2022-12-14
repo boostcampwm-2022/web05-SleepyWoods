@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { backgroundImage } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 import rejectCall from '../../assets/icon/rejectCall.svg';
 import acceptCall from '../../assets/icon/acceptCall.svg';
@@ -57,7 +57,7 @@ export const callingItem = css`
   }
 `;
 
-export const VideoStyle = (connectVideo: boolean) => css`
+export const videoStyle = (connectVideo: boolean) => css`
   position: absolute;
   top: 20px;
   left: 50%;
@@ -76,12 +76,13 @@ export const VideoStyle = (connectVideo: boolean) => css`
   ${connectVideo || 'display: none;'};
 
   video {
-    width: 180px;
-    height: 100%;
+    width: 200px;
+    height: 100px;
     background: ${theme.white};
+    border-radius: 10px 10px 0 0;
   }
 
-  button {
+  > button {
     width: 50px;
     height: 20px;
     border-radius: 5px;
@@ -89,5 +90,40 @@ export const VideoStyle = (connectVideo: boolean) => css`
     color: ${theme.white};
 
     ${connectVideo || 'display: none;'};
+  }
+`;
+
+export const videoBox = css`
+  ${flexCenter}
+  flex-flow: column;
+`;
+
+export const videoController = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 5px 15px;
+  background-color: ${theme.white07};
+  border-radius: 0 0 10px 10px;
+
+  > span {
+    font-size: 14px;
+  }
+`;
+
+export const controllerBox = css`
+  display: flex;
+`;
+
+export const controllerBtn = (img: string) => css`
+  width: 14px;
+  height: 14px;
+
+  ${backgroundImage(img)}
+
+  :nth-of-type(1) {
+    margin-right: 5px;
   }
 `;
