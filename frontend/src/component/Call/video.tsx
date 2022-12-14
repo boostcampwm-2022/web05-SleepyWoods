@@ -29,11 +29,8 @@ const Video = ({
     // 새 사람이 들어오면 이는 서버에서 알려주고, 기존 사람들은 이를 감지하여 각자 offer를 생성해 줍시다~~~~
     socket.on('newbieEntered', async payload => {
       console.log('newbie가 들어왔어요~ offer를 보내줄 시간~');
-      //RTCPeerConnection: new (configuration?: RTCConfiguration | undefined) => RTCPeerConnection
       const { newbieId }: { newbieId: string } = payload;
-      console.log(callingList);
-      console.log('@@@newbie@@@', newbieId);
-      console.log(callingUser[newbieId]);
+
       const peerConnection: RTCPeerConnection =
         callingUser[newbieId].peerConnection;
 
@@ -44,28 +41,16 @@ const Video = ({
     });
 
     socket.on('remoteAnswer', async function (payload) {
-      console.log('리모트앤서라고~~');
+      console.log('4. 뉴비에게 받은 answer 입니다~~');
       const { answer, newbieId } = payload;
-      console.log('@@@newbie in remote Answer@@@', newbieId);
-      console.log(callingList);
-      console.log(
-        '************************',
-        newbieId,
-        callingUser[newbieId].peerConnection
-      );
-      const peerConnection: RTCPeerConnection =
-        callingUser[newbieId].peerConnection;
 
-      // 4
       await handleRemoteAnswer(answer, newbieId);
     });
 
     socket.on('newOffer', async payload => {
-      // 기존 사람들로 부터 offer 들이 왔다....
       console.log('뉴오퍼오퍼오퍼~~ 받아왔어요~~ 내꺼랑 섞지요~~');
 
       const { offer, senderUserId } = payload;
-      console.log('@@@newbie@@@', senderUserId);
       const peerConnection: RTCPeerConnection =
         callingUser[senderUserId].peerConnection;
       await handleRemoteOffer(senderUserId, offer, peerConnection);
@@ -80,19 +65,12 @@ const Video = ({
     };
   }, [user, callingList]);
 
-  // receiver useEffect
-  // useEffect(() => {
-  // }, [user]);
-
   const handleRemoteAnswer = async (answer: any, newbieId: string) => {
     const remoteAnswer = new RTCSessionDescription(answer);
 
-    console.log('4. 기존의 유저들은 뉴비로부터 앤서를 받고 있어요~~');
-    console.log(callingList);
-
-    console.log('원래 로컬 떠있어줘 제발제발');
-    console.log('remoteAns : ', remoteAnswer);
-    console.log('peerConnection : ', callingUser[newbieId].peerConnection);
+    console.log('5. 기존의 유저들은 뉴비로부터 받은 앤서를 적용해요~');
+    console.log('newbie Id : ', newbieId);
+    console.log(callingUser[newbieId].peerConnection);
     await callingUser[newbieId].peerConnection.setRemoteDescription(
       remoteAnswer
     );
@@ -111,10 +89,6 @@ const Video = ({
     await peerConnection.setRemoteDescription(remoteOffer);
     const answer = await peerConnection.createAnswer(remoteOffer);
     await peerConnection.setLocalDescription(answer);
-    console.log(
-      '=======handleRemoteOffer() => setLocalDescription=====',
-      peerConnection
-    );
 
     console.log(`3. ${senderUserId}에게 앤서를 만들어서 돌려보내주고 있어요~`);
     socket.emit('newAnswer', { answer, senderUserId });
@@ -124,18 +98,10 @@ const Video = ({
     peerConnection: RTCPeerConnection,
     newbieId: string
   ) => {
-    console.log('2. createNewOffer : 내 오퍼를 만들어서 서버에 등록!');
+    console.log('2. createNewOffer : 내 오퍼를 만들어서 해당 뉴비에게 전달!');
     await getLocalVideo(callingUser[newbieId].peerConnection);
     const offer = await callingUser[newbieId].peerConnection.createOffer();
     await callingUser[newbieId].peerConnection.setLocalDescription(offer);
-    console.log(
-      '=======createNewOffer() => setLocalDescription=====',
-      peerConnection
-    );
-    console.log(callingList);
-    console.log(
-      '3. createOffer & setLocalDescription : 내 오퍼를 만들어서 setLocalDescription!'
-    );
     socket.emit('newOffer', { offer, senderUserId: user.id, newbieId });
 
     return peerConnection;

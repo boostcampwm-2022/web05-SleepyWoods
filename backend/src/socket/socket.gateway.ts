@@ -27,7 +27,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
   socketIdByUser = new Map();
   walkCountByUser = new Map();
-  offerMap = new Map();
+  // offerMap = new Map();
 
   constructor(
     private readonly authService: AuthService,
@@ -37,9 +37,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   /** room 안의 유저들을 불러옵니다. */
   public getRoomUserData(roomName: string) {
     const roomUser = [];
-    console.log(roomName);
-    console.log(this.server.sockets.adapter.rooms.get(roomName));
-    this.server.sockets.adapter.rooms.get(roomName).forEach(e => {
+    console.log(
+      'getRoomUserData:',
+      this.server.sockets.adapter.rooms.get(roomName)
+    );
+    this.server.sockets.adapter.rooms.get(roomName)?.forEach(e => {
       roomUser.push(this.server.sockets.sockets.get(e)['userData']);
     });
 
@@ -179,9 +181,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const calleeSocket = this.server.sockets.sockets.get(
       this.socketIdByUser.get(calleeUserId)
     );
+
+    // on, off, busy, callRequesting
     callerSocket.join(callingRoom);
     calleeSocket.join(callingRoom);
-    // on, off, busy, callRequesting
 
     // 두 사람의 상태 변경
     callerSocket['userData']['userState'] = 'busy';
@@ -189,11 +192,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // 두사람의 전화중인 room 변경
     callerSocket['userData']['callingRoom'] = callingRoom;
     calleeSocket['userData']['callingRoom'] = callingRoom;
-
-    // 나한테 통화 준비하라고 알려주는 거.
-    this.server
-      .to(this.socketIdByUser.get(callerUserId))
-      .emit('remoteOffer', { offers: [] });
 
     // 받는 사람한테, 전화오고 있다고 알림
     callerSocket.to(calleeSocket.id).emit('callRequested', {
@@ -236,7 +234,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.leave(callingRoom);
     client['userData']['callingRoom'] = '';
     // ooferMap 에서 offer 삭제
-    this.offerMap.get(callingRoom).delete(leavingUserId);
+    // this.offerMap.get(callingRoom).delete(leavingUserId);
 
     // 전 세계 사람들에게 알려주기
     this.server.to(client['userData']['roomName']).emit('userStateChanged', {
@@ -278,13 +276,19 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     client['userData']['userState'] = 'busy';
 
+    // 상대방에게 받았다는 것을 일려주기 위한 것
     calleeSocket.to(callerSocket.id).emit('callEntered', {
       calleeUserId,
     });
 
-    this.server.to(calleeSocket.id).emit('remoteOffer', {
-      offers: [...this.offerMap.get(callingRoom)],
+    // requesting인 사람에게도 해줘야 할지?
+    client.to(callingRoom).emit('newbieEntered', {
+      newbieId: calleeUserId,
     });
+
+    // this.server.to(calleeSocket.id).emit('remoteOffer', {
+    //   offers: [...this.offerMap.get(callingRoom)],
+    // });
     // this.server.to(this.socketIdByUser.get(calleeUserId)).emit('callCreated');
 
     // this.offerMap.get(callingRoom).set(callerUserId, callerOffer);
@@ -299,25 +303,30 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.disconnect();
   }
 
+  // socket.emit('newOffer', { offer, senderUserId: user.id, newbieId });
   @SubscribeMessage('newOffer')
   handleNewOffer(client: any, payload: any) {
-    const callingRoom = client['userData']['callingRoom'];
-    const offer = payload['offer'];
-    if (!this.offerMap.get(callingRoom)) {
-      this.offerMap.set(callingRoom, new Map());
-      this.offerMap.get(callingRoom).set(client['userData']['id'], offer);
-    }
+    const { offer, senderUserId, newbieId } = payload;
+
+    // 기 유저들에게 받은 offer들을 뉴비에게 전달
+    this.server.to(this.socketIdByUser.get(newbieId)).emit('newOffer', {
+      offer,
+      senderUserId,
+    });
   }
+
+  // socket.emit('newAnswer', { answer, senderUserId });
   @SubscribeMessage('newAnswer')
   handleNewAnswer(client: any, payload: any) {
-    const { answer, userId } = payload;
+    const { answer, senderUserId } = payload;
     this.server
-      .to(this.socketIdByUser.get(userId))
-      .emit('remoteAnswer', { answer });
+      .to(this.socketIdByUser.get(senderUserId))
+      .emit('remoteAnswer', { answer, newbieId: client['userData']['id'] });
   }
 
   @SubscribeMessage('newIce')
   handleNewIce(client: any, payload: any) {
+    ``;
     const callingRoom = client['userData']['callingRoom'];
 
     const { iceCandidates } = payload;
