@@ -27,11 +27,11 @@ const ChatMessage = ({
     }
 
     // 다른 사람의 채팅받기
-    socket.on('publicChat', (chat: chatType) => {
+    const publicChat = (chat: chatType) => {
       updateChat(chat);
-    });
+    };
 
-    socket.on('userCreated', (data: userType) => {
+    const userCreated = (data: userType) => {
       const chat = {
         type: 'info',
         nickname: data.nickname,
@@ -39,9 +39,9 @@ const ChatMessage = ({
         message: '님이 입장하셨습니다.',
       };
       updateChat(chat);
-    });
+    };
 
-    socket.on('userLeaved', (data: userType) => {
+    const userLeaved = (data: userType) => {
       const chat = {
         type: 'info',
         nickname: data.nickname,
@@ -49,12 +49,16 @@ const ChatMessage = ({
         message: '님이 퇴장하셨습니다.',
       };
       updateChat(chat);
-    });
+    };
+
+    socket.on('publicChat', publicChat);
+    socket.on('userCreated', userCreated);
+    socket.on('userLeaved', userLeaved);
 
     return () => {
-      socket.removeListener('publicChat');
-      socket.removeListener('userCreated');
-      socket.removeListener('userLeaved');
+      socket.removeListener('publicChat', publicChat);
+      socket.removeListener('userCreated', userCreated);
+      socket.removeListener('userLeaved', userLeaved);
     };
   }, []);
 

@@ -2,6 +2,11 @@ import { useRef, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import { callingItemType } from '../../store/atom/callingList';
+import * as style from './call.styled';
+import run from '../../assets/run.gif';
+import camOn from '../../assets/icon/cam-on.svg';
+import micOn from '../../assets/icon/mic-on.svg';
+
 // 나 - 형진 <-종빈
 // 1. 새로 들어오면 서버에서 offer를 갔다달라고 해요
 // 2. 각자 peerConnection 를 만들어서 offer도 만들어서 서버에 offer 전달
@@ -85,7 +90,18 @@ const RemoteVideo = ({ localVideoRef, user }: remoteVideoType) => {
     });
   }, [peerConnection]);
 
-  return <video ref={remoteVideoRef} />;
+  return (
+    <div css={style.videoBox}>
+      <video ref={remoteVideoRef} poster={run} />
+      <div css={style.videoController}>
+        <span>{user.nickname}</span>
+        <div css={style.controllerBox}>
+          <button type="button" css={style.controllerBtn(camOn)}></button>
+          <button type="button" css={style.controllerBtn(micOn)}></button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default RemoteVideo;

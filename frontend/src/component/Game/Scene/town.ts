@@ -235,7 +235,7 @@ export default class Town extends Phaser.Scene {
   socketInit() {
     if (!this.socket) return;
 
-    this.socket.on('userInitiated', (data: userType[]) => {
+    const userInitiated = (data: userType[]) => {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: userType) => {
@@ -245,40 +245,38 @@ export default class Town extends Phaser.Scene {
 
         this.otherPlayer[id] = new OtherPlayer(this, user);
       });
-    });
+    };
 
-    this.socket.on('userCreated', (user: userType) => {
+    const userCreated = (user: any) => {
       const id = user.id.toString().trim();
       this.otherPlayer[id] = new OtherPlayer(this, user);
-    });
+    };
 
-    this.socket.on('move', (data: userType) => {
+    const move = (data: userType) => {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
       const { state, x, y, direction } = data;
       this.otherPlayer[id].update(state, x, y, direction);
-    });
+    };
 
-    this.socket.on('motion', (data: userType) => {
-      const id = data.id.toString().trim();
-
-      if (!this.otherPlayer[id]) return;
-      const { state, x, y, direction } = data;
-      this.otherPlayer[id].update(state, x, y, direction);
-    });
-
-    this.socket.on('userLeaved', (data: userType) => {
+    const userLeaved = (data: userType) => {
       const id = data.id.toString().trim();
       this.otherPlayer[id].delete();
       delete this.otherPlayer[id];
-    });
+    };
 
-    this.socket.on('userDataChanged', (data: userType) => {
+    const userDataChanged = (data: userType) => {
       const { id, nickname, characterName } = data;
       this.otherPlayer[id].updateNickname(nickname);
       this.otherPlayer[id].updateHair(characterName);
-    });
+    };
+
+    this.socket.on('userInitiated', userInitiated);
+    this.socket.on('userCreated', userCreated);
+    this.socket.on('move', move);
+    this.socket.on('userLeaved', userLeaved);
+    this.socket.on('userDataChanged', userDataChanged);
   }
 
   musicControll() {

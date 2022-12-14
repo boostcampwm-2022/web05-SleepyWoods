@@ -19,20 +19,16 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
       try {
         const { data } = await axios('/api/chat/roomList');
 
-        console.log(data);
         setRoomList(() => data);
         setIsLoaded(true);
       } catch (e) {}
     };
 
     getRoomList();
-
-    socket.on('privateChat', () => {
-      getRoomList();
-    });
+    socket.on('privateChat', getRoomList);
 
     return () => {
-      socket.removeListener('privateChat');
+      socket.removeListener('privateChat', getRoomList);
     };
   }, []);
 
