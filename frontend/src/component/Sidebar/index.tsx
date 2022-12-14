@@ -16,6 +16,7 @@ import Setting from './Setting';
 import Chat from './Chat';
 import { useRecoilState } from 'recoil';
 import { sidebarState } from '../../store/atom/sidebar';
+import { emitter } from '../Game/util';
 
 type componentType = {
   [key: string]: EmotionJSX.Element;
@@ -48,6 +49,16 @@ const Sidebar = () => {
       $img === target && setCurrentTab(name);
     });
   };
+
+  useEffect(() => {
+    emitter.on('closeContent', () => {
+      setOpen(false);
+    });
+
+    return () => {
+      emitter.removeListener('closeContent');
+    };
+  }, []);
 
   return (
     <aside css={sidebarWrapper(isOpen, currentTab)}>
