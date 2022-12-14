@@ -41,6 +41,7 @@ const CallingList = () => {
       });
 
       const len = Object.values(tempList).length;
+      console.log('현재 calling room 인원: ', len);
       if (len) {
         setCallingRoom({
           ...callingRoom,
@@ -76,17 +77,17 @@ const CallingList = () => {
     // dragging 중인 user의 id
     const id = draggingElement.children[0].id;
 
-    setFriends({
+    setFriends(friends => ({
       ...friends,
       [id]: {
         ...friends[id],
         status: 'busy',
         isCalling: true,
       },
-    });
+    }));
 
     const callingRoomId = callingRoom.id || v1();
-    setCallingRoom({
+    setCallingRoom(callingRoom => ({
       id: callingRoomId,
       list: {
         ...callingRoom.list,
@@ -97,7 +98,7 @@ const CallingList = () => {
           peerConnection: new RTCPeerConnection(configuration),
         },
       },
-    });
+    }));
 
     // 해당 id의 유저에게 통화 요청
     socket.emit('callRequested', {

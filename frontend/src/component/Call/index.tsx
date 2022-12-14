@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { callingListState } from '../../store/atom/callingList';
 import { friendsState } from '../../store/atom/friends';
 import { socketState } from '../../store/atom/socket';
 import { callingWrapper } from './call.styled';
@@ -8,6 +9,7 @@ import Video from './video';
 
 const Call = () => {
   const [friends, setFriends] = useRecoilState(friendsState);
+  const [callingList, setCallingList] = useRecoilState(callingListState);
   const socket = useRecoilValue(socketState);
   let friendList = Object.values(friends).filter(value => value.isCalling);
 
@@ -21,7 +23,11 @@ const Call = () => {
   useEffect(() => {
     // 해당 id의 유저로부터 전화 걸려옴
     socket.on('callRequested', data => {
-      const { callerUserId: id, callerNickname: nickname } = data;
+      const {
+        callerUserId: id,
+        callerNickname: nickname,
+        callingRoom: roomId,
+      } = data;
 
       friends[id] &&
         setFriends(friends => ({
@@ -37,6 +43,11 @@ const Call = () => {
         id: id,
         nickname: nickname,
       });
+
+      setCallingList(callingList => ({
+        id: roomId,
+        list: callingList.list,
+      }));
     });
 
     socket.on('callCanceled', data => {
@@ -47,17 +58,21 @@ const Call = () => {
           ...friends,
           [id]: {
             ...friends[id],
-            status: 'on',
             isCalling: false,
           },
         }));
 
-      setSend({
+      setSend(() => ({
         id: '',
         nickname: '',
-      });
+      }));
 
-      setConnectVideo(false);
+      setCallingList(() => ({
+        id: '',
+        list: {},
+      }));
+
+      socket.emit('callLeaved');
     });
 
     socket.on('callRejected', data => {
@@ -68,12 +83,9 @@ const Call = () => {
           ...friends,
           [id]: {
             ...friends[id],
-            status: 'on',
             isCalling: false,
           },
         }));
-
-      setConnectVideo(false);
     });
 
     socket.on('callEntered', data => {

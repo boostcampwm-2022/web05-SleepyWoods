@@ -7,20 +7,6 @@ import run from '../../assets/run.gif';
 import camOn from '../../assets/icon/cam-on.svg';
 import micOn from '../../assets/icon/mic-on.svg';
 
-// 나 - 형진 <-종빈
-// 1. 새로 들어오면 서버에서 offer를 갔다달라고 해요
-// 2. 각자 peerConnection 를 만들어서 offer도 만들어서 서버에 offer 전달
-// 3. 서버가 새로 들어온 사람에게 offer 를 주겠죠
-// 4. 새로 들어온 사람이 각 offer마다 peerConnection를 생성해서, remoteOffer 처리하고 answer들을 만듭니다.
-// 5. 서버가 answer들을 원래 있던 사람들한테 전달하고
-// 6. 각자들은 answer를 본인의 setRemote에 심는다.
-
-// 끊을 때
-// 나 - 형진 -x 종빈
-// 1. 종빈이형은 스스로 peerConnection나 관련 그걸 다 지워요 ->close()
-// 2. 우리한테 나간다고 event를 쏴주겠져 (callLeaved)
-// 3. 종빈이형을 가리키고 있던 pcref를 지우면 되나요.
-
 type remoteVideoType = {
   localVideoRef: React.RefObject<HTMLVideoElement>;
   user: callingItemType;
@@ -58,22 +44,10 @@ const RemoteVideo = ({ localVideoRef, user }: remoteVideoType) => {
 
   useEffect(() => {
     peerConnection.addEventListener('signalingstatechange', () => {
-      // if (
-      //   peerConnection.signalingState === 'stable' &&
-      //   peerConnection.iceGatheringState === 'complete'
-      // ) {
-      // }
       socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
     });
 
     peerConnection.addEventListener('icegatheringstatechange', () => {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // if (
-      //   peerConnection.signalingState === 'stable' &&
-      //   peerConnection.iceGatheringState === 'complete'
-      // ) {
-      //   socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
-      // }
       socket.emit('newIce', { iceCandidates: iceCandidateRef.current });
     });
 

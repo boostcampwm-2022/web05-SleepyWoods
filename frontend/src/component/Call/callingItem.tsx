@@ -45,10 +45,10 @@ const CallingItem = ({
     // socketon -> videoRef.geT("성준이") -> ice ...
 
     setSend &&
-      setSend({
+      setSend(() => ({
         id: '',
         nickname: '',
-      });
+      }));
 
     if (isSend) {
       console.log('취소함');
@@ -60,9 +60,14 @@ const CallingItem = ({
       socket.emit('callRejected', {
         callerUserId: id,
       });
-    }
 
-    socket.emit('callLeaved');
+      setCallingList(callingList => ({
+        id: '',
+        list: {},
+      }));
+
+      socket.emit('callLeaved');
+    }
   };
 
   const handleAcceptCall = () => {
@@ -71,12 +76,12 @@ const CallingItem = ({
     });
 
     setSend &&
-      setSend({
+      setSend(() => ({
         id: '',
         nickname: '',
-      });
+      }));
 
-    setConnectVideo(() => true);
+    setConnectVideo(true);
     console.log('callEntered emit:', id);
   };
 
