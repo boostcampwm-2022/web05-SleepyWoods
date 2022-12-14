@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { useRef, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import {
   callingItemType,
@@ -9,9 +9,12 @@ import {
 import * as style from './call.styled';
 import RemoteVideo from './remoteVideo';
 import { userState } from '../../store/atom/user';
+import { webRTCState } from '../../store/atom/deviceSetting';
 import run from '../../assets/run.gif';
 import camOn from '../../assets/icon/cam-on.svg';
+import camOff from '../../assets/icon/cam-off.svg';
 import micOn from '../../assets/icon/mic-on.svg';
+import micOff from '../../assets/icon/mic-off.svg';
 
 const Video = ({
   connectVideo,
@@ -21,11 +24,14 @@ const Video = ({
   setConnectVideo: (value: boolean) => void;
 }) => {
   const socket = useRecoilValue(socketState);
+  const user = useRecoilValue(userState);
+  const [webRTC, setWebRTC] = useRecoilState(webRTCState);
   const [callingList, setCallingList] = useRecoilState(callingListState);
+
   const callingUser = callingList.list;
   const callingUserList = Object.values(callingList.list);
   const localVideoRef = useRef<HTMLVideoElement>(null);
-  const user = useRecoilValue(userState);
+  const connectButtonText = `${user.nickname} 외 ${callingUserList.length}명`;
 
   // sender useEffect
   useEffect(() => {
@@ -137,22 +143,50 @@ const Video = ({
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
-    <div css={style.videoStyle(connectVideo)}>
-      <div css={style.videoBox}>
-        <video ref={localVideoRef} muted poster={run} />
-        <div css={style.videoController}>
-          <span>{user.nickname}</span>
-          <div css={style.controllerBox}>
-            <button type="button" css={style.controllerBtn(camOn)}></button>
-            <button type="button" css={style.controllerBtn(micOn)}></button>
+    <>
+      <div css={style.videoStyle(connectVideo)}>
+        <div css={style.videoBox}>
+          <video ref={localVideoRef} muted poster={run} />
+          <div css={style.videoController}>
+            <span>{user.nickname}</span>
+            <div css={style.controllerBox}>
+              <button
+                type="button"
+                onClick={() =>
+                  setWebRTC(webRTC => ({ ...webRTC, cam: !webRTC.cam }))
+                }>
+                {webRTC.cam ? (
+                  <div css={style.controllerBtn(camOn)}></div>
+                ) : (
+                  <div css={style.controllerBtn(camOff)}></div>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  setWebRTC(webRTC => ({ ...webRTC, mic: !webRTC.mic }))
+                }>
+                {webRTC.mic ? (
+                  <div css={style.controllerBtn(micOn)}></div>
+                ) : (
+                  <div css={style.controllerBtn(micOff)}></div>
+                )}
+              </button>
+            </div>
           </div>
         </div>
+        {callingUserList.map((user: callingItemType) => (
+          <RemoteVideo
+            key={user.id}
+            user={user}
+            localVideoRef={localVideoRef}
+          />
+        ))}
       </div>
-      {callingUserList.map((user: callingItemType) => (
-        <RemoteVideo key={user.id} user={user} localVideoRef={localVideoRef} />
-      ))}
-      <button onClick={handleDisconnect}>나가기</button>
-    </div>
+      <button
+        css={style.rejectBtn(connectVideo)}
+        onClick={handleDisconnect}></button>
+    </>
   );
 };
 

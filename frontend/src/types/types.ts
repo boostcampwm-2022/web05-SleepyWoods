@@ -9,6 +9,10 @@ export type stringObjectType = {
   [key: string]: string;
 };
 
+export type booleanObjectType = {
+  [key: string]: boolean;
+};
+
 export type chatType = {
   type: string;
   timestamp: string;

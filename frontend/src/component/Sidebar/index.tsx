@@ -16,6 +16,7 @@ import Setting from './Setting';
 import Chat from './Chat';
 import { useRecoilState } from 'recoil';
 import { sidebarState } from '../../store/atom/sidebar';
+import { webRTCState } from '../../store/atom/deviceSetting';
 import { emitter } from '../Game/util';
 
 type componentType = {
@@ -31,8 +32,7 @@ const component: componentType = {
 
 const Sidebar = () => {
   const [isOpen, setOpen] = useState(false);
-  const [isMicOn, setMic] = useState(false);
-  const [isCamOn, setCam] = useState(true);
+  const [webRTC, setWebRTC] = useRecoilState(webRTCState);
 
   const [currentTab, setCurrentTab] = useRecoilState(sidebarState);
 
@@ -82,15 +82,21 @@ const Sidebar = () => {
         <section className="sidebar-content">{component[currentTab]}</section>
         <section className="sidebar-setting">
           <ul>
-            <li onClick={() => setMic(!isMicOn)}>
-              {isMicOn ? (
+            <li
+              onClick={() =>
+                setWebRTC(webRTC => ({ ...webRTC, mic: !webRTC.mic }))
+              }>
+              {webRTC.mic ? (
                 <img src={micOn} alt="마이크 on"></img>
               ) : (
                 <img src={micOff} alt="마이크 off"></img>
               )}
             </li>
-            <li onClick={() => setCam(!isCamOn)}>
-              {isCamOn ? (
+            <li
+              onClick={() =>
+                setWebRTC(webRTC => ({ ...webRTC, cam: !webRTC.cam }))
+              }>
+              {webRTC.cam ? (
                 <img src={camOn} alt="카메라 on"></img>
               ) : (
                 <img src={camOff} alt="카메라 off"></img>

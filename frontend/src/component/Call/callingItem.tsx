@@ -51,12 +51,10 @@ const CallingItem = ({
       }));
 
     if (isSend) {
-      console.log('취소함');
       socket.emit('callCanceled', {
         calleeUserId: id,
       });
     } else {
-      console.log('거절함');
       socket.emit('callRejected', {
         callerUserId: id,
       });
@@ -82,7 +80,6 @@ const CallingItem = ({
       }));
 
     setConnectVideo(true);
-    console.log('callEntered emit:', id);
   };
 
   return (

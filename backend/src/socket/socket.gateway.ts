@@ -37,10 +37,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   /** room 안의 유저들을 불러옵니다. */
   public getRoomUserData(roomName: string) {
     const roomUser = [];
-    console.log(
-      'getRoomUserData:',
-      this.server.sockets.adapter.rooms.get(roomName)
-    );
     this.server.sockets.adapter.rooms.get(roomName)?.forEach(e => {
       roomUser.push(this.server.sockets.sockets.get(e)['userData']);
     });
@@ -318,7 +314,6 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const callingRoom = client['userData']['callingRoom'];
 
     const { iceCandidates } = payload;
-    console.log('newIce');
     client.to(callingRoom).emit('remoteIce', { iceCandidates });
   }
 }

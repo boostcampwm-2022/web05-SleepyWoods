@@ -23,7 +23,6 @@ const CallingList = () => {
     // callingRoom의 멤버가 바뀔 때마다 갱신
     const callingRoomUserStateChanged = (data: any) => {
       const { callingRoomUserData } = data;
-      console.log('callingroom 상태가 변경되었습니다.', callingRoomUserData);
       const tempList: any = {};
       callingRoomUserData.forEach((user: { [key: string]: string }) => {
         if (user.id === myValue.id) return;
@@ -41,7 +40,6 @@ const CallingList = () => {
       });
 
       const len = Object.values(tempList).length;
-      console.log('현재 calling room 인원: ', len);
       if (len) {
         setCallingRoom({
           ...callingRoom,

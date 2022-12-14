@@ -70,26 +70,14 @@ export const videoStyle = (connectVideo: boolean) => css`
   gap: 20px;
 
   width: 80%;
-  max-width: 1000px;
-  background-color: ${theme.black};
 
   ${connectVideo || 'display: none;'};
 
   video {
     width: 200px;
-    height: 100px;
+    height: 150px;
     background: ${theme.white};
     border-radius: 10px 10px 0 0;
-  }
-
-  > button {
-    width: 50px;
-    height: 20px;
-    border-radius: 5px;
-    background-color: ${theme.red};
-    color: ${theme.white};
-
-    ${connectVideo || 'display: none;'};
   }
 `;
 
@@ -115,6 +103,7 @@ export const videoController = css`
 
 export const controllerBox = css`
   display: flex;
+  gap: 4px;
 `;
 
 export const controllerBtn = (img: string) => css`
@@ -122,8 +111,17 @@ export const controllerBtn = (img: string) => css`
   height: 14px;
 
   ${backgroundImage(img)}
+`;
 
-  :nth-of-type(1) {
-    margin-right: 5px;
-  }
+export const rejectBtn = (connectVideo: boolean) => css`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: ${theme.red};
+  ${backgroundImage(rejectCall)}
+
+  ${connectVideo || 'display: none;'};
 `;

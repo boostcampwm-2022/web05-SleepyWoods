@@ -102,8 +102,6 @@ const Call = () => {
         }));
 
       connectVideo || setConnectVideo(() => true);
-
-      console.log(`${id}님이 통화를 수락하셨습니다.`);
     });
 
     return () => {
