@@ -6,9 +6,12 @@ import {
   callingItemType,
   callingListState,
 } from '../../store/atom/callingList';
-import { VideoStyle } from './call.styled';
+import * as style from './call.styled';
 import RemoteVideo from './remoteVideo';
 import { userState } from '../../store/atom/user';
+import run from '../../assets/run.gif';
+import camOn from '../../assets/icon/cam-on.svg';
+import micOn from '../../assets/icon/mic-on.svg';
 
 const Video = () => {
   const socket = useRecoilValue(socketState);
@@ -165,8 +168,17 @@ const Video = () => {
 
   // 연결 수락이나 끊기 눌렀을 때, 통화 창 안 보이도록 해주기
   return (
-    <div css={VideoStyle}>
-      <video ref={localVideoRef} muted />
+    <div css={style.videoStyle}>
+      <div css={style.videoBox}>
+        <video ref={localVideoRef} muted poster={run} />
+        <div css={style.videoController}>
+          <span>{user.nickname}</span>
+          <div css={style.controllerBox}>
+            <button type="button" css={style.controllerBtn(camOn)}></button>
+            <button type="button" css={style.controllerBtn(micOn)}></button>
+          </div>
+        </div>
+      </div>
       {callingUserList.map((user: callingItemType) => (
         <RemoteVideo key={user.id} user={user} localVideoRef={localVideoRef} />
       ))}
