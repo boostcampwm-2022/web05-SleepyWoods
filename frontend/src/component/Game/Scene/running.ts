@@ -242,7 +242,6 @@ export default class Running extends Phaser.Scene {
       const { status } = data;
       if (status === 'START_GAME') {
         let cnt: any = 3;
-
         this.time.addEvent({
           delay: 1000,
           callback: () => {
@@ -256,17 +255,15 @@ export default class Running extends Phaser.Scene {
               }
             );
             this.time.delayedCall(1000, () => {
-              console.log('settimeout');
               cntText.destroy();
               cnt -= 1;
               if (!cnt) cnt = 'Start';
             });
           },
-          repeat: 4,
+          repeat: 3,
         });
 
         setTimeout(() => {
-          console.log('settimeout22');
           this.input.keyboard.enabled = true;
 
           const date = new Date();
