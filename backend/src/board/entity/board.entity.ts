@@ -20,7 +20,7 @@ export class Board {
   @Column('varchar', { length: 64 })
   userId: string;
 
-  @Column('varchar', { length: 128 })
+  @Column('varchar', { length: 256 })
   content: string;
 
   @Column({

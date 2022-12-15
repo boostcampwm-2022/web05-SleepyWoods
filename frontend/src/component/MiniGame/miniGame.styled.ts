@@ -305,3 +305,73 @@ export const backBtn = css`
   color: ${theme.white};
   border-radius: 10px;
 `;
+
+export const gameResult = css`
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column;
+  border-radius: 20px;
+  background-color: ${theme.white05};
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+`;
+
+export const commonContent = css`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+
+  width: 350px;
+  height: 200px;
+  line-height: 40px;
+  border: 2px solid ${theme.green};
+  border-radius: 15px;
+  margin-top: 30px;
+
+  strong {
+    color: ${theme.deepGreen};
+  }
+
+  div {
+    display: flex;
+    gap: 4px;
+  }
+`;
+
+export const resultContent = css`
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  height: 350px;
+  margin-top: 30px;
+
+  > div:first-of-type {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .buttonsWrapper {
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    border-radius: 10px;
+    color: ${theme.white};
+    margin-top: 50px;
+    padding: 10px;
+
+    &:first-of-type {
+      background-color: ${theme.deepGreen};
+    }
+    &:last-of-type {
+      background-color: ${theme.red};
+    }
+  }
+`;
