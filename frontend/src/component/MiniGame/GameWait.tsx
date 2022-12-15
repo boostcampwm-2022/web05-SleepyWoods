@@ -1,42 +1,67 @@
 import { useEffect, useState } from 'react';
 import { emitter } from '../Game/util';
 import * as style from './miniGame.styled';
-
+import { useRecoilValue } from 'recoil';
+import { socketState } from '../../store/atom/socket';
 const GameWait = ({
   selectModeFriend,
   initGame,
   gameName,
+  roomId
 }: {
   selectModeFriend: boolean;
   initGame: Function;
   gameName: string;
+  roomId:string;
 }) => {
+  const socket = useRecoilValue(socketState);
   const [waitUser, setWaitUser] = useState<{ nickname: string; id: string }[]>(
     []
   );
-  useEffect(() => {
-    // 대기하는 유저 받아오기
-
-    setWaitUser([
-      {
-        nickname: 'jongbin',
-        id: '120',
-      },
-      {
-        nickname: 'ktmihs',
-        id: '111',
-      },
-    ]);
-  }, []);
-
+  
   const gameStart = () => {
-    console.log(waitUser);
-    console.log('gameStart!');
+    console.log('gameStart 버튼 클릭!!');
 
-    emitter.emit('gameStart', { gameName, userList: waitUser });
+    socket.emit('readyGame', { gameRoomId:roomId });
 
     // game으로 emit scene 전환 이후 게임 시작
   };
+
+  const leaveGame = () => {
+    initGame();
+    socket.emit('leaveGameWatingList', {
+      gameRoomId: roomId
+    })
+  }
+
+  useEffect(() => {
+    const gameRoomUserListChanged = (data:any)=>{
+      // 대기하는 유저 받아오기
+      const {userList} = data;
+      // setWaitUser(userList=>userList);
+      // id, nickname 
+      console.log(userList)
+      setWaitUser(()=>userList);
+    }
+
+    const gameAlert = ({ status }:{ status: string }) => {
+      if (status==='READY_GAME'){
+        console.log('READY_GAME');
+        emitter.emit('readyGame', { gameName: gameName, roomId:roomId });
+      } 
+    }
+  
+  
+    socket.on("gameRoomUserListChanged", gameRoomUserListChanged);
+    socket.on('gameAlert',gameAlert);
+  
+    return ()=>{
+      socket.removeListener("gameRoomUserListChanged", gameRoomUserListChanged)
+      socket.removeListener('gameAlert',gameAlert)
+    }
+  }, []);
+
+  
 
   return (
     <div css={style.waitBox}>
@@ -60,7 +85,7 @@ const GameWait = ({
             게임 시작
           </button>
         )}
-        <button type="button" css={style.backBtn} onClick={() => initGame()}>
+        <button type="button" css={style.backBtn} onClick={leaveGame}>
           돌아가기
         </button>
       </div>

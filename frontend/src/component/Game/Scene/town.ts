@@ -26,8 +26,8 @@ export default class Town extends Phaser.Scene {
   }
 
   init() {
-    emitter.on('gameStart', (data: any) => {
-      this.changeScene(data.gameName);
+    emitter.on('readyGame', (data: any) => {
+      this.changeScene(data.gameName, data.roomId);
     });
 
     emitter.on('init', (data: gameInitType) => {
@@ -56,9 +56,9 @@ export default class Town extends Phaser.Scene {
       });
 
       const gameZonePosition = [
-        { name: 'Zombie', x: 540, y: 810 },
+        { name: 'Survival', x: 540, y: 810 },
         { name: 'Maze', x: 980, y: 1270 },
-        { name: 'Sprint', x: 1480, y: 680 },
+        { name: 'Running', x: 1480, y: 680 },
       ];
 
       this.gameEntry
@@ -134,17 +134,20 @@ export default class Town extends Phaser.Scene {
     emitter.emit('game-start');
   }
 
-  changeScene = (gameName: string) => {
+  changeScene = (gameName: string, roomId:string) => {
     emitter.emit('closeContent');
 
     this.scene.pause();
     this.scene.start(gameName, {
       socket: this.socket,
       myPlayer: this.myPlayer,
+      otherPlayer:this.otherPlayer,
       autoPlay: this.autoPlay,
+      roomId: roomId
     });
 
     // 자신의 캐릭터 지워주기
+
     this.myPlayer?.delete();
     delete this.myPlayer;
 
@@ -248,6 +251,7 @@ export default class Town extends Phaser.Scene {
     };
 
     const userCreated = (user: any) => {
+      console.log(user)
       const id = user.id.toString().trim();
       this.otherPlayer[id] = new OtherPlayer(this, user);
     };
@@ -277,6 +281,16 @@ export default class Town extends Phaser.Scene {
     this.socket.on('move', move);
     this.socket.on('userLeaved', userLeaved);
     this.socket.on('userDataChanged', userDataChanged);
+    
+    // emitter.on('readyGame', (data: any) => {
+      // this.socket?.removeListener('userInitiated', userInitiated);
+      // this.socket?.removeListener('userCreated', userCreated);
+      // this.socket?.removeListener('move', move);
+      // this.socket?.removeListener('userLeaved', userLeaved);
+      // this.socket?.removeListener('userDataChanged', userDataChanged);
+
+    //   this.changeScene(data.gameName, data.roomId);
+    // });
   }
 
   musicControll() {

@@ -66,6 +66,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
       }
     );
 
+    console.log('scene in player',scene);
     scene.physics.add.existing(this);
     this.getBody().setCollideWorldBounds(true).setSize(30, 50);
 

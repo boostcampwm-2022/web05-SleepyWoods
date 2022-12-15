@@ -2,10 +2,11 @@ import { Socket } from 'socket.io-client';
 import { MyPlayer } from '../Phaser/Player/myPlayer';
 import { OtherPlayer } from '../Phaser/Player/otherPlayer';
 import { emitter } from '../util';
+import {  userType } from '../../../types/types';
 
 const backToTown = { x: 1600, y: 1900 };
 
-export default class Sprint extends Phaser.Scene {
+export default class Running extends Phaser.Scene {
   socket?: Socket;
   autoPlay?: boolean;
   background?: Phaser.Tilemaps.TilemapLayer;
@@ -14,14 +15,17 @@ export default class Sprint extends Phaser.Scene {
   otherPlayer: { [key: string]: OtherPlayer };
   gameEntry?: any;
   isEnterGameZone?: any;
+  roomId:string | undefined;
 
   constructor() {
-    super('Sprint');
+    super('Running');
 
     this.otherPlayer = {};
+    
   }
 
   init(data: any) {
+    this.roomId = data.roomId;
     this.myPlayer = new MyPlayer(
       this,
       1750,
@@ -31,6 +35,11 @@ export default class Sprint extends Phaser.Scene {
       data.myPlayer.nickname,
       data.socket
     );
+
+    this.socket = data.socket
+    console.log(data.socket)
+    // this.socketInit()
+    
 
     this.gameEntry = this.physics.add.staticGroup({
       key: 'portal',
@@ -79,12 +88,16 @@ export default class Sprint extends Phaser.Scene {
         this.changeScene('Town');
       }
     });
+
+    this.input.keyboard.manager.enabled = false;
   }
 
   create() {
+    this.socket?.emit('startGame', { gameRoomId:this.roomId, gameType:'Running'});
+
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
-    const map = this.make.tilemap({ key: 'sprint' });
+    const map = this.make.tilemap({ key: 'running' });
     const tileset3 = map.addTilesetImage('tileset3', 'tileset3');
 
     map.createLayer('background', tileset3, 0, 0).setScale(2.5);
@@ -119,4 +132,72 @@ export default class Sprint extends Phaser.Scene {
       autoPlay: this.autoPlay,
     });
   };
+
+  socketInit() {
+    console.log(this.socket)
+    if (!this.socket) return;
+    console.log('socket init!!!')
+
+    const userInitiated = (data: userType[]) => {
+      console.log(data)
+      if (!Array.isArray(data)) data = [data];
+
+      data.forEach((user: userType) => {
+        const id = user.id.toString().trim();
+        if (this.myPlayer?.id === id) return;
+        if (this.otherPlayer[id]) return;
+
+        this.otherPlayer[id] = new OtherPlayer(this, user);
+      });
+    };
+
+    const userCreated = (user: any) => {
+      const id = user.id.toString().trim();
+      this.otherPlayer[id] = new OtherPlayer(this, user);
+    };
+
+    const move = (data: userType) => {
+      const id = data.id.toString().trim();
+
+      if (!this.otherPlayer[id]) return;
+      const { state, x, y, direction } = data;
+      this.otherPlayer[id].update(state, x, y, direction);
+    };
+
+    const userLeaved = (data: userType) => {
+      const id = data.id.toString().trim();
+      console.log(this.otherPlayer[id], id)  
+      try{
+          this.otherPlayer[id].delete();
+          delete this.otherPlayer[id];
+        }catch(e){
+          console.log("이미 사라졌습니다.");
+        }
+    };
+
+    const userDataChanged = (data: userType) => {
+      const { id, nickname, characterName } = data;
+      this.otherPlayer[id].updateNickname(nickname);
+      this.otherPlayer[id].updateHair(characterName);
+    };
+
+    this.socket.on('userInitiated', userInitiated);
+    this.socket.on('userCreated', userCreated);
+    this.socket.on('move', move);
+    this.socket.on('userLeaved', userLeaved);
+    this.socket.on('userDataChanged', userDataChanged);
+    
+    // this.socket.emit('startGame', { gameRoomId:this.roomId, gameType:'Running'});
+    
+    // emitter.on('gameStart', (data: any) => {
+      // console.log('소켓 지워줌~~??')
+      // this.socket?.removeListener('userInitiated', userInitiated);
+      // this.socket?.removeListener('userCreated', userCreated);
+      // this.socket?.removeListener('move', move);
+      // this.socket?.removeListener('userLeaved', userLeaved);
+      // this.socket?.removeListener('userDataChanged', userDataChanged);
+
+    //   this.changeScene(data.gameName);
+    // });
+  }
 }

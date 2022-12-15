@@ -1,6 +1,8 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import * as style from './miniGame.styled';
 import { v1 } from 'uuid';
+import { useRecoilValue } from 'recoil';
+import { socketState } from '../../store/atom/socket';
 
 const FriendMode = ({
   setRoomId,
@@ -12,6 +14,7 @@ const FriendMode = ({
   initGame: Function;
 }) => {
   const [inputRoom, setInputRoom] = useState('');
+  const socket = useRecoilValue(socketState);
 
   //
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -21,7 +24,10 @@ const FriendMode = ({
   const createRoom = () => {
     const id = v1();
     setRoomId(id);
-
+    
+    socket.emit('createNewGameRoom',{
+      gameRoomId : id
+    })
     console.log('방생성!', id);
   };
 
@@ -30,11 +36,28 @@ const FriendMode = ({
       alert('방 id를 확인해주세요');
       return;
     }
+    socket.emit("joinGameRoom", {
+      gameRoomId : inputRoom
+    })
 
     console.log('방 아이디: ', inputRoom);
     console.log('친구방 입장!');
-    setIsReady(false);
   };
+  
+  useEffect(()=>{
+    const gameAlert = ({status, message}:{status:string, message:any}) => {
+        if(status==='ROOM_NOT_EXIST'){
+          alert(message);
+        }else if (status==='JOIN_ROOM_SUCCESS'){
+          setRoomId(message)
+        }
+    }
+    socket.on('gameAlert',gameAlert)
+    
+    return ()=>{
+      socket.removeListener('gameAlert',gameAlert)
+    }
+  }, []);
 
   return (
     <>
