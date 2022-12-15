@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import { userType } from '../../../types/types';
 import { MyPlayer } from '../Phaser/Player/myPlayer';
 import { OtherPlayer } from '../Phaser/Player/otherPlayer';
 import { emitter } from '../util';
@@ -13,17 +14,25 @@ export default class Maze extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   gameEntry?: any;
+  flag?: any;
+  exit?: any;
   isEnterGameZone?: any;
+  roomId: string | undefined;
+  gameName: string;
+  gameTimerText: any;
+  gameTimer: any;
+  userTime: string;
 
   constructor() {
     super('Maze');
 
     this.otherPlayer = {};
+    this.gameName = 'Maze';
+    this.userTime = '00:00';
   }
 
   init(data: any) {
-    this.socket = data.socket;
-    this.autoPlay = data.autoPlay;
+    this.roomId = data.roomId;
     this.myPlayer = new MyPlayer(
       this,
       1000,
@@ -33,11 +42,23 @@ export default class Maze extends Phaser.Scene {
       data.myPlayer.nickname,
       data.socket
     );
-
     this.myPlayer.fixState(true, 'swimming', 1);
+
+    this.socket = data.socket;
+    this.socketInit();
 
     this.gameEntry = this.physics.add.staticGroup({
       key: 'portal',
+      frameQuantity: 1,
+    });
+
+    this.flag = this.physics.add.staticGroup({
+      key: 'flag',
+      frameQuantity: 1,
+    });
+
+    this.exit = this.physics.add.staticGroup({
+      key: 'flag',
       frameQuantity: 1,
     });
 
@@ -46,7 +67,12 @@ export default class Maze extends Phaser.Scene {
       .setPosition(backToTown.x, backToTown.y)
       .setDepth(3);
 
+    this.flag.getChildren()[0].setPosition(1000, 500).setDepth(3);
+    this.exit.getChildren()[0].setPosition(1400, 550).setDepth(0);
+
     this.gameEntry.refresh();
+    this.flag.refresh();
+    this.exit.refresh();
 
     const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
 
@@ -83,8 +109,35 @@ export default class Maze extends Phaser.Scene {
         this.changeScene('Town');
       }
     });
-  }
 
+    const flagOverlap = this.physics.add.overlap(
+      this.myPlayer,
+      this.flag,
+      () => {
+        // 모든 유저 움직임 멈춤
+        this.socket?.emit('winnerEmitter', {
+          gameRoomId: this.roomId,
+          gameType: this.gameName,
+          gameTime: this.userTime,
+        });
+
+        flagOverlap.destroy();
+        clearInterval(this.gameTimer);
+      }
+    );
+
+    const exitOverlap = this.physics.add.overlap(
+      this.myPlayer,
+      this.exit,
+      () => {
+        // 모든 유저 움직임 멈춤
+        this.myPlayer?.fixState(false, 'wait', 1);
+        exitOverlap.destroy();
+      }
+    );
+
+    this.input.keyboard.enabled = false;
+  }
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
@@ -112,6 +165,18 @@ export default class Maze extends Phaser.Scene {
       this.otherLayer.width * 2.5,
       this.otherLayer.height * 2.5
     );
+
+    // 타이머
+    this.gameTimerText = this.add
+      .text(0, 0, '00:00', {
+        font: '50px Arial',
+        color: '#fff',
+        padding: {
+          top: 10,
+          left: 30,
+        },
+      })
+      .setScrollFactor(0, 0);
   }
 
   update() {
@@ -120,6 +185,7 @@ export default class Maze extends Phaser.Scene {
 
   changeScene = (gameName: string) => {
     emitter.emit('closeContent');
+    this.socket?.emit('leaveGame', { gameRoomId: this.roomId });
 
     this.scene.pause();
     this.scene.start(gameName, {
@@ -128,4 +194,130 @@ export default class Maze extends Phaser.Scene {
       autoPlay: this.autoPlay,
     });
   };
+
+  socketInit() {
+    if (!this.socket) return;
+
+    const userInitiated = (data: userType[]) => {
+      if (!Array.isArray(data)) data = [data];
+
+      data.forEach((user: userType) => {
+        const id = user.id.toString().trim();
+        if (this.myPlayer?.id === id) return;
+        if (this.otherPlayer[id]) return;
+        this.otherPlayer[id] = new OtherPlayer(this, {
+          ...user,
+          x: 1000,
+          y: 1500,
+        });
+      });
+    };
+
+    const userCreated = (user: any) => {
+      const id = user.id.toString().trim();
+      if (this.myPlayer?.id === id) return;
+      if (this.otherPlayer[id]) return;
+
+      this.otherPlayer[id] = new OtherPlayer(this, {
+        ...user,
+        x: 1000,
+        y: 1500,
+      });
+    };
+
+    const move = (data: userType) => {
+      const id = data.id.toString().trim();
+
+      if (!this.otherPlayer[id]) return;
+      const { state, x, y, direction } = data;
+      this.otherPlayer[id].update(state, x, y, direction);
+    };
+
+    const userLeaved = (data: userType) => {
+      const id = data.id.toString().trim();
+      try {
+        this.otherPlayer[id].delete();
+        delete this.otherPlayer[id];
+      } catch (e) {
+        console.log('이미 사라졌습니다.');
+      }
+    };
+
+    const userDataChanged = (data: userType) => {
+      const { id, nickname, characterName } = data;
+      this.otherPlayer[id].updateNickname(nickname);
+      this.otherPlayer[id].updateHair(characterName);
+    };
+
+    const gameAlert = (data: any) => {
+      const { status } = data;
+      if (status === 'START_GAME') {
+        let cnt: any = 3;
+        const interval = setInterval(() => {
+          const cntText = this.add.text(
+            1000 - (cnt === 'Start' ? 60 : 20),
+            1300 - (cnt === 'Start' ? 40 : 60),
+            `${cnt}`,
+            {
+              color: '#fff',
+              font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
+            }
+          );
+
+          setTimeout(() => {
+            cntText.destroy();
+            cnt -= 1;
+            if (!cnt) cnt = 'Start';
+          }, 900);
+        }, 1000);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          this.input.keyboard.enabled = true;
+
+          const date = new Date();
+          const currentTime = date.getTime();
+          this.gameTimer = setInterval(() => {
+            this.userTime = this.updateTimer(currentTime);
+            this.gameTimerText.setText(this.userTime);
+          }, 1000);
+        }, 4000);
+      }
+    };
+
+    this.socket.on('userInitiated', userInitiated);
+    this.socket.on('userCreated', userCreated);
+    this.socket.on('move', move);
+    this.socket.on('userLeaved', userLeaved);
+    this.socket.on('userDataChanged', userDataChanged);
+    this.socket.on('gameAlert', gameAlert);
+
+    this.socket.emit('startGame', {
+      gameRoomId: this.roomId,
+      gameType: 'Maze',
+    });
+
+    emitter.on('leaveGame', (data: any) => {
+      if (!this.socket) return;
+      this.socket.removeListener('userInitiated', userInitiated);
+      this.socket.removeListener('userCreated', userCreated);
+      this.socket.removeListener('move', move);
+      this.socket.removeListener('userLeaved', userLeaved);
+      this.socket.removeListener('userDataChanged', userDataChanged);
+    });
+  }
+
+  updateTimer(currentTime: number) {
+    const date = new Date();
+    const timeDiff = date.getTime() - currentTime;
+
+    const m = Math.abs(Math.round(Math.floor(timeDiff / 1000) / 60))
+      .toString()
+      .padStart(2, '0');
+    const s = Math.abs(Math.round(timeDiff / 1000) % 60)
+      .toString()
+      .padStart(2, '0');
+
+    return `${m}:${s}`;
+  }
 }
