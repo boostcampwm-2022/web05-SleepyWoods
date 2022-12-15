@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { FormEvent, MouseEvent, useState } from 'react';
-import { useRecoilState } from 'recoil';
 import { friendsState } from '../../../store/atom/friends';
 import { findFriend } from './friends.styled';
-
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { socketState } from '../../../store/atom/socket';
 type nicknameType = {
   userId: string;
   isCalling: boolean;
@@ -12,6 +12,7 @@ type nicknameType = {
 };
 
 const Search = () => {
+  const socket = useRecoilValue(socketState);
   const [friends, setFriends] = useRecoilState(friendsState);
   const [searchWord, setSearchWord] = useState<string>('');
   const [nicknameList, setNicknameList] = useState<nicknameType[]>([]);
@@ -41,6 +42,23 @@ const Search = () => {
         });
 
         alert('팔로우 되었습니다.');
+        socket.emit(
+          'getUserState',
+          {
+            targetUserId: data.userId,
+          },
+          (userState: string) => {
+            setFriends({
+              ...friends,
+              [data.userId]: {
+                id: data.userId,
+                status: userState,
+                nickname: data.nickname,
+                isCalling: false,
+              },
+            });
+          }
+        );
       } catch {
         alert('팔로우 실패');
       }
