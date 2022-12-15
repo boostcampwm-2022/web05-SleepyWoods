@@ -5,6 +5,9 @@ import FriendMode from './FriendMode';
 import ModeBox from './ModeBox';
 import GameCode from './GameCode';
 import GameWait from './GameWait';
+import GameResult from './GameResult';
+import { useRecoilValue } from 'recoil';
+import { socketState } from '../../store/atom/socket';
 
 const games: { [key: string]: string } = {
   Survival: '술래를 피해 끝까지 살아남으세요!',
@@ -12,33 +15,47 @@ const games: { [key: string]: string } = {
   Maze: '보이지 않는 길을 찾아 모래사장에 도달하세요!',
 };
 
-const gamesName: { [key: string]: string } = {
+export const gamesName: { [key: string]: string } = {
   Survival: '살아남기',
   Running: '달리기경주',
   Maze: '미로탈출',
 };
 
 const MiniGame = () => {
+  const socket = useRecoilValue(socketState);
   const [isShowModal, setIsShowModal] = useState(false);
   const [selectGame, setSelectGame] = useState('');
   const [selectModeFriend, setSelectModeFriend] = useState(false);
   const [roomId, setRoomId] = useState('');
   const [isReady, setIsReady] = useState(false);
+  const [isGameFinish, setIsGameFinish] = useState(false);
+  const [winnerGame, setWinnerGame] = useState<any>(undefined);
 
   useEffect(() => {
-    emitter.on('game', ({ gameName }: { gameName: string }) => {
+    const game = ({ gameName }: { gameName: string }) => {
       setIsShowModal(true);
       setSelectGame(gameName);
-    });
+    };
 
-    emitter.on('closeContent', () => {
+    const closeContent = () => {
       setIsShowModal(false);
       initGame();
-    });
+    };
+
+    const finishGame = (data: any) => {
+      setWinnerGame(data);
+      setIsShowModal(true);
+      setIsGameFinish(true);
+    };
+
+    emitter.on('game', game);
+    emitter.on('closeContent', closeContent);
+    socket.on('finishGame', finishGame);
 
     return () => {
-      emitter.removeListener('closeContent');
-      emitter.removeListener('game');
+      emitter.removeListener('game', game);
+      emitter.removeListener('closeContent', closeContent);
+      socket.removeListener('finishGame', finishGame);
     };
   }, []);
 
@@ -63,41 +80,50 @@ const MiniGame = () => {
               onClick={handleModal}></button>
             <h3 css={style.header}>🎮 {gamesName[selectGame]}</h3>
             <div css={style.game}>
-              <div css={style.gameInfo}>{games[selectGame]}</div>
-              <div css={style.selectModes}>
-                {roomId ? (
-                  <>
-                    <GameCode roomId={roomId} />
-                    <GameWait
-                      selectModeFriend={selectModeFriend}
-                      initGame={initGame}
-                      gameName={selectGame}
-                      roomId={roomId}
-                    />
-                  </>
-                ) : isReady ? (
-                  <>
-                    {selectModeFriend && <GameCode roomId={roomId} />}
-                    <GameWait
-                      selectModeFriend={selectModeFriend}
-                      initGame={initGame}
-                      gameName={selectGame}
-                      roomId={roomId}
+              {isGameFinish ? (
+                <GameResult
+                  setIsGameFinish={setIsGameFinish}
+                  winnerGame={winnerGame}
+                />
+              ) : (
+                <>
+                  <div css={style.gameInfo}>{games[selectGame]}</div>
+                  <div css={style.selectModes}>
+                    {roomId ? (
+                      <>
+                        <GameCode roomId={roomId} />
+                        <GameWait
+                          selectModeFriend={selectModeFriend}
+                          initGame={initGame}
+                          gameName={selectGame}
+                          roomId={roomId}
+                        />
+                      </>
+                    ) : isReady ? (
+                      <>
+                        {selectModeFriend && <GameCode roomId={roomId} />}
+                        <GameWait
+                          selectModeFriend={selectModeFriend}
+                          initGame={initGame}
+                          gameName={selectGame}
+                          roomId={roomId}
+                        />
+                      </>
+                    ) : !selectModeFriend ? (
+                      <ModeBox
+                        setSelectModeFriend={setSelectModeFriend}
+                        setIsReady={setIsReady}
                       />
-                  </>
-                ) : !selectModeFriend ? (
-                  <ModeBox
-                    setSelectModeFriend={setSelectModeFriend}
-                    setIsReady={setIsReady}
-                  />
-                ) : (
-                  <FriendMode
-                    setRoomId={setRoomId}
-                    setIsReady={setIsReady}
-                    initGame={initGame}
-                  />
-                )}
-              </div>
+                    ) : (
+                      <FriendMode
+                        setRoomId={setRoomId}
+                        setIsReady={setIsReady}
+                        initGame={initGame}
+                      />
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </section>
         </>

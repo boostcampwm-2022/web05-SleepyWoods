@@ -2,7 +2,7 @@ import { Socket } from 'socket.io-client';
 import { MyPlayer } from '../Phaser/Player/myPlayer';
 import { OtherPlayer } from '../Phaser/Player/otherPlayer';
 import { emitter } from '../util';
-import {  userType } from '../../../types/types';
+import { userType } from '../../../types/types';
 
 const backToTown = { x: 1600, y: 1900 };
 
@@ -14,18 +14,30 @@ export default class Running extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   gameEntry?: any;
+  finishLine?: any;
   isEnterGameZone?: any;
-  roomId:string | undefined;
+  roomId: string | undefined;
+  gameName: string;
+  gameTimerText: any;
+  gameTimer: any;
+  userTime: string;
 
   constructor() {
     super('Running');
 
     this.otherPlayer = {};
-    
+    this.gameName = 'Running';
+    this.userTime = '00:00';
   }
 
   init(data: any) {
+    this.otherPlayer = {};
+    this.gameName = 'Running';
+    this.userTime = '00:00';
     this.roomId = data.roomId;
+    this.myPlayer?.delete();
+    delete this.myPlayer;
+
     this.myPlayer = new MyPlayer(
       this,
       1750,
@@ -36,13 +48,16 @@ export default class Running extends Phaser.Scene {
       data.socket
     );
 
-    this.socket = data.socket
-    console.log(data.socket)
-    // this.socketInit()
-    
+    this.socket = data.socket;
+    this.socketInit();
 
     this.gameEntry = this.physics.add.staticGroup({
       key: 'portal',
+      frameQuantity: 1,
+    });
+
+    this.finishLine = this.physics.add.staticGroup({
+      key: 'finishLine',
       frameQuantity: 1,
     });
 
@@ -51,7 +66,10 @@ export default class Running extends Phaser.Scene {
       .setPosition(backToTown.x, backToTown.y)
       .setDepth(3);
 
+    this.finishLine.getChildren()[0].setPosition(300, 1780).setDepth(3);
+
     this.gameEntry.refresh();
+    this.finishLine.refresh();
 
     const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
 
@@ -89,12 +107,30 @@ export default class Running extends Phaser.Scene {
       }
     });
 
-    this.input.keyboard.manager.enabled = false;
+    const overlap = this.physics.add.overlap(
+      this.myPlayer,
+      this.finishLine,
+      () => {
+        // 모든 유저 움직임 멈춤
+        this.socket?.emit('winnerEmitter', {
+          gameRoomId: this.roomId,
+          gameType: this.gameName,
+          gameTime: this.userTime,
+        });
+
+        overlap.destroy();
+        this.gameTimer.remove();
+      }
+    );
+
+    this.input.keyboard.enabled = false;
+
+    emitter.on('exitGame', () => {
+      this.changeScene('Town');
+    });
   }
 
   create() {
-    this.socket?.emit('startGame', { gameRoomId:this.roomId, gameType:'Running'});
-
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
     const map = this.make.tilemap({ key: 'running' });
@@ -116,6 +152,18 @@ export default class Running extends Phaser.Scene {
       this.otherLayer.width * 2.5,
       this.otherLayer.height * 2.5
     );
+
+    // 타이머
+    this.gameTimerText = this.add
+      .text(0, 0, '00:00', {
+        font: '50px Arial',
+        color: '#fff',
+        padding: {
+          top: 10,
+          left: 30,
+        },
+      })
+      .setScrollFactor(0, 0);
   }
 
   update() {
@@ -124,6 +172,9 @@ export default class Running extends Phaser.Scene {
 
   changeScene = (gameName: string) => {
     emitter.emit('closeContent');
+    this.socket?.emit('leaveGame', { gameRoomId: this.roomId });
+    emitter.emit('leaveGame');
+    this.gameTimerText.destroy();
 
     this.scene.pause();
     this.scene.start(gameName, {
@@ -134,26 +185,33 @@ export default class Running extends Phaser.Scene {
   };
 
   socketInit() {
-    console.log(this.socket)
     if (!this.socket) return;
-    console.log('socket init!!!')
 
     const userInitiated = (data: userType[]) => {
-      console.log(data)
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: userType) => {
         const id = user.id.toString().trim();
         if (this.myPlayer?.id === id) return;
         if (this.otherPlayer[id]) return;
-
-        this.otherPlayer[id] = new OtherPlayer(this, user);
+        this.otherPlayer[id] = new OtherPlayer(this, {
+          ...user,
+          x: 1750,
+          y: 1900,
+        });
       });
     };
 
     const userCreated = (user: any) => {
       const id = user.id.toString().trim();
-      this.otherPlayer[id] = new OtherPlayer(this, user);
+      if (this.myPlayer?.id === id) return;
+      if (this.otherPlayer[id]) return;
+
+      this.otherPlayer[id] = new OtherPlayer(this, {
+        ...user,
+        x: 1750,
+        y: 1900,
+      });
     };
 
     const move = (data: userType) => {
@@ -166,13 +224,12 @@ export default class Running extends Phaser.Scene {
 
     const userLeaved = (data: userType) => {
       const id = data.id.toString().trim();
-      console.log(this.otherPlayer[id], id)  
-      try{
-          this.otherPlayer[id].delete();
-          delete this.otherPlayer[id];
-        }catch(e){
-          console.log("이미 사라졌습니다.");
-        }
+      try {
+        this.otherPlayer[id].delete();
+        delete this.otherPlayer[id];
+      } catch (e) {
+        console.log('이미 사라졌습니다.');
+      }
     };
 
     const userDataChanged = (data: userType) => {
@@ -181,23 +238,91 @@ export default class Running extends Phaser.Scene {
       this.otherPlayer[id].updateHair(characterName);
     };
 
+    const gameAlert = (data: any) => {
+      const { status } = data;
+      if (status === 'START_GAME') {
+        let cnt: any = 3;
+
+        this.time.addEvent({
+          delay: 1000,
+          callback: () => {
+            const cntText = this.add.text(
+              1750 - (cnt === 'Start' ? 60 : 20),
+              1700 - (cnt === 'Start' ? 40 : 60),
+              `${cnt}`,
+              {
+                color: '#fff',
+                font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
+              }
+            );
+            this.time.delayedCall(1000, () => {
+              console.log('settimeout');
+              cntText.destroy();
+              cnt -= 1;
+              if (!cnt) cnt = 'Start';
+            });
+          },
+          repeat: 4,
+        });
+
+        setTimeout(() => {
+          console.log('settimeout22');
+          this.input.keyboard.enabled = true;
+
+          const date = new Date();
+          const currentTime = date.getTime();
+
+          this.gameTimer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+              this.userTime = this.updateTimer(currentTime);
+              this.gameTimerText.setText(this.userTime);
+            },
+            loop: true,
+          });
+        }, 4000);
+      }
+    };
+
     this.socket.on('userInitiated', userInitiated);
     this.socket.on('userCreated', userCreated);
     this.socket.on('move', move);
     this.socket.on('userLeaved', userLeaved);
     this.socket.on('userDataChanged', userDataChanged);
-    
-    // this.socket.emit('startGame', { gameRoomId:this.roomId, gameType:'Running'});
-    
-    // emitter.on('gameStart', (data: any) => {
-      // console.log('소켓 지워줌~~??')
-      // this.socket?.removeListener('userInitiated', userInitiated);
-      // this.socket?.removeListener('userCreated', userCreated);
-      // this.socket?.removeListener('move', move);
-      // this.socket?.removeListener('userLeaved', userLeaved);
-      // this.socket?.removeListener('userDataChanged', userDataChanged);
+    this.socket.on('gameAlert', gameAlert);
 
-    //   this.changeScene(data.gameName);
-    // });
+    this.socket.emit('startGame', {
+      gameRoomId: this.roomId,
+      gameType: 'Running',
+    });
+
+    const leaveGame = () => {
+      if (!this.socket) return;
+
+      this.socket.removeListener('userInitiated', userInitiated);
+      this.socket.removeListener('userCreated', userCreated);
+      this.socket.removeListener('move', move);
+      this.socket.removeListener('userLeaved', userLeaved);
+      this.socket.removeListener('userDataChanged', userDataChanged);
+      this.socket.removeListener('gameAlert', gameAlert);
+
+      emitter.removeListener('leaveGame', leaveGame);
+    };
+
+    emitter.on('leaveGame', leaveGame);
+  }
+
+  updateTimer(currentTime: number) {
+    const date = new Date();
+    const timeDiff = date.getTime() - currentTime;
+
+    const m = Math.abs(Math.round(Math.floor(timeDiff / 1000) / 60))
+      .toString()
+      .padStart(2, '0');
+    const s = Math.abs(Math.round(timeDiff / 1000) % 60)
+      .toString()
+      .padStart(2, '0');
+
+    return `${m}:${s}`;
   }
 }

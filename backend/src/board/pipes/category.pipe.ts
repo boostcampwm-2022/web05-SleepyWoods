@@ -10,9 +10,9 @@ export class articleCategoryValidationPipe implements PipeTransform {
   readonly categoryOptions: string[] = Object.values(articleCategory);
 
   transform(value: ArticleDataDto, metadata: ArgumentMetadata) {
-    const category = value.category.toLowerCase();
-    if (!this.isValid(category)) {
-      throw new BadRequestException(`${category} can't be the category`);
+    const val = value.category;
+    if (!this.isValid(val)) {
+      throw new BadRequestException(`${val} can't be the category`);
     }
     return value;
   }

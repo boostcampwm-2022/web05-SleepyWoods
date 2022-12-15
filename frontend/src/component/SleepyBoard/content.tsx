@@ -39,7 +39,9 @@ const Content = ({ data }: { data: boardType }) => {
           <span css={style.time}>{createdDate}</span>
         </div>
         <h3 css={style.category}>{category}</h3>
-        <div css={style.description}>{content}</div>
+        {content.split('$').map(text => (
+          <div css={style.description}>{text}</div>
+        ))}
       </div>
       <button
         data-articleid={id}

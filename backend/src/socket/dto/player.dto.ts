@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { directionOptions, stateOptions } from '../enum/player.enum';
 
 export class playerMovementDataDto {
   @IsNotEmpty()
@@ -11,9 +12,9 @@ export class playerMovementDataDto {
 
   @IsNotEmpty()
   @IsString()
-  direction: string;
+  direction: directionOptions;
 
   @IsNotEmpty()
   @IsString()
-  state: string;
+  state: stateOptions;
 }

@@ -7,61 +7,68 @@ const GameWait = ({
   selectModeFriend,
   initGame,
   gameName,
-  roomId
+  roomId,
 }: {
   selectModeFriend: boolean;
   initGame: Function;
   gameName: string;
-  roomId:string;
+  roomId: string;
 }) => {
   const socket = useRecoilValue(socketState);
   const [waitUser, setWaitUser] = useState<{ nickname: string; id: string }[]>(
     []
   );
-  
+
   const gameStart = () => {
-    console.log('gameStart 버튼 클릭!!');
-
-    socket.emit('readyGame', { gameRoomId:roomId });
-
-    // game으로 emit scene 전환 이후 게임 시작
+    socket.emit('readyGame', { gameRoomId: roomId });
   };
 
   const leaveGame = () => {
     initGame();
     socket.emit('leaveGameWatingList', {
-      gameRoomId: roomId
-    })
-  }
+      gameRoomId: roomId,
+    });
+  };
 
   useEffect(() => {
-    const gameRoomUserListChanged = (data:any)=>{
-      // 대기하는 유저 받아오기
-      const {userList} = data;
-      // setWaitUser(userList=>userList);
-      // id, nickname 
-      console.log(userList)
-      setWaitUser(()=>userList);
-    }
+    const enterRandomGameRoom = () => {
+      socket.emit('enterRandomGameRoom', {
+        gameType: gameName,
+      });
+    };
 
-    const gameAlert = ({ status }:{ status: string }) => {
-      if (status==='READY_GAME'){
-        console.log('READY_GAME');
-        emitter.emit('readyGame', { gameName: gameName, roomId:roomId });
-      } 
+    const gameRoomUserListChanged = (data: any) => {
+      const { userList } = data;
+      setWaitUser(() => userList);
+    };
+
+    const gameAlert = ({
+      status,
+      message,
+    }: {
+      status: string;
+      message: string;
+    }) => {
+      if (status === 'READY_GAME') {
+        if (!selectModeFriend) {
+          emitter.emit('readyGame', { gameName: gameName, roomId: message });
+        } else {
+          emitter.emit('readyGame', { gameName: gameName, roomId: roomId });
+        }
+      }
+    };
+
+    socket.on('gameRoomUserListChanged', gameRoomUserListChanged);
+    socket.on('gameAlert', gameAlert);
+
+    if (!selectModeFriend) {
+      enterRandomGameRoom();
     }
-  
-  
-    socket.on("gameRoomUserListChanged", gameRoomUserListChanged);
-    socket.on('gameAlert',gameAlert);
-  
-    return ()=>{
-      socket.removeListener("gameRoomUserListChanged", gameRoomUserListChanged)
-      socket.removeListener('gameAlert',gameAlert)
-    }
+    return () => {
+      socket.removeListener('gameRoomUserListChanged', gameRoomUserListChanged);
+      socket.removeListener('gameAlert', gameAlert);
+    };
   }, []);
-
-  
 
   return (
     <div css={style.waitBox}>

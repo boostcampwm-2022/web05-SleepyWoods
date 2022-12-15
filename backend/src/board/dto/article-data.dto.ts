@@ -4,11 +4,11 @@ import { articleCategory } from '../article.enum';
 export class ArticleDataDto {
   @IsNotEmpty()
   @IsString()
-  @MaxLength(36)
+  @MaxLength(256)
   content: string;
 
   @IsNotEmpty()
   @IsString()
-  @MaxLength(36)
+  @MaxLength(32)
   category: articleCategory;
 }
