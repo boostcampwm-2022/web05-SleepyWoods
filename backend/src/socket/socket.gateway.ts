@@ -1,4 +1,4 @@
-import { UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Session, UseFilters, UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -16,6 +16,25 @@ import { movementValidationPipe } from './pipes/movement.pipe';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { signupDataDto } from 'src/auth/dto/user-data.dto';
 import { Cron } from '@nestjs/schedule';
+
+const initPositionByRoomName = {
+  town: {
+    x: 800,
+    y: 800,
+  },
+  Maze: {
+    x: 1000,
+    y: 1500,
+  },
+  Running: {
+    x: 1750,
+    y: 1900,
+  },
+  Survival: {
+    x: 1000,
+    y: 1500,
+  },
+};
 
 @UseFilters(WsExceptionFilter)
 @WebSocketGateway({
@@ -37,7 +56,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   /** room 안의 유저들을 불러옵니다. */
   public getRoomUserData(roomName: string) {
     const roomUser = [];
-    this.server.sockets.adapter.rooms.get(roomName)?.forEach(e => {
+    if (!this.server.sockets.adapter.rooms.has(roomName)) return [];
+    this.server.sockets.adapter.rooms.get(roomName).forEach(e => {
       roomUser.push(this.server.sockets.sockets.get(e)['userData']);
     });
 
@@ -315,5 +335,120 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     const { iceCandidates } = payload;
     client.to(callingRoom).emit('remoteIce', { iceCandidates });
+  }
+  // 미니게임 친구들과 함께 하기 지정방!
+
+  @SubscribeMessage('createNewGameRoom')
+  handleCreateNewGameRoom(client: any, payload: any) {
+    const { gameRoomId } = payload;
+    // 방장이 방을 만들어서 타운에서 대기하고 있고! 이 방에 대기를 거는 사람들을 계속 뿌려줘야함!
+    client.join(gameRoomId);
+    this.server.to(gameRoomId).emit('gameRoomUserListChanged', {
+      userList: this.getRoomUserData(gameRoomId),
+    });
+    // client.to(callingRoom).emit('remoteIce', { iceCandidates });
+  }
+
+  @SubscribeMessage('joinGameRoom')
+  handleJoinGameRoom(client: any, payload: any) {
+    const { gameRoomId } = payload;
+    const gameRoom = this.server.sockets.adapter.rooms.get(gameRoomId);
+    if (gameRoom && gameRoom.size < 4) {
+      // 잘 들어갔다고 알려줄거야
+      client.join(gameRoomId);
+      this.server.to(client.id).emit('gameAlert', {
+        status: 'JOIN_ROOM_SUCCESS',
+        message: gameRoomId,
+      });
+      this.server.to(gameRoomId).emit('gameRoomUserListChanged', {
+        userList: this.getRoomUserData(gameRoomId),
+      });
+    } else {
+      this.server.to(client.id).emit('gameAlert', {
+        status: 'ROOM_NOT_EXIST',
+        message: '해당하는 방이 없습니다.',
+      });
+    }
+  }
+
+  public roomChange(
+    userSocketIdList,
+    prevRoomName,
+    nextRoomName,
+    nextRoomType
+  ) {
+    // 캐릭터 중복문제 발생시 분명 여기임
+
+    // socketId -> client[userData]
+    userSocketIdList.forEach(userSocketId => {
+      const user = this.server.sockets.sockets.get(userSocketId);
+
+      user.join(nextRoomName);
+      user.leave(prevRoomName);
+
+      this.server.to(prevRoomName).emit('userLeaved', user['userData']);
+      user['userData'] = {
+        ...user['userData'],
+        x: initPositionByRoomName[nextRoomType].x,
+        y: initPositionByRoomName[nextRoomType].y,
+        roomName: nextRoomName,
+      };
+      this.server
+        .to(userSocketId)
+        .emit('userInitiated', this.getRoomUserData(nextRoomName + ''));
+      this.server.to(nextRoomName).emit('userCreated', user['userData']);
+    });
+  }
+
+  @SubscribeMessage('readyGame')
+  handlereadyGame(client: any, payload: any) {
+    const { gameRoomId } = payload;
+
+    // 이동시켜야하는 사람들을 그랩!
+    // const userSocketIdList = [
+    //   ...this.server.sockets.adapter.rooms.get(gameRoomId).values(),
+    // ];
+
+    // this.roomChange(userSocketIdList, 'town', gameRoomId, gameType);
+    // 게임 룸으로 이동이되도, 서로 보이거나 하려면 그안에 가서도 userIni creatd ????
+    this.server.to(gameRoomId).emit('gameAlert', {
+      status: 'READY_GAME',
+      message: '대기열 유저를 게임으로 전환시켜주세요.',
+    });
+  }
+
+  @SubscribeMessage('startGame')
+  handleStartGame(client: any, payload: any) {
+    const { gameRoomId, gameType } = payload;
+
+    // 이동시켜야하는 사람들을 그랩!
+    const userSocketIdList = [
+      ...this.server.sockets.adapter.rooms.get(gameRoomId).values(),
+    ];
+
+    this.roomChange(userSocketIdList, 'town', gameRoomId, gameType);
+    // 게임 룸으로 이동이되도, 서로 보이거나 하려면 그안에 가서도 userIni creatd ????
+    // this.server.to(gameRoomId).emit('gameAlert', {
+    //   status: 'GAME_START',
+    //   message: '게임이 시작되었습니다',
+    // });
+  }
+
+  // 게임 중에 한명이! 나가는 거
+  @SubscribeMessage('leaveGame')
+  handleLeaveGame(client: any, payload: any) {
+    const { gameRoomId } = payload;
+    this.roomChange([client.id], gameRoomId, 'town', 'town');
+  }
+
+  // 게임 대기열에서 나감
+  @SubscribeMessage('leaveGameWatingList')
+  handleLeaveGameWatingList(client: any, payload: any) {
+    const { gameRoomId } = payload;
+    // uuid join! leave 대기열 gameAlert
+    client.leave(gameRoomId);
+    this.server.to(gameRoomId).emit('gameRoomUserListChanged', {
+      userList: this.getRoomUserData(gameRoomId),
+    });
   }
 }

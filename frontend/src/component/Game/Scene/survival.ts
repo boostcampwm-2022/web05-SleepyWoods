@@ -5,7 +5,7 @@ import { emitter } from '../util';
 
 const backToTown = { x: 1000, y: 1580 };
 
-export default class Zombie extends Phaser.Scene {
+export default class Survival extends Phaser.Scene {
   socket?: Socket;
   autoPlay?: boolean;
   background?: Phaser.Tilemaps.TilemapLayer;
@@ -16,7 +16,7 @@ export default class Zombie extends Phaser.Scene {
   isEnterGameZone?: any;
 
   constructor() {
-    super('Zombie');
+    super('Survival');
 
     this.otherPlayer = {};
   }
@@ -84,7 +84,7 @@ export default class Zombie extends Phaser.Scene {
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
-    const map = this.make.tilemap({ key: 'zombie' });
+    const map = this.make.tilemap({ key: 'survival' });
     const tileset3 = map.addTilesetImage('tileset3', 'tileset3');
 
     map.createLayer('other2', tileset3, 0, 0).setScale(2.5);

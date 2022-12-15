@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import Town from './Scene/town';
 import Maze from './Scene/maze';
-import Zombie from './Scene/zombie';
+import Survival from './Scene/survival';
 import OnBoard from './Scene/onboard';
-import Sprint from './Scene/sprint';
+import Running from './Scene/running';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -26,7 +26,7 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
     forceSetTimeOut: true,
   },
   autoFocus: true,
-  scene: [OnBoard, Town, Maze, Zombie, Sprint],
+  scene: [OnBoard, Town, Maze, Survival, Running],
 };
 
 export default gameConfig;
