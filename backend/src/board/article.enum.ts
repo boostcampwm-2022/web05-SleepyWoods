@@ -1,4 +1,5 @@
 export enum articleCategory {
-  LIFE_N_CUT = 'lifencut',
-  FISHING = 'fishing',
+  MAZE = 'Maze',
+  RUNNING = 'Running',
+  SURVIVAL = 'Survival',
 }

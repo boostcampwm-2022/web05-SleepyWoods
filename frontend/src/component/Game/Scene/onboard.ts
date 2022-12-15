@@ -1,10 +1,15 @@
 import mazeJSON from '../../../assets/tilemaps/maze/maze.json';
-import tileset3 from '../../../assets/tilemaps/maze/tileset3.png';
+import survivalJSON from '../../../assets/tilemaps/survival/survival.json';
+import runningJSON from '../../../assets/tilemaps/running/running.json';
+import tileset3 from '../../../assets/tilemaps/tile/tileset3.png';
 import townJSON from '../../../assets/tilemaps/town.json';
 import town from '../../../assets/tilemaps/town.png';
 import christmas from '../../../assets/audio/christmas.mp3';
 import dust from '../../../assets/character/dust.png';
 import spriteJSON from '../../../assets/character/sprite.json';
+import portal from '../../../assets/portal.png';
+import finishLine from '../../../assets/finishline.png';
+import flag from '../../../assets/flag.png';
 
 import waitImg from '../../../assets/character/wait/wait.png';
 import walkImg from '../../../assets/character/walk/walk.png';
@@ -40,6 +45,12 @@ export default class OnBoard extends Phaser.Scene {
     this.load.tilemapTiledJSON('maze', mazeJSON);
     this.load.image('tileset3', tileset3);
 
+    // 술래잡기(zombie)
+    this.load.tilemapTiledJSON('survival', survivalJSON);
+
+    // 달리기경주(sprint)
+    this.load.tilemapTiledJSON('running', runningJSON);
+
     // 배경음악
     this.load.audio('christmas', [christmas]);
 
@@ -53,6 +64,11 @@ export default class OnBoard extends Phaser.Scene {
       frameWidth: 24,
       frameHeight: 9,
     });
+
+    // 게임 이동 포탈
+    this.load.image('portal', portal);
+    this.load.image('finishLine', finishLine);
+    this.load.image('flag', flag);
   }
 
   update() {

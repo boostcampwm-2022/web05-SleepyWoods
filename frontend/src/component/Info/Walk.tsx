@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { socketState } from '../../store/atom/socket';
 import { useEffect, useState } from 'react';
 import { userState } from '../../store/atom/user';
+import { userType } from '../../types/types';
 
 const Walk = () => {
   const socket = useRecoilValue(socketState);
@@ -11,14 +12,23 @@ const Walk = () => {
   const [walkCnt, setWalkCnt] = useState(0);
 
   useEffect(() => {
-    socket.on('move', data => {
-      if (data.id !== user.id) return;
+    const walkInitiated = (users: userType[]) => {
+      users.forEach(userData => {
+        if (userData.id !== user.id) return;
 
-      setWalkCnt(data.walk);
-    });
+        setWalkCnt(() => userData.walk);
+      });
+    };
+    socket.on('userInitiated', walkInitiated);
+
+    const handleWalkCnt = (data: any) => {
+      if (data.id === user.id) setWalkCnt(data.walk);
+    };
+    socket.on('move', handleWalkCnt);
 
     return () => {
-      socket.removeListener('move');
+      socket.removeListener('move', handleWalkCnt);
+      socket.removeListener('userInitiated', walkInitiated);
     };
   }, [user]);
 

@@ -10,7 +10,10 @@ export default class Town extends Phaser.Scene {
   socket?: Socket;
   autoPlay: boolean;
   townLayer?: Phaser.Tilemaps.TilemapLayer;
-  mazeEntry?: any;
+  gameEntry?: any;
+  gameText: any[];
+  isEnterGameZone: boolean;
+  initData: any;
 
   constructor() {
     super('Town');
@@ -19,40 +22,32 @@ export default class Town extends Phaser.Scene {
     this.myPlayer;
     this.otherPlayer = {};
     this.autoPlay = false;
+    this.gameText = [];
+    this.isEnterGameZone = false;
   }
 
-  init() {
-    emitter.on('init', (data: gameInitType) => {
-      this.socket = data.socket.connect();
+  init(data: any) {
+    Object.values(this.otherPlayer).forEach(player => player.delete());
+    this.otherPlayer = {};
+    this.autoPlay = false;
+    this.gameText = [];
+    this.isEnterGameZone = false;
+    this.myPlayer?.delete();
+    delete this.myPlayer;
 
-      this.myPlayer = new MyPlayer(
-        this,
-        1000,
-        800,
-        data.id,
-        data.hair,
-        data.nickname,
-        data.socket
-      );
-
-      if (this.townLayer)
-        this.physics.add.collider(this.myPlayer, this.townLayer);
-
-      this.socket?.on('connect', () => {
-        this.socketInit();
+    if (data.myPlayer?.id) {
+      this.initData = {
+        id: data.myPlayer.id,
+        hair: data.myPlayer.hairName,
+        nickname: data.myPlayer.nickname,
+        socket: data.socket,
+      };
+    } else {
+      emitter.on('init', (data: gameInitType) => {
+        this.socket = data.socket.connect();
+        this.initUser(true, data);
       });
-
-      this.mazeEntry = this.physics.add.staticGroup({
-        key: 'mazeEntry',
-        frameQuantity: 3,
-      });
-
-      this.mazeEntry.getChildren()[0].setPosition(540, 810);
-
-      this.mazeEntry.refresh();
-
-      this.physics.add.overlap(this.myPlayer, this.mazeEntry, this.changeScene);
-    });
+    }
 
     emitter.on('updateNickname', (nickname: string) => {
       this.myPlayer?.updateNickname(nickname);
@@ -73,13 +68,23 @@ export default class Town extends Phaser.Scene {
     emitter.emit('game-start');
   }
 
-  changeScene = (player: any, item: any) => {
+  changeScene = (gameName: string, roomId: string) => {
+    emitter.emit('closeContent');
+
     this.scene.pause();
-    this.scene.start('Maze', {
+    this.scene.start(gameName, {
       socket: this.socket,
       myPlayer: this.myPlayer,
+      otherPlayer: this.otherPlayer,
       autoPlay: this.autoPlay,
+      roomId: roomId,
     });
+
+    // emitter 이벤트 지워주기
+    emitter.removeListener('init');
+    emitter.removeListener('updateNickname');
+    emitter.removeListener('updateHair');
+    emitter.removeListener('gameStart');
   };
 
   create() {
@@ -150,7 +155,11 @@ export default class Town extends Phaser.Scene {
       repeat: -1,
     });
 
-    emitter.emit('ready');
+    if (!this.initData) emitter.emit('ready');
+    else {
+      this.initUser(false, this.initData);
+      emitter.emit('leaveGame');
+    }
   }
 
   update() {
@@ -161,8 +170,7 @@ export default class Town extends Phaser.Scene {
 
   socketInit() {
     if (!this.socket) return;
-
-    this.socket.on('userInitiated', (data: userType[]) => {
+    const userInitiated = (data: userType[]) => {
       if (!Array.isArray(data)) data = [data];
 
       data.forEach((user: userType) => {
@@ -172,32 +180,135 @@ export default class Town extends Phaser.Scene {
 
         this.otherPlayer[id] = new OtherPlayer(this, user);
       });
-    });
+    };
 
-    this.socket.on('userCreated', (user: userType) => {
+    const userCreated = (user: any) => {
       const id = user.id.toString().trim();
       this.otherPlayer[id] = new OtherPlayer(this, user);
-    });
+    };
 
-    this.socket.on('move', (data: userType) => {
+    const move = (data: userType) => {
       const id = data.id.toString().trim();
 
       if (!this.otherPlayer[id]) return;
       const { state, x, y, direction } = data;
       this.otherPlayer[id].update(state, x, y, direction);
-    });
+    };
 
-    this.socket.on('userLeaved', (data: userType) => {
+    const userLeaved = (data: userType) => {
       const id = data.id.toString().trim();
       this.otherPlayer[id].delete();
       delete this.otherPlayer[id];
-    });
+    };
 
-    this.socket.on('userDataChanged', (data: userType) => {
+    const userDataChanged = (data: userType) => {
       const { id, nickname, characterName } = data;
       this.otherPlayer[id].updateNickname(nickname);
       this.otherPlayer[id].updateHair(characterName);
+    };
+
+    this.socket.on('userInitiated', userInitiated);
+    this.socket.on('userCreated', userCreated);
+    this.socket.on('move', move);
+    this.socket.on('userLeaved', userLeaved);
+    this.socket.on('userDataChanged', userDataChanged);
+
+    const readyGame = (data: any) => {
+      if (!this.socket) return;
+      this.socket.removeListener('userInitiated', userInitiated);
+      this.socket.removeListener('userCreated', userCreated);
+      this.socket.removeListener('move', move);
+      this.socket.removeListener('userLeaved', userLeaved);
+      this.socket.removeListener('userDataChanged', userDataChanged);
+
+      this.changeScene(data.gameName, data.roomId);
+      emitter.removeListener('readyGame', readyGame);
+    };
+
+    emitter.on('readyGame', readyGame);
+    this.socket.emit('getUserInitiated');
+  }
+
+  initUser(isSocketInit: boolean, data: any) {
+    const { id, hair, nickname, socket } = data;
+
+    this.myPlayer = new MyPlayer(this, 800, 800, id, hair, nickname, socket);
+
+    if (this.townLayer)
+      this.physics.add.collider(this.myPlayer, this.townLayer);
+
+    if (isSocketInit) {
+      this.socket?.on('connect', () => {
+        this.socketInit();
+      });
+    } else {
+      this.socket = socket;
+      this.socketInit();
+    }
+
+    this.gameEntry = this.physics.add.staticGroup({
+      key: 'portal',
+      frameQuantity: 2,
     });
+
+    const gameZonePosition = [
+      { name: 'Survival', x: 540, y: 810 },
+      { name: 'Maze', x: 980, y: 1270 },
+      // { name: 'Running', x: 1480, y: 680 },
+    ];
+
+    this.gameEntry
+      .getChildren()[0]
+      .setPosition(gameZonePosition[0].x, gameZonePosition[0].y);
+    this.gameEntry
+      .getChildren()[1]
+      .setPosition(gameZonePosition[1].x, gameZonePosition[1].y);
+    // this.gameEntry
+    //   .getChildren()[2]
+    //   .setPosition(gameZonePosition[2].x, gameZonePosition[2].y);
+
+    this.gameEntry.refresh();
+
+    const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
+
+    this.physics.add.overlap(
+      this.myPlayer,
+      this.gameEntry,
+      (player, entry: any) => {
+        const game = gameZonePosition.filter(({ x }) => x === entry.x)[0];
+        const { name, x, y } = game;
+        const text: (
+          | Phaser.GameObjects.Graphics
+          | Phaser.GameObjects.Text
+          | undefined
+        )[] = [];
+
+        if (!this.isEnterGameZone) {
+          text.push(
+            this.add
+              .graphics()
+              .fillStyle(0xffffff, 50)
+              .fillRoundedRect(x - 60, y - 70, 125, 40, 20),
+            this.add.text(x - 50, y - 60, 'push G key!', {
+              color: '#000',
+              font: '700 18px Arial',
+            })
+          );
+
+          this.isEnterGameZone = true;
+
+          setTimeout(() => {
+            text[0]?.destroy();
+            text[1]?.destroy();
+            this.isEnterGameZone = false;
+          }, 500);
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(keyG)) {
+          emitter.emit('game', { gameName: name });
+        }
+      }
+    );
   }
 
   musicControll() {

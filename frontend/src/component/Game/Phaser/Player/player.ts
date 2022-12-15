@@ -55,16 +55,13 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
     this.dust.setScale(3).setDepth(10);
 
-    this.nicknameText = this.scene.add.text(
-      this.x - this.nickname.length * 3.5,
-      this.y + 25,
-      this.nickname,
-      {
+    this.nicknameText = this.scene.add
+      .text(this.x - this.nickname.length * 3.5, this.y + 25, this.nickname, {
         color: '#000',
         font: '700 14px Arial',
         align: 'center',
-      }
-    );
+      })
+      .setDepth(20);
 
     scene.physics.add.existing(this);
     this.getBody().setCollideWorldBounds(true).setSize(30, 50);
@@ -81,7 +78,10 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
   }
 
   updateNickname(nickname: string) {
-    this.nicknameText?.setText(nickname);
+    if (!this.nicknameText) return;
+    this.nicknameText.setText(nickname);
+    this.nicknameText.x = this.x - nickname.length * 3.5;
+    this.nicknameText.y = this.y + 25;
   }
 
   updateHair(hair: string) {

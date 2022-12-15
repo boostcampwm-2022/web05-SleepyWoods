@@ -1,12 +1,12 @@
 import { Socket } from 'socket.io-client';
-import { userType } from '../../../types/types';
 import { MyPlayer } from '../Phaser/Player/myPlayer';
 import { OtherPlayer } from '../Phaser/Player/otherPlayer';
 import { emitter } from '../util';
+import { userType } from '../../../types/types';
 
-const backToTown = { x: 1000, y: 1580 };
+const backToTown = { x: 1600, y: 1900 };
 
-export default class Maze extends Phaser.Scene {
+export default class Running extends Phaser.Scene {
   socket?: Socket;
   autoPlay?: boolean;
   background?: Phaser.Tilemaps.TilemapLayer;
@@ -14,8 +14,7 @@ export default class Maze extends Phaser.Scene {
   myPlayer?: MyPlayer;
   otherPlayer: { [key: string]: OtherPlayer };
   gameEntry?: any;
-  flag?: any;
-  exit?: any;
+  finishLine?: any;
   isEnterGameZone?: any;
   roomId: string | undefined;
   gameName: string;
@@ -24,10 +23,10 @@ export default class Maze extends Phaser.Scene {
   userTime: string;
 
   constructor() {
-    super('Maze');
+    super('Running');
 
     this.otherPlayer = {};
-    this.gameName = 'Maze';
+    this.gameName = 'Running';
     this.userTime = '00:00';
   }
 
@@ -41,14 +40,13 @@ export default class Maze extends Phaser.Scene {
 
     this.myPlayer = new MyPlayer(
       this,
-      1000,
-      1500,
+      1750,
+      1900,
       data.myPlayer.id,
       data.myPlayer.hairName,
       data.myPlayer.nickname,
       data.socket
     );
-    this.myPlayer.fixState(true, 'swimming', 1);
 
     this.socket = data.socket;
     this.socketInit();
@@ -58,13 +56,8 @@ export default class Maze extends Phaser.Scene {
       frameQuantity: 1,
     });
 
-    this.flag = this.physics.add.staticGroup({
-      key: 'flag',
-      frameQuantity: 1,
-    });
-
-    this.exit = this.physics.add.staticGroup({
-      key: 'flag',
+    this.finishLine = this.physics.add.staticGroup({
+      key: 'finishLine',
       frameQuantity: 1,
     });
 
@@ -73,12 +66,10 @@ export default class Maze extends Phaser.Scene {
       .setPosition(backToTown.x, backToTown.y)
       .setDepth(3);
 
-    this.flag.getChildren()[0].setPosition(1000, 500).setDepth(3);
-    this.exit.getChildren()[0].setPosition(1400, 550).setDepth(0);
+    this.finishLine.getChildren()[0].setPosition(300, 1780).setDepth(3);
 
     this.gameEntry.refresh();
-    this.flag.refresh();
-    this.exit.refresh();
+    this.finishLine.refresh();
 
     const keyG = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G);
 
@@ -116,9 +107,9 @@ export default class Maze extends Phaser.Scene {
       }
     });
 
-    const flagOverlap = this.physics.add.overlap(
+    const overlap = this.physics.add.overlap(
       this.myPlayer,
-      this.flag,
+      this.finishLine,
       () => {
         // 모든 유저 움직임 멈춤
         this.socket?.emit('winnerEmitter', {
@@ -127,18 +118,8 @@ export default class Maze extends Phaser.Scene {
           gameTime: this.userTime,
         });
 
-        flagOverlap.destroy();
-        clearInterval(this.gameTimer);
-      }
-    );
-
-    const exitOverlap = this.physics.add.overlap(
-      this.myPlayer,
-      this.exit,
-      () => {
-        // 모든 유저 움직임 멈춤
-        this.myPlayer?.fixState(false, 'wait', 1);
-        exitOverlap.destroy();
+        overlap.destroy();
+        this.gameTimer.remove();
       }
     );
 
@@ -148,24 +129,20 @@ export default class Maze extends Phaser.Scene {
       this.changeScene('Town');
     });
   }
+
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
 
-    const map = this.make.tilemap({ key: 'maze' });
+    const map = this.make.tilemap({ key: 'running' });
     const tileset3 = map.addTilesetImage('tileset3', 'tileset3');
 
-    map.createLayer('root', tileset3, 0, 0).setScale(2.5);
-    this.background = map
-      .createLayer('background', tileset3, 0, 0)
-      .setScale(2.5);
+    map.createLayer('background', tileset3, 0, 0).setScale(2.5);
+    map.createLayer('object', tileset3, 0, 0).setScale(2.5);
     this.otherLayer = map.createLayer('other', tileset3, 0, 0).setScale(2.5);
-    const goalLayer = map.createLayer('goal', tileset3, 0, 0).setScale(2.5);
 
-    this.background.setCollisionByProperty({ collides: true });
     this.otherLayer.setCollisionByProperty({ collides: true });
 
     if (this.myPlayer) {
-      this.physics.add.collider(this.myPlayer, this.background);
       this.physics.add.collider(this.myPlayer, this.otherLayer);
     }
 
@@ -196,6 +173,8 @@ export default class Maze extends Phaser.Scene {
   changeScene = (gameName: string) => {
     emitter.emit('closeContent');
     this.socket?.emit('leaveGame', { gameRoomId: this.roomId });
+    emitter.emit('leaveGame');
+    this.gameTimerText.destroy();
 
     this.scene.pause();
     this.scene.start(gameName, {
@@ -217,8 +196,8 @@ export default class Maze extends Phaser.Scene {
         if (this.otherPlayer[id]) return;
         this.otherPlayer[id] = new OtherPlayer(this, {
           ...user,
-          x: 1000,
-          y: 1500,
+          x: 1750,
+          y: 1900,
         });
       });
     };
@@ -230,8 +209,8 @@ export default class Maze extends Phaser.Scene {
 
       this.otherPlayer[id] = new OtherPlayer(this, {
         ...user,
-        x: 1000,
-        y: 1500,
+        x: 1750,
+        y: 1900,
       });
     };
 
@@ -311,7 +290,7 @@ export default class Maze extends Phaser.Scene {
 
     this.socket.emit('startGame', {
       gameRoomId: this.roomId,
-      gameType: 'Maze',
+      gameType: 'Running',
     });
 
     const leaveGame = () => {
