@@ -32,25 +32,30 @@ const MiniGame = () => {
   const [winnerGame, setWinnerGame] = useState<any>(undefined);
 
   useEffect(() => {
-    emitter.on('game', ({ gameName }: { gameName: string }) => {
+    const game = ({ gameName }: { gameName: string }) => {
       setIsShowModal(true);
       setSelectGame(gameName);
-    });
+    };
 
-    emitter.on('closeContent', () => {
+    const closeContent = () => {
       setIsShowModal(false);
       initGame();
-    });
+    };
 
-    socket.on('finishGame', data => {
+    const finishGame = (data: any) => {
       setWinnerGame(data);
       setIsShowModal(true);
       setIsGameFinish(true);
-    });
+    };
+
+    emitter.on('game', game);
+    emitter.on('closeContent', closeContent);
+    socket.on('finishGame', finishGame);
 
     return () => {
-      emitter.removeListener('closeContent');
-      emitter.removeListener('game');
+      emitter.removeListener('game', game);
+      emitter.removeListener('closeContent', closeContent);
+      socket.removeListener('finishGame', finishGame);
     };
   }, []);
 
@@ -76,7 +81,10 @@ const MiniGame = () => {
             <h3 css={style.header}>🎮 {gamesName[selectGame]}</h3>
             <div css={style.game}>
               {isGameFinish ? (
-                <GameResult winnerGame={winnerGame} />
+                <GameResult
+                  setIsGameFinish={setIsGameFinish}
+                  winnerGame={winnerGame}
+                />
               ) : (
                 <>
                   <div css={style.gameInfo}>{games[selectGame]}</div>

@@ -99,6 +99,14 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.walkCountByUser.clear();
   }
 
+  @SubscribeMessage('getUserInitiated')
+  handleGetUserInitiated(@ConnectedSocket() client: sleepySocket) {
+    const roomName = client.userData.roomName;
+    this.server
+      .to(client.id)
+      .emit('userInitiated', this.getRoomUserData(roomName + ''));
+  }
+
   @SubscribeMessage('userDataChanged')
   handleUserDataChanged(
     @ConnectedSocket() client: sleepySocket,
@@ -462,15 +470,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     if (this.server.sockets.adapter.rooms.get(waitingRoomName).size >= 4) {
       const uuid = v1();
-      this.server.to(waitingRoomName).emit('gameRoomUserListChanged', {});
-
-      const { gameRoomId } = payload;
 
       // 게임 룸으로 이동이되도, 서로 보이거나 하려면 그안에 가서도 userIni creatd ????
-      this.server.to(gameRoomId).emit('gameAlert', {
+      this.server.to(waitingRoomName).emit('gameAlert', {
         status: 'READY_GAME',
-        message: gameRoomId,
+        message: uuid,
       });
+      this.server.in(waitingRoomName).socketsLeave(waitingRoomName);
     }
   }
 }
