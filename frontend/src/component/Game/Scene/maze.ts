@@ -32,7 +32,13 @@ export default class Maze extends Phaser.Scene {
   }
 
   init(data: any) {
+    this.otherPlayer = {};
+    this.gameName = 'Running';
+    this.userTime = '00:00';
     this.roomId = data.roomId;
+    this.myPlayer?.delete();
+    delete this.myPlayer;
+
     this.myPlayer = new MyPlayer(
       this,
       1000,
@@ -137,6 +143,10 @@ export default class Maze extends Phaser.Scene {
     );
 
     this.input.keyboard.enabled = false;
+
+    emitter.on('exitGame', () => {
+      this.changeScene('Town');
+    });
   }
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
@@ -253,34 +263,41 @@ export default class Maze extends Phaser.Scene {
       const { status } = data;
       if (status === 'START_GAME') {
         let cnt: any = 3;
-        const interval = setInterval(() => {
-          const cntText = this.add.text(
-            1000 - (cnt === 'Start' ? 60 : 20),
-            1300 - (cnt === 'Start' ? 40 : 60),
-            `${cnt}`,
-            {
-              color: '#fff',
-              font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
-            }
-          );
-
-          setTimeout(() => {
-            cntText.destroy();
-            cnt -= 1;
-            if (!cnt) cnt = 'Start';
-          }, 900);
-        }, 1000);
+        this.time.addEvent({
+          delay: 1000,
+          callback: () => {
+            const cntText = this.add.text(
+              1750 - (cnt === 'Start' ? 60 : 20),
+              1700 - (cnt === 'Start' ? 40 : 60),
+              `${cnt}`,
+              {
+                color: '#fff',
+                font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
+              }
+            );
+            this.time.delayedCall(1000, () => {
+              cntText.destroy();
+              cnt -= 1;
+              if (!cnt) cnt = 'Start';
+            });
+          },
+          repeat: 3,
+        });
 
         setTimeout(() => {
-          clearInterval(interval);
           this.input.keyboard.enabled = true;
 
           const date = new Date();
           const currentTime = date.getTime();
-          this.gameTimer = setInterval(() => {
-            this.userTime = this.updateTimer(currentTime);
-            this.gameTimerText.setText(this.userTime);
-          }, 1000);
+
+          this.gameTimer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+              this.userTime = this.updateTimer(currentTime);
+              this.gameTimerText.setText(this.userTime);
+            },
+            loop: true,
+          });
         }, 4000);
       }
     };
@@ -297,14 +314,20 @@ export default class Maze extends Phaser.Scene {
       gameType: 'Maze',
     });
 
-    emitter.on('leaveGame', (data: any) => {
+    const leaveGame = () => {
       if (!this.socket) return;
+
       this.socket.removeListener('userInitiated', userInitiated);
       this.socket.removeListener('userCreated', userCreated);
       this.socket.removeListener('move', move);
       this.socket.removeListener('userLeaved', userLeaved);
       this.socket.removeListener('userDataChanged', userDataChanged);
-    });
+      this.socket.removeListener('gameAlert', gameAlert);
+
+      emitter.removeListener('leaveGame', leaveGame);
+    };
+
+    emitter.on('leaveGame', leaveGame);
   }
 
   updateTimer(currentTime: number) {
