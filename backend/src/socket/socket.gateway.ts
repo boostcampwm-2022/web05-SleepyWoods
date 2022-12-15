@@ -22,15 +22,15 @@ const initPositionByRoomName = {
     x: 800,
     y: 800,
   },
-  maze: {
+  Maze: {
     x: 1000,
     y: 1500,
   },
-  running: {
+  Running: {
     x: 1750,
     y: 1900,
   },
-  survival: {
+  Survival: {
     x: 1000,
     y: 1500,
   },
@@ -346,6 +346,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { gameRoomId } = payload;
     // 방장이 방을 만들어서 타운에서 대기하고 있고! 이 방에 대기를 거는 사람들을 계속 뿌려줘야함!
     client.join(gameRoomId);
+    this.server.to(gameRoomId).emit('gameRoomUserListChanged', {
+      userList: this.getRoomUserData(gameRoomId),
+    });
     // client.to(callingRoom).emit('remoteIce', { iceCandidates });
   }
 
@@ -354,7 +357,12 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const { gameRoomId } = payload;
     const gameRoom = this.server.sockets.adapter.rooms.get(gameRoomId);
     if (gameRoom && gameRoom.size < 4) {
+      // 잘 들어갔다고 알려줄거야
       client.join(gameRoomId);
+      this.server.to(client.id).emit('gameAlert', {
+        status: 'JOIN_ROOM_SUCCESS',
+        message: gameRoomId,
+      });
       this.server.to(gameRoomId).emit('gameRoomUserListChanged', {
         userList: this.getRoomUserData(gameRoomId),
       });
@@ -388,10 +396,27 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
         y: initPositionByRoomName[nextRoomType].y,
         roomName: nextRoomName,
       };
-      this.server.to(nextRoomName).emit('userCreated', user['userData']);
       this.server
         .to(userSocketId)
         .emit('userInitiated', this.getRoomUserData(nextRoomName + ''));
+      this.server.to(nextRoomName).emit('userCreated', user['userData']);
+    });
+  }
+
+  @SubscribeMessage('readyGame')
+  handlereadyGame(client: any, payload: any) {
+    const { gameRoomId } = payload;
+
+    // 이동시켜야하는 사람들을 그랩!
+    // const userSocketIdList = [
+    //   ...this.server.sockets.adapter.rooms.get(gameRoomId).values(),
+    // ];
+
+    // this.roomChange(userSocketIdList, 'town', gameRoomId, gameType);
+    // 게임 룸으로 이동이되도, 서로 보이거나 하려면 그안에 가서도 userIni creatd ????
+    this.server.to(gameRoomId).emit('gameAlert', {
+      status: 'READY_GAME',
+      message: '대기열 유저를 게임으로 전환시켜주세요.',
     });
   }
 
@@ -406,10 +431,10 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     this.roomChange(userSocketIdList, 'town', gameRoomId, gameType);
     // 게임 룸으로 이동이되도, 서로 보이거나 하려면 그안에 가서도 userIni creatd ????
-    this.server.to(gameRoomId).emit('gameAlert', {
-      status: 'GAME_START',
-      message: '게임이 시작되었습니다',
-    });
+    // this.server.to(gameRoomId).emit('gameAlert', {
+    //   status: 'GAME_START',
+    //   message: '게임이 시작되었습니다',
+    // });
   }
 
   // 게임 중에 한명이! 나가는 거
