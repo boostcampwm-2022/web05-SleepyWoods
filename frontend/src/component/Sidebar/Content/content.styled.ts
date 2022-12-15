@@ -7,9 +7,14 @@ export const container = (
 ) => css`
   width: 100%;
   ${isexpand && 'height: 100%;'}
+  ${isexpand && 'overflow: auto;'};
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 15px;
   ${draggable && 'cursor: move;'}
   cursor: ${isCursor ? 'pointer' : 'auto'};
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
