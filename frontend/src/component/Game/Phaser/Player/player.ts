@@ -55,18 +55,14 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     this.dust = this.scene.add.sprite(this.x - 20, this.y + 5, 'dust');
     this.dust.setScale(3).setDepth(10);
 
-    this.nicknameText = this.scene.add.text(
-      this.x - this.nickname.length * 3.5,
-      this.y + 25,
-      this.nickname,
-      {
+    this.nicknameText = this.scene.add
+      .text(this.x - this.nickname.length * 3.5, this.y + 25, this.nickname, {
         color: '#000',
         font: '700 14px Arial',
         align: 'center',
-      }
-    );
+      })
+      .setDepth(20);
 
-    console.log('scene in player',scene);
     scene.physics.add.existing(this);
     this.getBody().setCollideWorldBounds(true).setSize(30, 50);
 
