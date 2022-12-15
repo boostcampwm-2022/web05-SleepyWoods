@@ -23,7 +23,6 @@ const CallingList = () => {
     // callingRoom의 멤버가 바뀔 때마다 갱신
     const callingRoomUserStateChanged = (data: any) => {
       const { callingRoomUserData } = data;
-      console.log('callingroom 상태가 변경되었습니다.', callingRoomUserData);
       const tempList: any = {};
       callingRoomUserData.forEach((user: { [key: string]: string }) => {
         if (user.id === myValue.id) return;
@@ -76,17 +75,17 @@ const CallingList = () => {
     // dragging 중인 user의 id
     const id = draggingElement.children[0].id;
 
-    setFriends({
+    setFriends(friends => ({
       ...friends,
       [id]: {
         ...friends[id],
         status: 'busy',
         isCalling: true,
       },
-    });
+    }));
 
     const callingRoomId = callingRoom.id || v1();
-    setCallingRoom({
+    setCallingRoom(callingRoom => ({
       id: callingRoomId,
       list: {
         ...callingRoom.list,
@@ -97,7 +96,7 @@ const CallingList = () => {
           peerConnection: new RTCPeerConnection(configuration),
         },
       },
-    });
+    }));
 
     // 해당 id의 유저에게 통화 요청
     socket.emit('callRequested', {
