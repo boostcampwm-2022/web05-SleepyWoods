@@ -4,6 +4,7 @@ import * as style from './miniGame.styled';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../store/atom/user';
 import { gamesName } from './index';
+import { emitter } from '../Game/util';
 
 const recordFormMaker = (
   winner: string,
@@ -18,7 +19,13 @@ const recordFormMaker = (
     )}`;
 };
 
-const GameResult = ({ winnerGame }: { winnerGame: any }) => {
+const GameResult = ({
+  setIsGameFinish,
+  winnerGame,
+}: {
+  setIsGameFinish: Function;
+  winnerGame: any;
+}) => {
   const user = useRecoilValue(userState);
   const [isShared, setShare] = useState(false);
 
@@ -52,6 +59,8 @@ const GameResult = ({ winnerGame }: { winnerGame: any }) => {
 
   const handleExitGame = () => {
     // 게임 나가기
+    setIsGameFinish(false);
+    emitter.emit('exitGame');
   };
 
   const commonContent = () => {
@@ -86,7 +95,7 @@ const GameResult = ({ winnerGame }: { winnerGame: any }) => {
               {commonContent()}
               <div className="buttonsWrapper">
                 <button type="button" onClick={handleShareResult}>
-                  {isShared ? '공유하기' : '공유됨'}
+                  {isShared ? '공유됨' : '공유하기'}
                 </button>
                 <button type="button" onClick={handleExitGame}>
                   돌아가기

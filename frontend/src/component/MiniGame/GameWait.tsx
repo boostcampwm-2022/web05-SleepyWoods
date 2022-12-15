@@ -31,20 +31,39 @@ const GameWait = ({
   };
 
   useEffect(() => {
+    const enterRandomGameRoom = () => {
+      socket.emit('enterRandomGameRoom', {
+        gameType: gameName,
+      });
+    };
+
     const gameRoomUserListChanged = (data: any) => {
       const { userList } = data;
       setWaitUser(() => userList);
     };
 
-    const gameAlert = ({ status }: { status: string }) => {
+    const gameAlert = ({
+      status,
+      message,
+    }: {
+      status: string;
+      message: string;
+    }) => {
       if (status === 'READY_GAME') {
-        emitter.emit('readyGame', { gameName: gameName, roomId: roomId });
+        if (!selectModeFriend) {
+          emitter.emit('readyGame', { gameName: gameName, roomId: message });
+        } else {
+          emitter.emit('readyGame', { gameName: gameName, roomId: roomId });
+        }
       }
     };
 
     socket.on('gameRoomUserListChanged', gameRoomUserListChanged);
     socket.on('gameAlert', gameAlert);
 
+    if (!selectModeFriend) {
+      enterRandomGameRoom();
+    }
     return () => {
       socket.removeListener('gameRoomUserListChanged', gameRoomUserListChanged);
       socket.removeListener('gameAlert', gameAlert);
