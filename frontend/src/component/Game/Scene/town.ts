@@ -27,6 +27,14 @@ export default class Town extends Phaser.Scene {
   }
 
   init(data: any) {
+    Object.values(this.otherPlayer).forEach(player => player.delete());
+    this.otherPlayer = {};
+    this.autoPlay = false;
+    this.gameText = [];
+    this.isEnterGameZone = false;
+    this.myPlayer?.delete();
+    delete this.myPlayer;
+
     if (data.myPlayer?.id) {
       this.initData = {
         id: data.myPlayer.id,
@@ -71,11 +79,6 @@ export default class Town extends Phaser.Scene {
       autoPlay: this.autoPlay,
       roomId: roomId,
     });
-
-    // 자신의 캐릭터 지워주기
-
-    this.myPlayer?.delete();
-    delete this.myPlayer;
 
     // emitter 이벤트 지워주기
     emitter.removeListener('init');
@@ -210,7 +213,7 @@ export default class Town extends Phaser.Scene {
     this.socket.on('userLeaved', userLeaved);
     this.socket.on('userDataChanged', userDataChanged);
 
-    emitter.on('readyGame', (data: any) => {
+    const readyGame = (data: any) => {
       if (!this.socket) return;
       this.socket.removeListener('userInitiated', userInitiated);
       this.socket.removeListener('userCreated', userCreated);
@@ -219,7 +222,11 @@ export default class Town extends Phaser.Scene {
       this.socket.removeListener('userDataChanged', userDataChanged);
 
       this.changeScene(data.gameName, data.roomId);
-    });
+      emitter.removeListener('readyGame', readyGame);
+    };
+
+    emitter.on('readyGame', readyGame);
+    this.socket.emit('getUserInitiated');
   }
 
   initUser(isSocketInit: boolean, data: any) {
@@ -241,13 +248,13 @@ export default class Town extends Phaser.Scene {
 
     this.gameEntry = this.physics.add.staticGroup({
       key: 'portal',
-      frameQuantity: 3,
+      frameQuantity: 2,
     });
 
     const gameZonePosition = [
       { name: 'Survival', x: 540, y: 810 },
       { name: 'Maze', x: 980, y: 1270 },
-      { name: 'Running', x: 1480, y: 680 },
+      // { name: 'Running', x: 1480, y: 680 },
     ];
 
     this.gameEntry
@@ -256,9 +263,9 @@ export default class Town extends Phaser.Scene {
     this.gameEntry
       .getChildren()[1]
       .setPosition(gameZonePosition[1].x, gameZonePosition[1].y);
-    this.gameEntry
-      .getChildren()[2]
-      .setPosition(gameZonePosition[2].x, gameZonePosition[2].y);
+    // this.gameEntry
+    //   .getChildren()[2]
+    //   .setPosition(gameZonePosition[2].x, gameZonePosition[2].y);
 
     this.gameEntry.refresh();
 
