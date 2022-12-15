@@ -8,6 +8,8 @@ import christmas from '../../../assets/audio/christmas.mp3';
 import dust from '../../../assets/character/dust.png';
 import spriteJSON from '../../../assets/character/sprite.json';
 import portal from '../../../assets/portal.png';
+import finishLine from '../../../assets/finishline.png';
+import flag from '../../../assets/flag.png';
 
 import waitImg from '../../../assets/character/wait/wait.png';
 import walkImg from '../../../assets/character/walk/walk.png';
@@ -65,6 +67,8 @@ export default class OnBoard extends Phaser.Scene {
 
     // 게임 이동 포탈
     this.load.image('portal', portal);
+    this.load.image('finishLine', finishLine);
+    this.load.image('flag', flag);
   }
 
   update() {
