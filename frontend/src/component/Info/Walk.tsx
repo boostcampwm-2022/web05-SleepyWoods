@@ -16,7 +16,7 @@ const Walk = () => {
       users.forEach(userData => {
         if (userData.id !== user.id) return;
 
-        setWalkCnt(() => userData.walk);
+        setWalkCnt(() => Math.floor(userData.walk));
       });
     };
     socket.on('userInitiated', walkInitiated);
