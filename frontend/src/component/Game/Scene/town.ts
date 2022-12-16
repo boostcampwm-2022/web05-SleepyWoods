@@ -184,6 +184,9 @@ export default class Town extends Phaser.Scene {
 
     const userCreated = (user: any) => {
       const id = user.id.toString().trim();
+      if (this.myPlayer?.id === id) return;
+      if (this.otherPlayer[id]) return;
+
       this.otherPlayer[id] = new OtherPlayer(this, user);
     };
 
@@ -252,9 +255,9 @@ export default class Town extends Phaser.Scene {
     });
 
     const gameZonePosition = [
-      { name: 'Survival', x: 540, y: 810 },
       { name: 'Maze', x: 980, y: 1270 },
-      // { name: 'Running', x: 1480, y: 680 },
+      { name: 'Running', x: 1480, y: 680 },
+      // { name: 'Survival', x: 540, y: 810 },
     ];
 
     this.gameEntry
