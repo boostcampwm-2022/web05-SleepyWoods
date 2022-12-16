@@ -23,11 +23,19 @@ const GameWait = ({
     socket.emit('readyGame', { gameRoomId: roomId });
   };
 
+  // waitingRoom_게임명
   const leaveGame = () => {
     initGame();
-    socket.emit('leaveGameWatingList', {
-      gameRoomId: roomId,
-    });
+
+    if (!selectModeFriend) {
+      socket.emit('leaveGameWatingList', {
+        gameRoomId: `waitingRoom_${gameName}`,
+      });
+    } else {
+      socket.emit('leaveGameWatingList', {
+        gameRoomId: roomId,
+      });
+    }
   };
 
   useEffect(() => {
