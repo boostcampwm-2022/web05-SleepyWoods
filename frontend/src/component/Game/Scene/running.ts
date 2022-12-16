@@ -21,6 +21,7 @@ export default class Running extends Phaser.Scene {
   gameTimerText: any;
   gameTimer: any;
   userTime: string;
+  isFinish: boolean;
 
   constructor() {
     super('Running');
@@ -28,9 +29,11 @@ export default class Running extends Phaser.Scene {
     this.otherPlayer = {};
     this.gameName = 'Running';
     this.userTime = '00:00';
+    this.isFinish = false;
   }
 
   init(data: any) {
+    this.isFinish = false;
     this.otherPlayer = {};
     this.gameName = 'Running';
     this.userTime = '00:00';
@@ -96,8 +99,6 @@ export default class Running extends Phaser.Scene {
         this.isEnterGameZone = true;
 
         setTimeout(() => {
-          text[0]?.destroy();
-          text[1]?.destroy();
           this.isEnterGameZone = false;
         }, 500);
       }
@@ -111,23 +112,25 @@ export default class Running extends Phaser.Scene {
       this.myPlayer,
       this.finishLine,
       () => {
-        // 모든 유저 움직임 멈춤
-        this.socket?.emit('winnerEmitter', {
-          gameRoomId: this.roomId,
-          gameType: this.gameName,
-          gameTime: this.userTime,
-        });
+        if (!this.isFinish) {
+          this.isFinish = true;
+          this.gameTimer.remove();
 
-        overlap.destroy();
-        this.gameTimer.remove();
+          this.socket?.emit('winnerEmitter', {
+            gameRoomId: this.roomId,
+            gameType: this.gameName,
+            gameTime: this.userTime,
+          });
+        }
       }
     );
-
-    this.input.keyboard.enabled = false;
 
     emitter.on('exitGame', () => {
       this.changeScene('Town');
     });
+
+    this.input.keyboard.enabled = false;
+    this.input.keyboard.manager.enabled = false;
   }
 
   create() {
@@ -174,7 +177,6 @@ export default class Running extends Phaser.Scene {
     emitter.emit('closeContent');
     this.socket?.emit('leaveGame', { gameRoomId: this.roomId });
     emitter.emit('leaveGame');
-    this.gameTimerText.destroy();
 
     this.scene.pause();
     this.scene.start(gameName, {
@@ -194,6 +196,7 @@ export default class Running extends Phaser.Scene {
         const id = user.id.toString().trim();
         if (this.myPlayer?.id === id) return;
         if (this.otherPlayer[id]) return;
+
         this.otherPlayer[id] = new OtherPlayer(this, {
           ...user,
           x: 1750,
@@ -254,7 +257,26 @@ export default class Running extends Phaser.Scene {
                 font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
               }
             );
-            this.time.delayedCall(1000, () => {
+
+            if (cnt === 'Start') {
+              // 움직일 수 있음
+              this.input.keyboard.enabled = true;
+              this.input.keyboard.manager.enabled = true;
+
+              const date = new Date();
+              const currentTime = date.getTime();
+
+              this.gameTimer = this.time.addEvent({
+                delay: 1000,
+                callback: () => {
+                  this.userTime = this.updateTimer(currentTime);
+                  this.gameTimerText.setText(this.userTime);
+                },
+                loop: true,
+              });
+            }
+
+            this.time.delayedCall(900, () => {
               cntText.destroy();
               cnt -= 1;
               if (!cnt) cnt = 'Start';
@@ -262,23 +284,12 @@ export default class Running extends Phaser.Scene {
           },
           repeat: 3,
         });
-
-        setTimeout(() => {
-          this.input.keyboard.enabled = true;
-
-          const date = new Date();
-          const currentTime = date.getTime();
-
-          this.gameTimer = this.time.addEvent({
-            delay: 1000,
-            callback: () => {
-              this.userTime = this.updateTimer(currentTime);
-              this.gameTimerText.setText(this.userTime);
-            },
-            loop: true,
-          });
-        }, 4000);
       }
+    };
+
+    const finishGame = () => {
+      this.isFinish = true;
+      this.gameTimer.remove();
     };
 
     this.socket.on('userInitiated', userInitiated);
@@ -287,6 +298,7 @@ export default class Running extends Phaser.Scene {
     this.socket.on('userLeaved', userLeaved);
     this.socket.on('userDataChanged', userDataChanged);
     this.socket.on('gameAlert', gameAlert);
+    this.socket.on('finishGame', finishGame);
 
     this.socket.emit('startGame', {
       gameRoomId: this.roomId,
@@ -313,7 +325,7 @@ export default class Running extends Phaser.Scene {
     const date = new Date();
     const timeDiff = date.getTime() - currentTime;
 
-    const m = Math.abs(Math.round(Math.floor(timeDiff / 1000) / 60))
+    const m = Math.abs(Math.floor(Math.round(timeDiff / 1000) / 60))
       .toString()
       .padStart(2, '0');
     const s = Math.abs(Math.round(timeDiff / 1000) % 60)
