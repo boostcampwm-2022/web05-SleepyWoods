@@ -10,6 +10,7 @@ export enum stateOptions {
   ROLL = 'roll',
   JUMP = 'jump',
   ATTACK = 'attack',
+  SWIMMING = 'swimming',
 }
 
 export enum userStateOptions {
