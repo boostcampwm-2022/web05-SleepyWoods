@@ -107,7 +107,7 @@ const GameResult = ({
             <>
               <div>아쉬워요😥</div>
               {commonContent()}
-              <button type="button" onClick={handleShareResult}>
+              <button type="button" onClick={handleExitGame}>
                 돌아가기
               </button>
             </>

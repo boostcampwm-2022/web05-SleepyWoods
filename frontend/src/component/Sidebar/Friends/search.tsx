@@ -31,16 +31,6 @@ const Search = () => {
       try {
         const { data } = await axios.put(`/api/friendship/${selectedWord}`);
 
-        setFriends({
-          ...friends,
-          [data.userId]: {
-            id: data.userId,
-            status: 'off',
-            nickname: data.nickname,
-            isCalling: false,
-          },
-        });
-
         alert('팔로우 되었습니다.');
         socket.emit(
           'getUserState',

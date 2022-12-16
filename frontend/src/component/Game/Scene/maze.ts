@@ -22,6 +22,7 @@ export default class Maze extends Phaser.Scene {
   gameTimerText: any;
   gameTimer: any;
   userTime: string;
+  isFinish: boolean;
 
   constructor() {
     super('Maze');
@@ -29,9 +30,11 @@ export default class Maze extends Phaser.Scene {
     this.otherPlayer = {};
     this.gameName = 'Maze';
     this.userTime = '00:00';
+    this.isFinish = false;
   }
 
   init(data: any) {
+    this.isFinish = false;
     this.otherPlayer = {};
     this.gameName = 'Running';
     this.userTime = '00:00';
@@ -116,37 +119,35 @@ export default class Maze extends Phaser.Scene {
       }
     });
 
-    const flagOverlap = this.physics.add.overlap(
-      this.myPlayer,
-      this.flag,
-      () => {
-        // 모든 유저 움직임 멈춤
+    this.physics.add.overlap(this.myPlayer, this.flag, () => {
+      if (!this.isFinish) {
+        this.isFinish = true;
+        this.gameTimer.remove();
+
         this.socket?.emit('winnerEmitter', {
           gameRoomId: this.roomId,
           gameType: this.gameName,
           gameTime: this.userTime,
         });
-
-        flagOverlap.destroy();
-        clearInterval(this.gameTimer);
       }
-    );
+    });
 
     const exitOverlap = this.physics.add.overlap(
       this.myPlayer,
       this.exit,
       () => {
-        // 모든 유저 움직임 멈춤
         this.myPlayer?.fixState(false, 'wait', 1);
         exitOverlap.destroy();
       }
     );
 
-    this.input.keyboard.enabled = false;
-
     emitter.on('exitGame', () => {
       this.changeScene('Town');
     });
+
+    // 처음 시작시 움직임을 막음
+    this.input.keyboard.enabled = false;
+    this.input.keyboard.manager.enabled = false;
   }
   create() {
     this.cameras.main.setBounds(0, 0, 2000, 2000);
@@ -159,7 +160,7 @@ export default class Maze extends Phaser.Scene {
       .createLayer('background', tileset3, 0, 0)
       .setScale(2.5);
     this.otherLayer = map.createLayer('other', tileset3, 0, 0).setScale(2.5);
-    const goalLayer = map.createLayer('goal', tileset3, 0, 0).setScale(2.5);
+    map.createLayer('goal', tileset3, 0, 0).setScale(2.5);
 
     this.background.setCollisionByProperty({ collides: true });
     this.otherLayer.setCollisionByProperty({ collides: true });
@@ -196,6 +197,8 @@ export default class Maze extends Phaser.Scene {
   changeScene = (gameName: string) => {
     emitter.emit('closeContent');
     this.socket?.emit('leaveGame', { gameRoomId: this.roomId });
+    emitter.emit('leaveGame');
+    this.gameTimerText.destroy();
 
     this.scene.pause();
     this.scene.start(gameName, {
@@ -220,6 +223,7 @@ export default class Maze extends Phaser.Scene {
           x: 1000,
           y: 1500,
         });
+        this.otherPlayer[id].update('swimming', 1000, 1500, 'right');
       });
     };
 
@@ -233,6 +237,7 @@ export default class Maze extends Phaser.Scene {
         x: 1000,
         y: 1500,
       });
+      this.otherPlayer[id].update('swimming', 1000, 1500, 'right');
     };
 
     const move = (data: userType) => {
@@ -267,15 +272,34 @@ export default class Maze extends Phaser.Scene {
           delay: 1000,
           callback: () => {
             const cntText = this.add.text(
-              1750 - (cnt === 'Start' ? 60 : 20),
-              1700 - (cnt === 'Start' ? 40 : 60),
+              1000 - (cnt === 'Start' ? 60 : 20),
+              1400 - (cnt === 'Start' ? 40 : 60),
               `${cnt}`,
               {
                 color: '#fff',
                 font: `700 ${cnt === 'Start' ? '72px' : '108px'} Arial`,
               }
             );
-            this.time.delayedCall(1000, () => {
+
+            if (cnt === 'Start') {
+              // 움직일 수 있음
+              this.input.keyboard.enabled = true;
+              this.input.keyboard.manager.enabled = true;
+
+              const date = new Date();
+              const currentTime = date.getTime();
+
+              this.gameTimer = this.time.addEvent({
+                delay: 1000,
+                callback: () => {
+                  this.userTime = this.updateTimer(currentTime);
+                  this.gameTimerText.setText(this.userTime);
+                },
+                loop: true,
+              });
+            }
+
+            this.time.delayedCall(900, () => {
               cntText.destroy();
               cnt -= 1;
               if (!cnt) cnt = 'Start';
@@ -283,23 +307,12 @@ export default class Maze extends Phaser.Scene {
           },
           repeat: 3,
         });
-
-        setTimeout(() => {
-          this.input.keyboard.enabled = true;
-
-          const date = new Date();
-          const currentTime = date.getTime();
-
-          this.gameTimer = this.time.addEvent({
-            delay: 1000,
-            callback: () => {
-              this.userTime = this.updateTimer(currentTime);
-              this.gameTimerText.setText(this.userTime);
-            },
-            loop: true,
-          });
-        }, 4000);
       }
+    };
+
+    const finishGame = () => {
+      this.isFinish = true;
+      this.gameTimer.remove();
     };
 
     this.socket.on('userInitiated', userInitiated);
@@ -308,6 +321,7 @@ export default class Maze extends Phaser.Scene {
     this.socket.on('userLeaved', userLeaved);
     this.socket.on('userDataChanged', userDataChanged);
     this.socket.on('gameAlert', gameAlert);
+    this.socket.on('finishGame', finishGame);
 
     this.socket.emit('startGame', {
       gameRoomId: this.roomId,
@@ -334,10 +348,10 @@ export default class Maze extends Phaser.Scene {
     const date = new Date();
     const timeDiff = date.getTime() - currentTime;
 
-    const m = Math.abs(Math.round(Math.floor(timeDiff / 1000) / 60))
+    const m = Math.abs(Math.floor(Math.floor(timeDiff / 1000) / 60))
       .toString()
       .padStart(2, '0');
-    const s = Math.abs(Math.round(timeDiff / 1000) % 60)
+    const s = Math.abs(Math.floor(timeDiff / 1000) % 60)
       .toString()
       .padStart(2, '0');
 
