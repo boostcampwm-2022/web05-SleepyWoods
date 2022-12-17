@@ -6,9 +6,7 @@ import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 
 export const modal = (animation: string) => css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   flex-flow: column;
 
   width: 60%;
@@ -103,19 +101,15 @@ export const selectModes = css`
   flex-grow: 1;
   width: 100%;
 
-  display: flex;
+  ${flexCenter}
   flex-flow: column;
-  justify-content: center;
-  align-items: center;
   margin-bottom: 50px;
 `;
 
 export const friendMode = css`
   width: 50%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
 `;
 
 export const ModeBtn = css`
@@ -164,9 +158,7 @@ export const enterBtn = css`
 `;
 
 export const enterCodeBox = css`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${flexCenter}
 `;
 
 export const enterCode = css`
@@ -317,10 +309,8 @@ export const gameResult = css`
 `;
 
 export const commonContent = css`
-  display: flex;
+  ${flexCenter}
   flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
 
   width: 350px;
   height: 200px;

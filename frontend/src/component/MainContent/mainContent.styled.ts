@@ -1,13 +1,11 @@
 import { css } from '@emotion/react';
-import { center } from '../../styles/mixin.styled';
+import { center, flexCenter } from '../../styles/mixin.styled';
 
 export const container = css`
   ${center}
 
-  display: flex;
+  ${flexCenter}
   flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   gap: 50px;
 
   width: 50%;

@@ -63,10 +63,8 @@ export const videoStyle = (connectVideo: boolean) => css`
   left: 50%;
   transform: translateX(-50%);
 
-  display: flex;
+  ${flexCenter}
   flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
   gap: 20px;
 
   width: 80%;

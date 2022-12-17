@@ -14,9 +14,13 @@ const recordFormMaker = (
 ) => {
   return `${winner}님이 ${gamesName[gameType]}게임에서 우승했습니다.$
     * 기록 : ${gameTime}$ 
-    * 같이한 사람들 : ${OtherPlayer.map((player: any) => player.nickname).join(
-      ', '
-    )}`;
+    ${
+      OtherPlayer.length
+        ? `* 같이한 사람들 : ${OtherPlayer.map(
+            (player: any) => player.nickname
+          ).join(', ')}`
+        : ''
+    }`;
 };
 
 const GameResult = ({

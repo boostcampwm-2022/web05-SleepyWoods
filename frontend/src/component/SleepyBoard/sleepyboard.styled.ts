@@ -4,7 +4,7 @@ import trophy from '../../assets/trophy.svg';
 import like from '../../assets/icon/like.svg';
 import unlike from '../../assets/icon/unlike.svg';
 import close from '../../assets/icon/close.svg';
-import { flexCenter } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 
 export const sleepyBoardBtn = css`
@@ -14,15 +14,11 @@ export const sleepyBoardBtn = css`
   position: absolute;
   bottom: 55px;
   right: 30px;
-  background-image: url(${trophy});
-  background-repeat: no-repeat;
-  background-position: center;
+  ${backgroundImage(trophy)}
 `;
 
 export const modal = (animation: string) => css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   flex-flow: column;
 
   width: 60%;
@@ -123,8 +119,7 @@ export const user = (avatar: string) => css`
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-image: url(${avatar});
-    background-repeat: no-repeat;
+    ${backgroundImage(avatar)}
     background-size: cover;
     vertical-align: middle;
     margin-right: 8px;
@@ -141,6 +136,7 @@ export const description = css`
   flex-grow: 1;
 
   width: 80%;
+  line-height: 20px;
   font-size: 12px;
   font-weight: 700;
 `;
@@ -164,8 +160,7 @@ export const likeBtn = (isLiked: boolean) => css`
     display: block;
     width: 25px;
     height: 20px;
-    background-image: url(${isLiked ? like : unlike});
-    background-repeat: no-repeat;
+    ${backgroundImage(isLiked ? like : unlike)}
     background-size: contain;
   }
 `;
@@ -189,8 +184,7 @@ export const filterBtn = (isSelected: boolean, icon: string) => css`
     display: ${icon ? 'block' : 'none'};
     width: 22px;
     height: 18px;
-    background-image: url(${icon});
-    background-repeat: no-repeat;
+    ${backgroundImage(icon)}
     background-size: contain;
   }
 
@@ -229,8 +223,7 @@ export const tabBtn = css`
     display: inline-block;
     width: 20px;
     height: 20px;
-    background-image: url(${tree});
-    background-repeat: no-repeat;
+    ${backgroundImage(tree)}
     vertical-align: middle;
     margin-left: 5px;
   }
@@ -330,9 +323,7 @@ export const closeBtn = css`
     display: block;
     width: 20px;
     height: 20px;
-    background-image: url(${close});
-    background-position: center;
-    background-repeat: no-repeat;
+    ${backgroundImage(close)}
     background-size: contain;
   }
 `;

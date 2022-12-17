@@ -51,9 +51,7 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
       <ul css={chatWrapper(isClose)} onClick={selectChatRoom}>
         {isLoaded &&
           (roomList.length ? (
-            roomList.map(data => (
-              <ChatRoom key={data.targetUserId} data={data} />
-            ))
+            roomList.map(data => <ChatRoom key={data.roomId} data={data} />)
           ) : (
             <div css={emptyMessage}>😀 친구와 대화를 시작해보세요!</div>
           ))}
