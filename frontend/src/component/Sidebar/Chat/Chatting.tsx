@@ -109,18 +109,16 @@ const Chatting = ({
             onClick={handleChatRoom}></button>
         </div>
         <ul css={style.textWrapper} ref={chatRef}>
-          {chatDatas.map((data, idx: number) => {
+          {chatDatas.map(data => {
             const date = calcDate(data.timestamp);
             const checkSameDate = date === lastDate;
             if (!checkSameDate) lastDate = date;
 
             return (
-              <>
-                {!checkSameDate && (
-                  <SeparateTimeLine key={idx + 'date'} date={date} />
-                )}
-                <ChatMessage key={idx + 'msg'} chat={data} />
-              </>
+              <li key={data.id}>
+                {!checkSameDate && <SeparateTimeLine date={date} />}
+                <ChatMessage chat={data} />
+              </li>
             );
           })}
         </ul>

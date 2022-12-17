@@ -53,7 +53,7 @@ const ChatList = ({ setChatTarget }: { setChatTarget: Function }) => {
           (roomList.length ? (
             roomList.map(data => <ChatRoom key={data.roomId} data={data} />)
           ) : (
-            <div css={emptyMessage}>😀 친구와 대화를 시작해보세요!</div>
+            <li css={emptyMessage}>😀 친구와 대화를 시작해보세요!</li>
           ))}
       </ul>
     </Content>
