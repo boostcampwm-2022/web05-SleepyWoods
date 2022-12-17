@@ -9,10 +9,10 @@ const ChatMessage = ({ chat }: { chat: privateChatType }) => {
   const isSender = user.id === chat.senderId;
 
   return (
-    <li css={style.chatItem(isSender)}>
+    <div css={style.chatItem(isSender)}>
       <div css={style.chatText(isSender)}>{chat.message}</div>
       <div css={style.chatTime}>{calcTimeFromMs(chat.timestamp, false)}</div>
-    </li>
+    </div>
   );
 };
 export default ChatMessage;

@@ -1,5 +1,5 @@
 export const calcTimeFromMs = (ms: number | string, option: boolean) => {
-  if (typeof ms === 'string') return;
+  if (typeof ms === 'string') ms = Date.parse(ms);
   const date = new Date(ms);
 
   if (option) {
