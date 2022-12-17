@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { flexCenter } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 import downArrow from '../../assets/icon/downArrow.svg';
 
@@ -108,10 +108,9 @@ export const extendBtn = (isExtend: boolean) => css`
     display: block;
     width: 20px;
     height: 8px;
-    background-image: url(${downArrow});
-    background-repeat: no-repeat;
+    ${backgroundImage(downArrow)}
     background-size: cover;
-    background-position: center;
+
     transform: rotate(${isExtend ? 0 : '180deg'});
   }
 `;

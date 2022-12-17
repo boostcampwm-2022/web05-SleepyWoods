@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import theme from '../../styles/theme';
 import close from '../../assets/icon/close.svg';
 import checkBox from '../../assets/icon/checkBox.svg';
-import { flexCenter } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 
 export const infoBox = css`
   display: flex;
@@ -28,9 +28,7 @@ export const info = (content: string) => css`
     display: 'block';
     width: 20px;
     height: 15px;
-    background-image: url(${content});
-    background-position: center;
-    background-repeat: no-repeat;
+    ${backgroundImage(content)}
     background-size: contain;
   }
 `;
@@ -96,9 +94,7 @@ export const closeBtn = css`
     display: block;
     width: 20px;
     height: 20px;
-    background-image: url(${close});
-    background-position: center;
-    background-repeat: no-repeat;
+    ${backgroundImage(close)}
     background-size: contain;
   }
 `;
@@ -143,9 +139,7 @@ export const helpSetting = (isCheck: boolean) => css`
     margin-left: 5px;
     width: 14px;
     height: 14px;
-    background-image: url(${checkBox});
-    background-position: center;
-    background-repeat: no-repeat;
+    ${backgroundImage(checkBox)}
     background-size: cover;
     opacity: ${isCheck ? 1 : 0.3};
   }

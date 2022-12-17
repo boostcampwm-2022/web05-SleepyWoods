@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { flexCenter } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import theme from '../../styles/theme';
 import run from '../../assets/run.gif';
 
@@ -35,6 +35,6 @@ export const loading = css`
     display: block;
     width: 100px;
     height: 100px;
-    background-image: url(${run});
+    ${backgroundImage(run)}
   }
 `;
