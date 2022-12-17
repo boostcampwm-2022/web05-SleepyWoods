@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { flexCenter } from '../../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../../styles/mixin.styled';
 import theme from '../../../styles/theme';
 import prevArrow from '../../../assets/prevArrow.svg';
 
@@ -121,9 +121,8 @@ export const prevBtn = css`
     display: block;
     width: 10px;
     height: 15px;
-    background-image: url(${prevArrow});
+    ${backgroundImage(prevArrow)}
     background-size: contain;
-    background-repeat: no-repeat;
   }
 `;
 

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { flexCenter } from '../../styles/mixin.styled';
+import { backgroundImage, flexCenter } from '../../styles/mixin.styled';
 import characterAsset from '../../assets/character/wait/wait.png';
 import { hairPos } from './hair';
 
@@ -15,8 +15,8 @@ export const character = (hairName: string) => css`
   position: relative;
   width: 96px;
   height: 64px;
-  background-image: url(${characterAsset});
-  background-repeat: no-repeat;
+
+  ${backgroundImage(characterAsset)}
   background-position-y: 0;
   animation: wait 0.6s step-start infinite;
   transform: scale(6);
@@ -29,8 +29,7 @@ export const character = (hairName: string) => css`
     left: 0;
     width: 96px;
     height: 64px;
-    background-image: url(${characterAsset});
-    background-repeat: no-repeat;
+    ${backgroundImage(characterAsset)}
     background-position-y: -${hairPos[hairName]}px;
     animation: wait 0.6s step-start infinite;
   }
