@@ -36,7 +36,7 @@ export default class Maze extends Phaser.Scene {
   init(data: any) {
     this.isFinish = false;
     this.otherPlayer = {};
-    this.gameName = 'Running';
+    this.gameName = 'Maze';
     this.userTime = '00:00';
     this.roomId = data.roomId;
     this.myPlayer?.delete();
