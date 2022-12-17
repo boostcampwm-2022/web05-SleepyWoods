@@ -23,7 +23,7 @@ const ChatMessage = ({
     // 채팅창 초기화
     const sessionStorageChat = sessionStorage.getItem('chat');
     if (sessionStorageChat) {
-      setChatDatas(JSON.parse(sessionStorageChat));
+      setChatDatas(() => JSON.parse(sessionStorageChat));
     }
 
     // 다른 사람의 채팅받기
