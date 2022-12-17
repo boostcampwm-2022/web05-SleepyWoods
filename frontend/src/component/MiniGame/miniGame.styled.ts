@@ -102,7 +102,7 @@ export const selectModes = css`
   width: 100%;
 
   ${flexCenter}
-  display: flex;
+  flex-flow: column;
   margin-bottom: 50px;
 `;
 

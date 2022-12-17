@@ -136,6 +136,7 @@ export const description = css`
   flex-grow: 1;
 
   width: 80%;
+  line-height: 20px;
   font-size: 12px;
   font-weight: 700;
 `;
