@@ -18,9 +18,7 @@ export const sleepyBoardBtn = css`
 `;
 
 export const modal = (animation: string) => css`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${flexCenter}
   flex-flow: column;
 
   width: 60%;
