@@ -10,8 +10,14 @@ const RankContainer = () => {
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   const dateList = [
-    { year: month - 2 > 0 ? year : year - 1, month: month - 2 },
-    { year: month - 1 > 0 ? year : year - 1, month: month - 1 },
+    {
+      year: month - 2 > 0 ? year : year - 1,
+      month: month - 2 < 0 ? 11 : month - 2,
+    },
+    {
+      year: month - 1 > 0 ? year : year - 1,
+      month: month - 2 < 0 ? 12 : month - 1,
+    },
     { year: year, month: month },
   ];
 
