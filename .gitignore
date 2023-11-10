@@ -2,14 +2,13 @@
 */.DS_Store
 
 # IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 */.env
 */node_modules
 */dist
 */.env.prod
 */.env.dev
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore
+branch_structure.json
