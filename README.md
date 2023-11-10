@@ -13,6 +13,9 @@
 
 <img src="https://user-images.githubusercontent.com/97016022/203822737-25dedf14-d617-469b-985f-6586b402aab3.png" width=1000></img>
 
+다양한 기능이 궁금하시다면 [SleepyWoods 노션](https://stouter.notion.site/SleepyWoods-f9fbca6aa60a4478b17ae931d426c2be)을 방문해주세요 😆🎄
+<br>
+<br>
 <br>
 
 # 👨‍👩‍👧‍👦 팀원 소개
